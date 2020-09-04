@@ -14,8 +14,8 @@ _(forked from https://github.com/yusaer/orm-benchmark)_
 
 All package run in no-cache mode.
 
-- [gorm2](https://github.com/go-gorm/gorm)
-- [pg](https://github.com/go-pg/pg)
+- [gorm 2](https://github.com/go-gorm/gorm)
+- [pg 9.2.0](https://github.com/go-pg/pg)
 - [beego/orm](https://github.com/astaxie/beego/tree/master/orm)
 - [xorm](https://github.com/xormplus/xorm)
 
