@@ -28,7 +28,10 @@ func initDB2() {
 
 	DB, err := sql.Open("postgres", OrmSource)
 	checkErr(err)
-	defer DB.Close()
+	defer func() {
+		err := DB.Close()
+		checkErr(err)
+	}()
 
 	err = DB.Ping()
 	checkErr(err)

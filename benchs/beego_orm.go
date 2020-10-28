@@ -29,7 +29,10 @@ func initDB3() {
 
 	DB, err := sql.Open("postgres", OrmSource)
 	checkErr(err)
-	defer DB.Close()
+	defer func() {
+		err := DB.Close()
+		checkErr(err)
+	}()
 
 	err = DB.Ping()
 	checkErr(err)
@@ -73,7 +76,8 @@ func init() {
 		st.AddBenchmark("Read", 200*OrmMulti, BeegoOrmRead)
 		st.AddBenchmark("MultiRead limit 100", 200*OrmMulti, BeegoOrmReadSlice)
 
-		orm.RegisterDataBase("default", "postgres", OrmSource, OrmMaxIdle, OrmMaxConn)
+		err := orm.RegisterDataBase("default", "postgres", OrmSource, OrmMaxIdle, OrmMaxConn)
+		checkErr(err)
 		orm.RegisterModel(new(BeegoModel))
 
 		bo = orm.NewOrm()
