@@ -34,8 +34,8 @@ func initDB3() {
 	err = DB.Ping()
 	checkErr(err)
 
-	for _, sql := range sqls {
-		_, err = DB.Exec(sql)
+	for _, line := range sqls {
+		_, err = DB.Exec(line)
 		checkErr(err)
 	}
 }

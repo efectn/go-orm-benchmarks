@@ -52,7 +52,6 @@ func wrapExecute(b *B, cbk func()) {
 }
 
 func initDB() {
-
 	sqls := []string{
 		`DROP TABLE IF EXISTS models;`,
 		`CREATE TABLE models (
@@ -75,8 +74,8 @@ func initDB() {
 	err = DB.Ping()
 	checkErr(err)
 
-	for _, sql := range sqls {
-		_, err = DB.Exec(sql)
+	for _, line := range sqls {
+		_, err = DB.Exec(line)
 		checkErr(err)
 	}
 }
