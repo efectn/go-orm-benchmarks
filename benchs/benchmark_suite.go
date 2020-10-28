@@ -43,7 +43,7 @@ func (r BenchmarkResult) String() string {
 	}
 
 	nsop := r.NsPerOp()
-	total := fmt.Sprintf("   %5.2fs", float64(r.T)/float64(1e9))
+	total := fmt.Sprintf("   %5.2fs", float64(r.T)/1e9)
 	ns := fmt.Sprintf("   %10d ns/op", nsop)
 	if r.N > 0 && nsop < 100 {
 

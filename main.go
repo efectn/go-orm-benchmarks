@@ -61,7 +61,7 @@ func main() {
 	}
 
 	if all {
-		orms = ListOpts(benchs.BrandNames)
+		orms = benchs.BrandNames
 	}
 
 	orms.Shuffle()
