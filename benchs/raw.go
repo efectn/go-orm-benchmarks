@@ -33,13 +33,8 @@ func init() {
 func RawInsert(b *B) {
 	var m *Model
 	wrapExecute(b, func() {
-		var err error
 		initDB()
 		m = NewModel()
-		if err != nil {
-			fmt.Println(err)
-			b.FailNow()
-		}
 	})
 
 	for i := 0; i < b.N; i++ {
@@ -118,10 +113,9 @@ func RawInsertMulti(b *B) {
 func RawUpdate(b *B) {
 	var m *Model
 	wrapExecute(b, func() {
-		var err error
 		initDB()
 		m = NewModel()
-		rawInsert(m)
+		err := rawInsert(m)
 		if err != nil {
 			fmt.Println(err)
 			b.FailNow()
@@ -140,10 +134,9 @@ func RawUpdate(b *B) {
 func RawRead(b *B) {
 	var m *Model
 	wrapExecute(b, func() {
-		var err error
 		initDB()
 		m = NewModel()
-		rawInsert(m)
+		err := rawInsert(m)
 		if err != nil {
 			fmt.Println(err)
 			b.FailNow()
