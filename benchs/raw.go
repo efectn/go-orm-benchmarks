@@ -26,7 +26,7 @@ func init() {
 		st.AddBenchmark("Read", 200*OrmMulti, RawRead)
 		st.AddBenchmark("MultiRead limit 100", 200*OrmMulti, RawReadSlice)
 
-		raw, _ = sql.Open("postgres", OrmSource)
+		raw, _ = sql.Open("pgx", OrmSource)
 	}
 }
 
