@@ -9,13 +9,13 @@ import (
 func init() {
 	st := NewSuite("raw_stmt")
 	st.InitF = func() {
-		st.AddBenchmark("Insert", 200*ORM_MULTI, RawStmtInsert)
-		st.AddBenchmark("MultiInsert 100 row", 200*ORM_MULTI, RawStmtInsertMulti)
-		st.AddBenchmark("Update", 200*ORM_MULTI, RawStmtUpdate)
-		st.AddBenchmark("Read", 200*ORM_MULTI, RawStmtRead)
-		st.AddBenchmark("MultiRead limit 100", 200*ORM_MULTI, RawStmtReadSlice)
+		st.AddBenchmark("Insert", 200*OrmMulti, RawStmtInsert)
+		st.AddBenchmark("MultiInsert 100 row", 200*OrmMulti, RawStmtInsertMulti)
+		st.AddBenchmark("Update", 200*OrmMulti, RawStmtUpdate)
+		st.AddBenchmark("Read", 200*OrmMulti, RawStmtRead)
+		st.AddBenchmark("MultiRead limit 100", 200*OrmMulti, RawStmtReadSlice)
 
-		raw, _ = sql.Open("postgres", ORM_SOURCE)
+		raw, _ = sql.Open("postgres", OrmSource)
 	}
 }
 

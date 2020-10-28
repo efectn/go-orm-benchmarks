@@ -12,14 +12,14 @@ var gormdb *gorm.DB
 func init() {
 	st := NewSuite("gorm")
 	st.InitF = func() {
-		st.AddBenchmark("Insert", 200*ORM_MULTI, GormInsert)
-		st.AddBenchmark("MultiInsert 100 row", 200*ORM_MULTI, GormInsertMulti)
-		st.AddBenchmark("Update", 200*ORM_MULTI, GormUpdate)
-		st.AddBenchmark("Read", 200*ORM_MULTI, GormRead)
-		st.AddBenchmark("MultiRead limit 100", 200*ORM_MULTI, GormReadSlice)
+		st.AddBenchmark("Insert", 200*OrmMulti, GormInsert)
+		st.AddBenchmark("MultiInsert 100 row", 200*OrmMulti, GormInsertMulti)
+		st.AddBenchmark("Update", 200*OrmMulti, GormUpdate)
+		st.AddBenchmark("Read", 200*OrmMulti, GormRead)
+		st.AddBenchmark("MultiRead limit 100", 200*OrmMulti, GormReadSlice)
 		var err error
 		gormdb, err = gorm.Open(postgres.New(postgres.Config{
-			DSN:                  ORM_SOURCE,
+			DSN:                  OrmSource,
 			PreferSimpleProtocol: true, // disables implicit prepared statement usage
 		}), &gorm.Config{
 			SkipDefaultTransaction: true,

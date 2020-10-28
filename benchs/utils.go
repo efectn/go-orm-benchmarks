@@ -31,10 +31,10 @@ func NewModel() *Model {
 }
 
 var (
-	ORM_MULTI    int
-	ORM_MAX_IDLE int
-	ORM_MAX_CONN int
-	ORM_SOURCE   string
+	OrmMulti   int
+	OrmMaxIdle int
+	OrmMaxConn int
+	OrmSource  string
 )
 
 func checkErr(err error) {
@@ -68,7 +68,7 @@ func initDB() {
 			) WITH (OIDS=FALSE);`,
 	}
 
-	DB, err := sql.Open("postgres", ORM_SOURCE)
+	DB, err := sql.Open("postgres", OrmSource)
 	checkErr(err)
 	defer DB.Close()
 

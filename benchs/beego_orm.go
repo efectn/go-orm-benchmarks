@@ -27,7 +27,7 @@ func initDB3() {
 			) WITH (OIDS=FALSE);`,
 	}
 
-	DB, err := sql.Open("postgres", ORM_SOURCE)
+	DB, err := sql.Open("postgres", OrmSource)
 	checkErr(err)
 	defer DB.Close()
 
@@ -67,13 +67,13 @@ func NewBeegoModel() *BeegoModel {
 func init() {
 	st := NewSuite("beego_orm")
 	st.InitF = func() {
-		st.AddBenchmark("Insert", 200*ORM_MULTI, BeegoOrmInsert)
-		st.AddBenchmark("MultiInsert 100 row", 200*ORM_MULTI, BeegoOrmInsertMulti)
-		st.AddBenchmark("Update", 200*ORM_MULTI, BeegoOrmUpdate)
-		st.AddBenchmark("Read", 200*ORM_MULTI, BeegoOrmRead)
-		st.AddBenchmark("MultiRead limit 100", 200*ORM_MULTI, BeegoOrmReadSlice)
+		st.AddBenchmark("Insert", 200*OrmMulti, BeegoOrmInsert)
+		st.AddBenchmark("MultiInsert 100 row", 200*OrmMulti, BeegoOrmInsertMulti)
+		st.AddBenchmark("Update", 200*OrmMulti, BeegoOrmUpdate)
+		st.AddBenchmark("Read", 200*OrmMulti, BeegoOrmRead)
+		st.AddBenchmark("MultiRead limit 100", 200*OrmMulti, BeegoOrmReadSlice)
 
-		orm.RegisterDataBase("default", "postgres", ORM_SOURCE, ORM_MAX_IDLE, ORM_MAX_CONN)
+		orm.RegisterDataBase("default", "postgres", OrmSource, OrmMaxIdle, OrmMaxConn)
 		orm.RegisterModel(new(BeegoModel))
 
 		bo = orm.NewOrm()

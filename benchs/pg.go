@@ -11,11 +11,11 @@ var pgdb *pg.DB
 func init() {
 	st := NewSuite("pg")
 	st.InitF = func() {
-		st.AddBenchmark("Insert", 200*ORM_MULTI, PgInsert)
-		st.AddBenchmark("MultiInsert 100 row", 200*ORM_MULTI, PgInsertMulti)
-		st.AddBenchmark("Update", 200*ORM_MULTI, PgUpdate)
-		st.AddBenchmark("Read", 200*ORM_MULTI, PgRead)
-		st.AddBenchmark("MultiRead limit 100", 200*ORM_MULTI, PgReadSlice)
+		st.AddBenchmark("Insert", 200*OrmMulti, PgInsert)
+		st.AddBenchmark("MultiInsert 100 row", 200*OrmMulti, PgInsertMulti)
+		st.AddBenchmark("Update", 200*OrmMulti, PgUpdate)
+		st.AddBenchmark("Read", 200*OrmMulti, PgRead)
+		st.AddBenchmark("MultiRead limit 100", 200*OrmMulti, PgReadSlice)
 
 		pgdb = pg.Connect(&pg.Options{
 			Addr:     "localhost:5432",

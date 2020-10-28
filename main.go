@@ -41,10 +41,10 @@ func main() {
 	runtime.GOMAXPROCS(runtime.NumCPU())
 
 	var orms ListOpts
-	flag.IntVar(&benchs.ORM_MAX_IDLE, "max_idle", 200, "max idle conns")
-	flag.IntVar(&benchs.ORM_MAX_CONN, "max_conn", 200, "max open conns")
-	flag.StringVar(&benchs.ORM_SOURCE, "source", "host=localhost user=postgres password=postgres dbname=test sslmode=disable", "postgres dsn source")
-	flag.IntVar(&benchs.ORM_MULTI, "multi", 1, "base query nums x multi")
+	flag.IntVar(&benchs.OrmMaxIdle, "max_idle", 200, "max idle conns")
+	flag.IntVar(&benchs.OrmMaxConn, "max_conn", 200, "max open conns")
+	flag.StringVar(&benchs.OrmSource, "source", "host=localhost user=postgres password=postgres dbname=test sslmode=disable", "postgres dsn source")
+	flag.IntVar(&benchs.OrmMulti, "multi", 1, "base query nums x multi")
 	flag.Var(&orms, "orm", "orm name: all, "+strings.Join(benchs.BrandNames, ", "))
 	flag.Parse()
 

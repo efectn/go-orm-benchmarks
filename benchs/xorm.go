@@ -26,7 +26,7 @@ func initDB2() {
 		) WITH (OIDS=FALSE);`,
 	}
 
-	DB, err := sql.Open("postgres", ORM_SOURCE)
+	DB, err := sql.Open("postgres", OrmSource)
 	checkErr(err)
 	defer DB.Close()
 
@@ -66,13 +66,13 @@ func NewXormModel() *XormModel {
 func init() {
 	st := NewSuite("xorm")
 	st.InitF = func() {
-		st.AddBenchmark("Insert", 200*ORM_MULTI, XormInsert)
-		st.AddBenchmark("MultiInsert 100 row", 200*ORM_MULTI, XormInsertMulti)
-		st.AddBenchmark("Update", 200*ORM_MULTI, XormUpdate)
-		st.AddBenchmark("Read", 200*ORM_MULTI, XormRead)
-		st.AddBenchmark("MultiRead limit 100", 200*ORM_MULTI, XormReadSlice)
+		st.AddBenchmark("Insert", 200*OrmMulti, XormInsert)
+		st.AddBenchmark("MultiInsert 100 row", 200*OrmMulti, XormInsertMulti)
+		st.AddBenchmark("Update", 200*OrmMulti, XormUpdate)
+		st.AddBenchmark("Read", 200*OrmMulti, XormRead)
+		st.AddBenchmark("MultiRead limit 100", 200*OrmMulti, XormReadSlice)
 
-		engine, err := xorm.NewEngine("postgres", ORM_SOURCE)
+		engine, err := xorm.NewEngine("postgres", OrmSource)
 		if err != nil {
 			fmt.Print(err)
 		}
