@@ -48,6 +48,7 @@ func wrapExecute(b *B, cbk func()) {
 	b.StopTimer()
 	defer b.StartTimer()
 	cbk()
+	b.ResetTimer()
 }
 
 func initDB() {
