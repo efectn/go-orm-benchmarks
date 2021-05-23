@@ -8,7 +8,7 @@ _(forked from https://github.com/yusaer/orm-benchmark)_
 
 ### PostgreSQL
 
-- PostgreSQL 12 for Linux on x86_64
+- PostgreSQL 13 for Linux on x86_64
 
 ### ORMs
 
