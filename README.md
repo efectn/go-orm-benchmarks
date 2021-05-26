@@ -42,7 +42,7 @@ orm-benchmark -multi=20 -orm=bun
 From [`results.md`](https://github.com/frederikhors/orm-benchmark/tree/master/results.md):
 
 
-### orm-benchmark -multi=50
+**orm-benchmark -multi=50**
 
 ```
  10000 times - Insert
