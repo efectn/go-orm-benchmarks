@@ -17,12 +17,12 @@ func init() {
 		st.AddBenchmark("Read", 200*OrmMulti, PgRead)
 		st.AddBenchmark("MultiRead limit 100", 200*OrmMulti, PgReadSlice)
 
-		opt, err := pg.ParseURL(OrmSource)
-		if err != nil {
-			fmt.Println(err)
-		}
-
-		pgdb = pg.Connect(opt)
+		pgdb = pg.Connect(&pg.Options{
+			Addr:     "localhost:5432",
+			User:     "postgres",
+			Password: "postgres",
+			Database: "test",
+		})
 	}
 }
 
