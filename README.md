@@ -44,6 +44,7 @@ From [`results.md`](https://github.com/frederikhors/orm-benchmark/tree/master/re
 
 ### orm-benchmark -multi=50
 
+```
  10000 times - Insert
        raw:    18.82s      1882463 ns/op     713 B/op     13 allocs/op
   raw_stmt:    18.87s      1886864 ns/op     720 B/op     14 allocs/op
@@ -88,3 +89,4 @@ From [`results.md`](https://github.com/frederikhors/orm-benchmark/tree/master/re
  beego_orm:    10.52s      1051815 ns/op   55250 B/op   3077 allocs/op
       gorm:    13.09s      1309194 ns/op   71629 B/op   3877 allocs/op
       xorm:     doesn't work
+```

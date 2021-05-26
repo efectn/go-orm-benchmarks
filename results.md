@@ -1,7 +1,8 @@
 # Results
 
-### orm-benchmark (with no flags)
+- orm-benchmark (with no flags)
 
+```
    200 times - Insert
   raw_stmt:     0.37s      1872632 ns/op     692 B/op     14 allocs/op
  beego_orm:     0.38s      1923870 ns/op    2405 B/op     56 allocs/op
@@ -46,9 +47,11 @@
  beego_orm:     0.21s      1074391 ns/op   55257 B/op   3077 allocs/op
       gorm:     0.26s      1284915 ns/op   71716 B/op   3877 allocs/op
       xorm:     doesn't work
+```
 
-### orm-benchmark -multi=5
+- orm-benchmark -multi=5
 
+```
   1000 times - Insert
   raw_stmt:     1.90s      1899747 ns/op     713 B/op     14 allocs/op
  beego_orm:     1.90s      1904115 ns/op    2408 B/op     56 allocs/op
@@ -93,9 +96,11 @@
  beego_orm:     1.05s      1048641 ns/op   55252 B/op   3077 allocs/op
       gorm:     1.34s      1337241 ns/op   71642 B/op   3877 allocs/op
       xorm:     doesn't work
+```
 
-### orm-benchmark -multi=20
+- orm-benchmark -multi=20
 
+```
   4000 times - Insert
        raw:     7.46s      1866171 ns/op     719 B/op     13 allocs/op
   raw_stmt:     7.49s      1871428 ns/op     718 B/op     14 allocs/op
@@ -140,9 +145,11 @@
  beego_orm:     4.37s      1092503 ns/op   55248 B/op   3077 allocs/op
       gorm:     5.12s      1280190 ns/op   71628 B/op   3877 allocs/op
       xorm:     doesn't work
+```
 
-### orm-benchmark -multi=50
+- orm-benchmark -multi=50
 
+```
  10000 times - Insert
        raw:    18.82s      1882463 ns/op     713 B/op     13 allocs/op
   raw_stmt:    18.87s      1886864 ns/op     720 B/op     14 allocs/op
@@ -187,3 +194,4 @@
  beego_orm:    10.52s      1051815 ns/op   55250 B/op   3077 allocs/op
       gorm:    13.09s      1309194 ns/op   71629 B/op   3877 allocs/op
       xorm:     doesn't work
+```
