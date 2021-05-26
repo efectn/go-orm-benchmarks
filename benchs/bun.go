@@ -24,7 +24,7 @@ func init() {
 		st.AddBenchmark("Read", 200*OrmMulti, BunRead)
 		st.AddBenchmark("MultiRead limit 100", 200*OrmMulti, BunReadSlice)
 
-		dsn := "postgres://postgres:@localhost:5432/test?sslmode=disable"
+		dsn := "postgres://postgres:postgres@localhost:5432/test?sslmode=disable"
 		sqldb := sql.OpenDB(pgdriver.NewConnector(pgdriver.WithDSN(dsn)))
 		sqldb.SetMaxOpenConns(OrmMaxConn)
 		sqldb.SetMaxIdleConns(OrmMaxIdle)
