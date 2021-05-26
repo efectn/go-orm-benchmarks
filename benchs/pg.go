@@ -17,17 +17,18 @@ func init() {
 		st.AddBenchmark("Read", 200*OrmMulti, PgRead)
 		st.AddBenchmark("MultiRead limit 100", 200*OrmMulti, PgReadSlice)
 
-		pgdb = pg.Connect(&pg.Options{
-			Addr:     "localhost:5432",
-			User:     "postgres",
-			Password: "postgres",
-			Database: "test",
-		})
+		opt, err := pg.ParseURL(OrmSource)
+		if err != nil {
+			fmt.Println(err)
+		}
+
+		pgdb = pg.Connect(opt)
 	}
 }
 
 func PgInsert(b *B) {
 	var m *Model
+
 	wrapExecute(b, func() {
 		initDB()
 		m = NewModel()
@@ -44,6 +45,7 @@ func PgInsert(b *B) {
 
 func PgInsertMulti(b *B) {
 	var ms []*Model
+
 	wrapExecute(b, func() {
 		initDB()
 		ms = make([]*Model, 0, 100)
@@ -56,6 +58,7 @@ func PgInsertMulti(b *B) {
 		for _, m := range ms {
 			m.Id = 0
 		}
+
 		if _, err := pgdb.Model(&ms).Insert(); err != nil {
 			fmt.Println(err)
 			b.FailNow()
@@ -65,6 +68,7 @@ func PgInsertMulti(b *B) {
 
 func PgUpdate(b *B) {
 	var m *Model
+
 	wrapExecute(b, func() {
 		initDB()
 		m = NewModel()
