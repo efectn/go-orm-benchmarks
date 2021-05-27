@@ -203,7 +203,6 @@ func SqlcReadSlice(b *B) {
 	})
 
 	for i := 0; i < b.N; i++ {
-		var models []*Model
 		sqlcModels, err := sqlcQueries.ListModels(ctx, db.ListModelsParams{
 			ID:    0,
 			Limit: 100,
@@ -213,8 +212,10 @@ func SqlcReadSlice(b *B) {
 			b.FailNow()
 		}
 
+		models := make([]*Model, len(sqlcModels))
+
 		for i2 := range sqlcModels {
-			models = append(models, &Model{
+			models[i2] = &Model{
 				Name:    sqlcModels[i2].Name,
 				Title:   sqlcModels[i2].Title,
 				Fax:     sqlcModels[i2].Fax,
@@ -222,7 +223,7 @@ func SqlcReadSlice(b *B) {
 				Age:     int(sqlcModels[i2].Age),
 				Right:   sqlcModels[i2].Right,
 				Counter: sqlcModels[i2].Counter,
-			})
+			}
 		}
 	}
 }
