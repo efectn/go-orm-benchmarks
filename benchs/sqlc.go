@@ -118,6 +118,7 @@ func SqlcUpdate(b *B) {
 
 func SqlcRead(b *B) {
 	var m *Model
+
 	wrapExecute(b, func() {
 		initDB()
 		m = NewModel()
@@ -169,6 +170,7 @@ func SqlcRead(b *B) {
 
 func SqlcReadSlice(b *B) {
 	var m *Model
+
 	wrapExecute(b, func() {
 		initDB()
 		m = NewModel()
