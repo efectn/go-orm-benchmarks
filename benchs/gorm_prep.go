@@ -5,6 +5,7 @@ import (
 
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
+	"gorm.io/gorm/logger"
 )
 
 var gormPrepared *gorm.DB
@@ -19,10 +20,11 @@ func init() {
 		st.AddBenchmark("MultiRead limit 100", 200*OrmMulti, GormPreparedReadSlice)
 		var err error
 		gormPrepared, err = gorm.Open(postgres.New(postgres.Config{
-			DSN:                  OrmSource,
+			DSN: OrmSource,
 		}), &gorm.Config{
 			SkipDefaultTransaction: true,
 			PrepareStmt:            true,
+			Logger:                 logger.Default.LogMode(logger.Silent),
 		})
 		if err != nil {
 			fmt.Println(err)
