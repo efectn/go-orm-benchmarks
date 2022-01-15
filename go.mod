@@ -3,7 +3,7 @@ module github.com/efectn/orm-benchmark
 go 1.17
 
 require (
-	entgo.io/ent v0.9.1
+	entgo.io/ent v0.9.2-0.20220113113942-3a426390de5a
 	github.com/astaxie/beego v1.12.3
 	github.com/go-pg/pg/v10 v10.10.6
 	github.com/jackc/pgx/v4 v4.14.1
