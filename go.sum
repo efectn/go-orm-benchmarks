@@ -2,6 +2,8 @@ cloud.google.com/go v0.26.0/go.mod h1:aQUYkXzVsufM+DwF1aE+0xfcU+56JwCaLick0ClmMT
 cloud.google.com/go v0.34.0/go.mod h1:aQUYkXzVsufM+DwF1aE+0xfcU+56JwCaLick0ClmMTw=
 entgo.io/ent v0.9.2-0.20220113113942-3a426390de5a h1:h2Ga08iM/NOvBGWLFxnbqiJDoC4icPF/TRAfC6lEl48=
 entgo.io/ent v0.9.2-0.20220113113942-3a426390de5a/go.mod h1:PJSJIK0NlZbPTC5aiS1885qPefVHUR0xjOwjfjJx30Y=
+entgo.io/ent v0.9.2-0.20220115210437-b70754d12f85 h1:z7GcfGTfroVoGXGAAkQFkRH1iA0IvNGZ+9y28W+t/Bw=
+entgo.io/ent v0.9.2-0.20220115210437-b70754d12f85/go.mod h1:PJSJIK0NlZbPTC5aiS1885qPefVHUR0xjOwjfjJx30Y=
 gitea.com/xorm/sqlfiddle v0.0.0-20180821085327-62ce714f951a h1:lSA0F4e9A2NcQSqGqTOXqu2aRi/XEQxDCBwM8yJtE6s=
 gitea.com/xorm/sqlfiddle v0.0.0-20180821085327-62ce714f951a/go.mod h1:EXuID2Zs0pAQhH8yz+DNjUbjppKQzKFAn28TMYPB6IU=
 github.com/BurntSushi/toml v0.3.1/go.mod h1:xHWCNGjB5oqiDr8zfno3MHue2Ht5sIBksp03qcyfWMU=
