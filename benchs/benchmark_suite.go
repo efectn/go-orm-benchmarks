@@ -110,7 +110,7 @@ func (b *B) StartTimer() {
 
 func (b *B) StopTimer() {
 	if b.timerOn {
-		b.duration += time.Now().Sub(b.start)
+		b.duration += time.Since(b.start)
 		runtime.ReadMemStats(&memStats)
 		b.netAllocs += memStats.Mallocs - b.startAllocs
 		b.netBytes += memStats.TotalAlloc - b.startBytes
@@ -161,7 +161,6 @@ type suite struct {
 	Brand  string
 	InitF  func()
 	benchs []*B
-	orders []string
 }
 
 func (st *suite) AddBenchmark(name string, n int, run func(b *B)) {

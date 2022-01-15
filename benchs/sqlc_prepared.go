@@ -4,7 +4,7 @@ import (
 	"database/sql"
 	"fmt"
 
-	"github.com/frederikhors/orm-benchmark/benchs/sqlc_prepared/db"
+	"github.com/efectn/orm-benchmark/benchs/sqlc_prepared/db"
 )
 
 var (

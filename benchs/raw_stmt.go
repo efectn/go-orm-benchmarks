@@ -227,7 +227,6 @@ func RawStmtReadSlice(b *B) {
 				b.FailNow()
 			}
 		}
-		models = models[:j]
 		if err = rows.Err(); err != nil {
 			fmt.Println(err)
 			b.FailNow()
