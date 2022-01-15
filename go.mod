@@ -50,6 +50,7 @@ require (
 	golang.org/x/crypto v0.0.0-20220112180741-5e0467b6c7ce // indirect
 	golang.org/x/sys v0.0.0-20220114195835-da31bd327af9 // indirect
 	golang.org/x/text v0.3.7 // indirect
+	gopkg.in/gorp.v1 v1.7.2 // indirect
 	mellium.im/sasl v0.2.1 // indirect
 	xorm.io/builder v0.3.9 // indirect
 )
