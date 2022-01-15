@@ -21,6 +21,7 @@ All package run in no-cache mode.
 - [sqlc](https://github.com/kyleconroy/sqlc) (partially)
 - [xorm](https://github.com/xormplus/xorm)
 - [ent](https://github.com/ent/ent)
+- [prisma](https://github.com/prisma/prisma-client-go)
 
 See [`go.mod`](https://github.com/efectn/orm-benchmark/blob/master/go.mod) for their latest versions.
 

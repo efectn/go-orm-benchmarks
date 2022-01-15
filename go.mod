@@ -6,8 +6,13 @@ require (
 	entgo.io/ent v0.9.2-0.20220113113942-3a426390de5a
 	github.com/astaxie/beego v1.12.3
 	github.com/go-pg/pg/v10 v10.10.6
+	github.com/iancoleman/strcase v0.0.0-20190422225806-e506e3ef7365
 	github.com/jackc/pgx/v4 v4.14.1
+	github.com/joho/godotenv v1.3.0
 	github.com/lib/pq v1.10.4
+	github.com/prisma/prisma-client-go v0.12.2
+	github.com/shopspring/decimal v1.2.0
+	github.com/takuoki/gocase v1.0.0
 	github.com/uptrace/bun v1.0.21
 	github.com/uptrace/bun/dialect/pgdialect v1.0.21
 	github.com/uptrace/bun/driver/pgdriver v1.0.21
