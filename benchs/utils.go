@@ -17,6 +17,17 @@ type Model struct {
 	Counter int64
 }
 
+type ModelUpper struct {
+	Id      uint   `db:"id,omitempty"`
+	Name    string `db:"name"`
+	Title   string `db:"title"`
+	Fax     string `db:"fax"`
+	Web     string `db:"web"`
+	Age     int    `db:"age"`
+	Right   bool   `db:"right"`
+	Counter int64  `db:"counter"`
+}
+
 func NewModel() *Model {
 	m := new(Model)
 	m.Name = "Orm Benchmark"
@@ -52,9 +63,10 @@ func wrapExecute(b *B, cbk func()) {
 }
 
 func initDB() {
-	sqls := []string{
-		`DROP TABLE IF EXISTS models;`,
-		`CREATE TABLE models (
+	sqls := [][]string{
+		{
+			`DROP TABLE IF EXISTS models;`,
+			`CREATE TABLE models (
 			id SERIAL NOT NULL,
 			name text NOT NULL,
 			title text NOT NULL,
@@ -65,6 +77,21 @@ func initDB() {
 			counter bigint NOT NULL,
 			CONSTRAINT models_pkey PRIMARY KEY (id)
 			) WITH (OIDS=FALSE);`,
+		},
+		{
+			`DROP TABLE IF EXISTS models_upper;`,
+			`CREATE TABLE models_upper (
+			id SERIAL NOT NULL,
+			name text NOT NULL,
+			title text NOT NULL,
+			fax text NOT NULL,
+			web text NOT NULL,
+			age integer NOT NULL,
+			"right" boolean NOT NULL,
+			counter bigint NOT NULL,
+			CONSTRAINT models_upper_pkey PRIMARY KEY (id)
+			) WITH (OIDS=FALSE);`,
+		},
 	}
 
 	DB, err := sql.Open("postgres", OrmSource)
@@ -77,8 +104,11 @@ func initDB() {
 	err = DB.Ping()
 	checkErr(err)
 
-	for _, line := range sqls {
-		_, err = DB.Exec(line)
-		checkErr(err)
+	for _, sql := range sqls {
+		for _, line := range sql {
+			_, err = DB.Exec(line)
+			checkErr(err)
+		}
 	}
+
 }

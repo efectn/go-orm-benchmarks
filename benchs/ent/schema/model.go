@@ -13,6 +13,7 @@ type Model struct {
 // Fields of the Model.
 func (Model) Fields() []ent.Field {
 	return []ent.Field{
+		//field.Int("id").Unique().StorageKey("oid").Primar
 		field.String("name"),
 		field.String("title"),
 		field.String("fax"),

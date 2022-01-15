@@ -109,9 +109,12 @@ func EntInsertMulti(b *B) {
 			SetCounter(m.Counter)
 	}
 
-	if _, err := client.Model.CreateBulk(bulk...).Save(ctx); err != nil {
-		log.Fatal(err)
-		b.FailNow()
+	for i := 0; i < b.N; i++ {
+		if _, err := client.Model.CreateBulk(bulk...).Save(ctx); err != nil {
+			log.Fatal(err)
+			b.FailNow()
+		}
+
 	}
 }
 
