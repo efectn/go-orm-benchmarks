@@ -29,6 +29,10 @@ func initDB4() {
 	client = ent.NewClient(ent.Driver(drv))
 
 	// Run the auto migration tool.
+	if _, err = db.Exec("DROP TABLE IF EXISTS models"); err != nil {
+		log.Fatal(err)
+	}
+
 	if err := client.Schema.Create(context.Background()); err != nil {
 		log.Fatalf("failed creating schema resources: %v", err)
 	}
@@ -205,7 +209,7 @@ func EntReadSlice(b *B) {
 	})
 
 	for i := 0; i < b.N; i++ {
-		_, err := client.Model.Query().Where(model.IDGT(0)).Limit(100).All(ctx)
+		_, err := client.Model.Query().Where(model.IDGT(0)).Unique(false).Limit(100).All(ctx)
 		if err != nil {
 			log.Fatal(err)
 			b.FailNow()
