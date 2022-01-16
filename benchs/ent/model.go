@@ -7,7 +7,7 @@ import (
 	"strings"
 
 	"entgo.io/ent/dialect/sql"
-	"github.com/efectn/orm-benchmark/benchs/ent/model"
+	"github.com/efectn/go-orm-benchmarks/benchs/ent/model"
 )
 
 // Model is the model entity for the Model schema.

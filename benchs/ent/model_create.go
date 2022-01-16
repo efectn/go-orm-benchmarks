@@ -9,7 +9,7 @@ import (
 
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
-	"github.com/efectn/orm-benchmark/benchs/ent/model"
+	"github.com/efectn/go-orm-benchmarks/benchs/ent/model"
 )
 
 // ModelCreate is the builder for creating a Model entity.

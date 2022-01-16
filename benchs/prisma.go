@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/efectn/orm-benchmark/benchs/prisma/db"
+	"github.com/efectn/go-orm-benchmarks/benchs/prisma/db"
 )
 
 var prisma *db.PrismaClient

@@ -4,7 +4,7 @@ package model
 
 import (
 	"entgo.io/ent/dialect/sql"
-	"github.com/efectn/orm-benchmark/benchs/ent/predicate"
+	"github.com/efectn/go-orm-benchmarks/benchs/ent/predicate"
 )
 
 // ID filters vertices based on their ID field.

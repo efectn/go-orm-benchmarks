@@ -5,7 +5,7 @@ import (
 
 	"database/sql"
 
-	"github.com/efectn/orm-benchmark/benchs/ent/model"
+	"github.com/efectn/go-orm-benchmarks/benchs/ent/model"
 	_ "github.com/jackc/pgx/v4/stdlib"
 	_ "github.com/lib/pq"
 	gorpware "gopkg.in/gorp.v1"

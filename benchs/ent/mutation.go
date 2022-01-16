@@ -8,8 +8,8 @@ import (
 	"fmt"
 	"sync"
 
-	"github.com/efectn/orm-benchmark/benchs/ent/model"
-	"github.com/efectn/orm-benchmark/benchs/ent/predicate"
+	"github.com/efectn/go-orm-benchmarks/benchs/ent/model"
+	"github.com/efectn/go-orm-benchmarks/benchs/ent/predicate"
 
 	"entgo.io/ent"
 )

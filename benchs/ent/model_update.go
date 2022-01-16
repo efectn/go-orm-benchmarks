@@ -10,8 +10,8 @@ import (
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
-	"github.com/efectn/orm-benchmark/benchs/ent/model"
-	"github.com/efectn/orm-benchmark/benchs/ent/predicate"
+	"github.com/efectn/go-orm-benchmarks/benchs/ent/model"
+	"github.com/efectn/go-orm-benchmarks/benchs/ent/predicate"
 )
 
 // ModelUpdate is the builder for updating Model entities.

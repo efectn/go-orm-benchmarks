@@ -4,7 +4,7 @@ import (
 	"database/sql"
 	"fmt"
 
-	"github.com/efectn/orm-benchmark/benchs/sqlc/db"
+	"github.com/efectn/go-orm-benchmarks/benchs/sqlc/db"
 )
 
 var (

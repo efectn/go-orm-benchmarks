@@ -8,7 +8,7 @@ import (
 
 	"entgo.io/ent"
 	"entgo.io/ent/dialect/sql"
-	"github.com/efectn/orm-benchmark/benchs/ent/model"
+	"github.com/efectn/go-orm-benchmarks/benchs/ent/model"
 )
 
 // ent aliases to avoid import conflicts in user's code.

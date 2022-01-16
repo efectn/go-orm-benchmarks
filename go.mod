@@ -1,4 +1,4 @@
-module github.com/efectn/orm-benchmark
+module github.com/efectn/go-orm-benchmarks
 
 go 1.17
 

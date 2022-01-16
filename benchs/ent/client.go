@@ -7,9 +7,9 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/efectn/orm-benchmark/benchs/ent/migrate"
+	"github.com/efectn/go-orm-benchmarks/benchs/ent/migrate"
 
-	"github.com/efectn/orm-benchmark/benchs/ent/model"
+	"github.com/efectn/go-orm-benchmarks/benchs/ent/model"
 
 	"entgo.io/ent/dialect"
 	"entgo.io/ent/dialect/sql"

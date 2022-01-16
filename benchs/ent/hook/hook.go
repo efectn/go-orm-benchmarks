@@ -6,7 +6,7 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/efectn/orm-benchmark/benchs/ent"
+	"github.com/efectn/go-orm-benchmarks/benchs/ent"
 )
 
 // The ModelFunc type is an adapter to allow the use of ordinary

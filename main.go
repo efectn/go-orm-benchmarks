@@ -8,7 +8,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/efectn/orm-benchmark/benchs"
+	"github.com/efectn/go-orm-benchmarks/benchs"
 
 	_ "github.com/lib/pq"
 )

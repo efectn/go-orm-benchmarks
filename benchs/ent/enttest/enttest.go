@@ -5,9 +5,9 @@ package enttest
 import (
 	"context"
 
-	"github.com/efectn/orm-benchmark/benchs/ent"
+	"github.com/efectn/go-orm-benchmarks/benchs/ent"
 	// required by schema hooks.
-	_ "github.com/efectn/orm-benchmark/benchs/ent/runtime"
+	_ "github.com/efectn/go-orm-benchmarks/benchs/ent/runtime"
 
 	"entgo.io/ent/dialect/sql/schema"
 )

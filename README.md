@@ -29,12 +29,12 @@ All package run in no-cache mode.
 - [pop](https://github.com/gobuffalo/pop)
 - [rel](https://github.com/go-rel/rel)
 
-See [`go.mod`](https://github.com/efectn/orm-benchmark/blob/master/go.mod) for their latest versions.
+See [`go.mod`](https://github.com/efectn/go-orm-benchmarks/blob/master/go.mod) for their latest versions.
 
 ### Run
 
 ```shell
-go get github.com/efectn/orm-benchmark
+go get github.com/efectn/go-orm-benchmarks
 # build
 go install
 # all
@@ -48,7 +48,7 @@ orm-benchmark -multi=20 -orm=bun
 
 ### Results
 
-From [`results.md`](https://github.com/efectn/orm-benchmark/tree/master/results.md):
+From [`results.md`](https://github.com/efectn/go-orm-benchmarks/tree/master/results.md):
 
 **orm-benchmark -multi=20**
 
