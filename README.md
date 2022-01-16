@@ -128,3 +128,13 @@ From [`results.md`](https://github.com/efectn/orm-benchmark/tree/master/results.
     prisma:    67.39s     16846721 ns/op  146641 B/op    853 allocs/op
       xorm:     doesn't work
 ```
+
+### To-Do List:
+- [] Remove or add prisma again.
+- [] Fix TBDs.
+- [] Add SqlBoiler.
+- [] Add go-reform.
+- [] Clean and restructure codebase.
+- [] Add makefile to run benchmarks easily, run benchmarks inside of container.
+- [] Add final benchmark results with details.
+- [] Tag release and be ready to compare ORMs performances.
