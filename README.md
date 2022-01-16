@@ -25,6 +25,7 @@ All package run in no-cache mode.
 - [upper](https://github.com/upper/db)
 - [gorp](https://github.com/go-gorp/gorp)
 - [godb](https://github.com/samonzeweb/godb)
+- [dbr](https://github.com/gocraft/dbr/)
 
 See [`go.mod`](https://github.com/efectn/orm-benchmark/blob/master/go.mod) for their latest versions.
 
