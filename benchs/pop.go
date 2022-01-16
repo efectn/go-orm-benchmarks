@@ -21,6 +21,10 @@ type PopModel struct {
 	Counter int64  `db:"counter"`
 }
 
+func (PopModel) Table() string {
+	return "pop_models"
+}
+
 func NewPopModel() *PopModel {
 	m := new(PopModel)
 	m.Name = "Orm Benchmark"

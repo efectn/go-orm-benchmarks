@@ -6,6 +6,9 @@ require (
 	entgo.io/ent v0.9.2-0.20220115210437-b70754d12f85
 	github.com/astaxie/beego v1.12.3
 	github.com/go-pg/pg/v10 v10.10.6
+	github.com/go-rel/postgres v0.6.0
+	github.com/go-rel/rel v0.30.0
+	github.com/gobuffalo/pop/v6 v6.0.1
 	github.com/gocraft/dbr/v2 v2.7.3
 	github.com/jackc/pgx/v4 v4.14.1
 	github.com/lib/pq v1.10.4
@@ -27,6 +30,7 @@ require (
 	github.com/fatih/structs v1.1.0 // indirect
 	github.com/fsnotify/fsnotify v1.5.1 // indirect
 	github.com/go-pg/zerochecker v0.2.0 // indirect
+	github.com/go-rel/sql v0.7.0 // indirect
 	github.com/go-sql-driver/mysql v1.6.0 // indirect
 	github.com/gobuffalo/envy v1.10.1 // indirect
 	github.com/gobuffalo/fizz v1.14.0 // indirect
@@ -35,7 +39,6 @@ require (
 	github.com/gobuffalo/helpers v0.6.4 // indirect
 	github.com/gobuffalo/nulls v0.4.1 // indirect
 	github.com/gobuffalo/plush/v4 v4.1.9 // indirect
-	github.com/gobuffalo/pop/v6 v6.0.1 // indirect
 	github.com/gobuffalo/tags/v3 v3.1.2 // indirect
 	github.com/gobuffalo/validate/v3 v3.3.1 // indirect
 	github.com/goccy/go-json v0.9.3 // indirect
@@ -64,10 +67,9 @@ require (
 	github.com/microcosm-cc/bluemonday v1.0.16 // indirect
 	github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd // indirect
 	github.com/modern-go/reflect2 v1.0.2 // indirect
-	github.com/onsi/ginkgo v1.15.0 // indirect
-	github.com/onsi/gomega v1.10.5 // indirect
 	github.com/pkg/errors v0.9.1 // indirect
 	github.com/rogpeppe/go-internal v1.8.0 // indirect
+	github.com/serenize/snaker v0.0.0-20201027110005-a7ad2135616e // indirect
 	github.com/sergi/go-diff v1.2.0 // indirect
 	github.com/sourcegraph/annotate v0.0.0-20160123013949-f4cad6c6324d // indirect
 	github.com/sourcegraph/syntaxhighlight v0.0.0-20170531221838-bd320f5d308e // indirect

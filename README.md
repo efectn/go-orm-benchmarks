@@ -27,6 +27,7 @@ All package run in no-cache mode.
 - [godb](https://github.com/samonzeweb/godb)
 - [dbr](https://github.com/gocraft/dbr/)
 - [pop](https://github.com/gobuffalo/pop)
+- [rel](https://github.com/go-rel/rel)
 
 See [`go.mod`](https://github.com/efectn/orm-benchmark/blob/master/go.mod) for their latest versions.
 
