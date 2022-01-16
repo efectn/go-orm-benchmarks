@@ -24,6 +24,7 @@ All package run in no-cache mode.
 - [prisma](https://github.com/prisma/prisma-client-go)
 - [upper](https://github.com/upper/db)
 - [gorp](https://github.com/go-gorp/gorp)
+- [godb](https://github.com/samonzeweb/godb)
 
 See [`go.mod`](https://github.com/efectn/orm-benchmark/blob/master/go.mod) for their latest versions.
 

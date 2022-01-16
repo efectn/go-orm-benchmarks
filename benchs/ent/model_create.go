@@ -132,25 +132,25 @@ func (mc *ModelCreate) ExecX(ctx context.Context) {
 // check runs all checks and user-defined validators on the builder.
 func (mc *ModelCreate) check() error {
 	if _, ok := mc.mutation.Name(); !ok {
-		return &ValidationError{Name: "name", err: errors.New(`ent: missing required field "name"`)}
+		return &ValidationError{Name: "name", err: errors.New(`ent: missing required field "Model.name"`)}
 	}
 	if _, ok := mc.mutation.Title(); !ok {
-		return &ValidationError{Name: "title", err: errors.New(`ent: missing required field "title"`)}
+		return &ValidationError{Name: "title", err: errors.New(`ent: missing required field "Model.title"`)}
 	}
 	if _, ok := mc.mutation.Fax(); !ok {
-		return &ValidationError{Name: "fax", err: errors.New(`ent: missing required field "fax"`)}
+		return &ValidationError{Name: "fax", err: errors.New(`ent: missing required field "Model.fax"`)}
 	}
 	if _, ok := mc.mutation.Web(); !ok {
-		return &ValidationError{Name: "web", err: errors.New(`ent: missing required field "web"`)}
+		return &ValidationError{Name: "web", err: errors.New(`ent: missing required field "Model.web"`)}
 	}
 	if _, ok := mc.mutation.Age(); !ok {
-		return &ValidationError{Name: "age", err: errors.New(`ent: missing required field "age"`)}
+		return &ValidationError{Name: "age", err: errors.New(`ent: missing required field "Model.age"`)}
 	}
 	if _, ok := mc.mutation.Right(); !ok {
-		return &ValidationError{Name: "right", err: errors.New(`ent: missing required field "right"`)}
+		return &ValidationError{Name: "right", err: errors.New(`ent: missing required field "Model.right"`)}
 	}
 	if _, ok := mc.mutation.Counter(); !ok {
-		return &ValidationError{Name: "counter", err: errors.New(`ent: missing required field "counter"`)}
+		return &ValidationError{Name: "counter", err: errors.New(`ent: missing required field "Model.counter"`)}
 	}
 	return nil
 }

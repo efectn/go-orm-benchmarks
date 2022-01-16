@@ -2,8 +2,6 @@
 
 package db
 
-import ()
-
 type Model struct {
 	ID      int32
 	Name    string

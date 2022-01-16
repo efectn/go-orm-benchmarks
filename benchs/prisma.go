@@ -1,5 +1,6 @@
 package benchs
 
+/*
 import (
 	"fmt"
 	"log"
@@ -181,3 +182,4 @@ func PrismaReadSlice(b *B) {
 	}
 	closePrisma()
 }
+*/
