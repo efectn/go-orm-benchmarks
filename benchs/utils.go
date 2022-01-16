@@ -120,6 +120,20 @@ func initDB() {
 			CONSTRAINT pop_models_pkey PRIMARY KEY (id)
 			) WITH (OIDS=FALSE);`,
 		},
+		{
+			`DROP TABLE IF EXISTS reform_models;`,
+			`CREATE TABLE reform_models (
+			id SERIAL NOT NULL,
+			name text NOT NULL,
+			title text NOT NULL,
+			fax text NOT NULL,
+			web text NOT NULL,
+			age integer NOT NULL,
+			"right" boolean NOT NULL,
+			counter bigint NOT NULL,
+			CONSTRAINT reform_models_pkey PRIMARY KEY (id)
+			) WITH (OIDS=FALSE);`,
+		},
 	}
 
 	DB, err := sql.Open("postgres", OrmSource)

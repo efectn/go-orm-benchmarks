@@ -28,6 +28,7 @@ All package run in no-cache mode.
 - [dbr](https://github.com/gocraft/dbr/)
 - [pop](https://github.com/gobuffalo/pop)
 - [rel](https://github.com/go-rel/rel)
+- [reform](https://github.com/go-reform/reform)
 
 See [`go.mod`](https://github.com/efectn/go-orm-benchmarks/blob/master/go.mod) for their latest versions.
 
@@ -130,11 +131,11 @@ From [`results.md`](https://github.com/efectn/go-orm-benchmarks/tree/master/resu
 ```
 
 ### To-Do List:
-- [] Remove or add prisma again.
-- [] Fix TBDs.
-- [] Add SqlBoiler.
-- [] Add go-reform.
-- [] Clean and restructure codebase.
-- [] Add makefile to run benchmarks easily, run benchmarks inside of container.
-- [] Add final benchmark results with details.
-- [] Tag release and be ready to compare ORMs performances.
+- [ ] Remove or add prisma again.
+- [ ] Fix TBDs.
+- [ ] Add SqlBoiler.
+- [x] Add go-reform.
+- [ ] Clean and restructure codebase.
+- [ ] Add makefile to run benchmarks easily, run benchmarks inside of container.
+- [ ] Add final benchmark results with details.
+- [ ] Tag release and be ready to compare ORMs performances.
