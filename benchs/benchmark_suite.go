@@ -181,8 +181,10 @@ func (st *suite) AddBenchmark(name string, n int, run func(b *B)) {
 func (st *suite) run() {
 	for _, b := range st.benchs {
 		b.run()
-		fmt.Printf("%25s: %6d ", b.Name, b.N)
-		fmt.Println(b.result.String())
+		if DebugMode {
+			fmt.Printf("%25s: %6d ", b.Name, b.N)
+			fmt.Println(b.result.String())
+		}
 	}
 }
 

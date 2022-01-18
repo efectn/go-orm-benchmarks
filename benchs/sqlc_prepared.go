@@ -1,5 +1,6 @@
 package benchs
 
+/*
 import (
 	"database/sql"
 	"fmt"
@@ -235,3 +236,4 @@ func SqlcPreparedReadSlice(b *B) {
 		}
 	}
 }
+*/

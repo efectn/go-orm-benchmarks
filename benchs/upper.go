@@ -12,15 +12,23 @@ var upper db.Session
 
 func initDB6() {
 	var err error
+
+	source := SplitSource()
 	upper, err = postgresql.Open(postgresql.ConnectionURL{
-		Database: "test",
-		Host:     "localhost:5432",
-		User:     "postgres",
-		Password: "postgres",
+		Host:     source["host"] + ":5432",
+		User:     source["user"],
+		Password: source["password"],
+		Database: source["dbname"],
 	})
 	if err != nil {
 		log.Fatal(err)
 	}
+
+	if err := upper.Ping(); err != nil {
+		log.Fatalf("error connecting to postgres: %v", err)
+	}
+
+	initDB()
 }
 
 func closeUpper() {

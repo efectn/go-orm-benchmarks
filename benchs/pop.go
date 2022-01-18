@@ -41,7 +41,7 @@ func NewPopModel() *PopModel {
 func initDB10() {
 	var err error
 	pop, err = popware.NewConnection(&popware.ConnectionDetails{
-		URL: "postgres://postgres:postgres@localhost:5432/test?sslmode=disable",
+		URL: ConvertSourceToDSN(),
 	})
 	if err != nil {
 		log.Fatalf("failed opening connection to postgres: %v", err)

@@ -2,6 +2,7 @@ package benchs
 
 import (
 	"fmt"
+	"log"
 
 	"github.com/go-pg/pg/v10"
 )
@@ -17,12 +18,17 @@ func init() {
 		st.AddBenchmark("Read", 200*OrmMulti, PgRead)
 		st.AddBenchmark("MultiRead limit 100", 200*OrmMulti, PgReadSlice)
 
+		source := SplitSource()
 		pgdb = pg.Connect(&pg.Options{
-			Addr:     "localhost:5432",
-			User:     "postgres",
-			Password: "postgres",
-			Database: "test",
+			Addr:     source["host"] + ":5432",
+			User:     source["user"],
+			Password: source["password"],
+			Database: source["dbname"],
 		})
+
+		if err := pgdb.Ping(ctx); err != nil {
+			log.Fatalf("error connecting to postgres: %v", err)
+		}
 	}
 }
 

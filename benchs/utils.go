@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"fmt"
 	"os"
+	"strings"
 )
 
 type Model struct {
@@ -46,7 +47,40 @@ var (
 	OrmMaxIdle int
 	OrmMaxConn int
 	OrmSource  string
+	DebugMode  bool
 )
+
+// Convert ORMSource to DSN (dburl)
+func ConvertSourceToDSN() string {
+	template := "postgres://$(user):$(password)@$(host):5432/$(dbname)"
+
+	// Parse one-by-one instead of using REGEX because of performance issues
+	for _, option := range strings.Split(OrmSource, " ") {
+		k := strings.Split(option, "=")[0]
+		v := strings.Split(option, "=")[1]
+
+		if strings.Contains(template, "$("+k+")") {
+			template = strings.ReplaceAll(template, "$("+k+")", v)
+		} else {
+			template += "?" + option
+		}
+	}
+
+	return template
+}
+
+func SplitSource() map[string]string {
+	options := make(map[string]string)
+	// Split one-by-one instead of using REGEX because of performance issues
+	for _, option := range strings.Split(OrmSource, " ") {
+		k := strings.Split(option, "=")[0]
+		v := strings.Split(option, "=")[1]
+
+		options[k] = v
+	}
+
+	return options
+}
 
 func checkErr(err error) {
 	if err != nil {

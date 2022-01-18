@@ -47,6 +47,8 @@ orm-benchmark -multi=20 -orm=bun
 # ... and so on...
 ```
 
+**_Note: Also you can run `./run_benchmarks.sh` and you can get output like results.md format._**
+
 ### Results
 
 From [`results.md`](https://github.com/efectn/go-orm-benchmarks/tree/master/results.md):
@@ -131,11 +133,11 @@ From [`results.md`](https://github.com/efectn/go-orm-benchmarks/tree/master/resu
 ```
 
 ### To-Do List:
-- [ ] Remove or add prisma again.
+- [x] Remove or add prisma again.
 - [ ] Fix TBDs.
 - [ ] Add SqlBoiler.
 - [x] Add go-reform.
 - [ ] Clean and restructure codebase.
-- [ ] Add makefile to run benchmarks easily, run benchmarks inside of container.
+- [x] Add ~~makefile~~ script to run benchmarks easily, run benchmarks inside of container.
 - [ ] Add final benchmark results with details.
 - [ ] Tag release and be ready to compare ORMs performances.
