@@ -157,7 +157,7 @@ From [`results.md`](results.md):
 - [ ] Fix TBDs.
 - [ ] Add SqlBoiler.
 - [x] Add go-reform.
-- [ ] Clean and restructure codebase.
+- [x] Clean and restructure codebase.
 - [x] Add ~~makefile~~ script to run benchmarks easily, run benchmarks inside of container.
 - [ ] Add final benchmark results with details.
 - [ ] Tag release and be ready to compare ORMs performances.
