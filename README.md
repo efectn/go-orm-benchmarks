@@ -15,7 +15,6 @@ All package run in no-cache mode.
 - [sqlc](https://github.com/kyleconroy/sqlc) (partially)
 - [xorm](https://github.com/xormplus/xorm)
 - [ent](https://github.com/ent/ent)
-- [prisma](https://github.com/prisma/prisma-client-go)
 - [upper](https://github.com/upper/db)
 - [gorp](https://github.com/go-gorp/gorp)
 - [godb](https://github.com/samonzeweb/godb)
