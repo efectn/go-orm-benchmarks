@@ -2,10 +2,10 @@ package reform
 
 //go:generate reform
 
-// reform_models represents a row in reform_models table.
-//reform:reform_models
+// reform_models represents a row in models table.
+//reform:models
 type ReformModels struct {
-	ID      int32  `reform:"id,pk"`
+	ID      int    `reform:"id,pk"`
 	Name    string `reform:"name"`
 	Title   string `reform:"title"`
 	Fax     string `reform:"fax"`

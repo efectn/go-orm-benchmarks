@@ -204,11 +204,11 @@ func RunBenchmark(name string) {
 	if s, ok := benchmarks[name]; ok {
 		s.InitF()
 		if len(s.benchs) != benchmarksNums {
-			checkErr(fmt.Errorf("%s have not enough benchmarks", s.Brand))
+			CheckErr(fmt.Errorf("%s have not enough benchmarks", s.Brand))
 		}
 		s.run()
 	} else {
-		checkErr(fmt.Errorf("not found benchmark suite %s", s.Brand))
+		CheckErr(fmt.Errorf("not found benchmark suite %s", s.Brand))
 	}
 }
 

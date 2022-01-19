@@ -1,9 +1,6 @@
 package benchs
 
 import (
-	"context"
-	"log"
-
 	"database/sql"
 
 	"entgo.io/ent/dialect"
@@ -11,44 +8,18 @@ import (
 	"github.com/efectn/go-orm-benchmarks/benchs/ent"
 	"github.com/efectn/go-orm-benchmarks/benchs/ent/model"
 	_ "github.com/jackc/pgx/v4/stdlib"
-	_ "github.com/lib/pq"
 )
 
 var client *ent.Client
+var dbEnt *sql.DB
 
-func initDB4() {
-	db, err := sql.Open("pgx", OrmSource)
-	if err != nil {
-		log.Fatalf("failed opening connection to postgres: %v", err)
-	}
+func initDBEnt() {
+	// Run the auto migration.
+	_, err := dbEnt.Exec("DROP TABLE IF EXISTS models")
+	CheckErr(err)
 
-	// Create an ent.Driver from `db`.
-	drv := entsql.OpenDB(dialect.Postgres, db)
-
-	// Assign to client
-	client = ent.NewClient(ent.Driver(drv))
-
-	// Run the auto migration tool.
-	if _, err = db.Exec("DROP TABLE IF EXISTS models"); err != nil {
-		log.Fatal(err)
-	}
-
-	if err := client.Schema.Create(context.Background()); err != nil {
-		log.Fatalf("failed creating schema resources: %v", err)
-	}
-}
-
-func NewEntModel() ent.Model {
-	m := ent.Model{}
-	m.Name = "Orm Benchmark"
-	m.Title = "Just a Benchmark for fun"
-	m.Fax = "99909990"
-	m.Web = "http://blog.milkpod29.me"
-	m.Age = 100
-	m.Right = true
-	m.Counter = 1000
-
-	return m
+	err = client.Schema.Create(ctx)
+	CheckErr(err)
 }
 
 func init() {
@@ -59,14 +30,25 @@ func init() {
 		st.AddBenchmark("Update", 200*OrmMulti, EntUpdate)
 		st.AddBenchmark("Read", 200*OrmMulti, EntRead)
 		st.AddBenchmark("MultiRead limit 100", 200*OrmMulti, EntReadSlice)
+
+		var err error
+		dbEnt, err = sql.Open("pgx", OrmSource)
+		CheckErr(err)
+
+		// Create an ent.Driver from `dbEnt`.
+		drv := entsql.OpenDB(dialect.Postgres, dbEnt)
+
+		// Assign to client
+		client = ent.NewClient(ent.Driver(drv))
+
 	}
 }
 
 func EntInsert(b *B) {
-	var m ent.Model
-	wrapExecute(b, func() {
-		initDB4()
-		m = NewEntModel()
+	var m Model
+	WrapExecute(b, func() {
+		initDBEnt()
+		m = NewModelAlt()
 	})
 
 	for i := 0; i < b.N; i++ {
@@ -80,20 +62,17 @@ func EntInsert(b *B) {
 			SetCounter(m.Counter).
 			Save(ctx)
 
-		if err != nil {
-			log.Fatal(err)
-			b.FailNow()
-		}
+		CheckErr(err)
 	}
 }
 
 func EntInsertMulti(b *B) {
-	var ms []ent.Model
-	wrapExecute(b, func() {
-		initDB4()
-		ms = make([]ent.Model, 0, 100)
+	var ms []Model
+	WrapExecute(b, func() {
+		initDBEnt()
+		ms = make([]Model, 0, 100)
 		for i := 0; i < 100; i++ {
-			ms = append(ms, NewEntModel())
+			ms = append(ms, NewModelAlt())
 		}
 	})
 
@@ -110,19 +89,17 @@ func EntInsertMulti(b *B) {
 	}
 
 	for i := 0; i < b.N; i++ {
-		if _, err := client.Model.CreateBulk(bulk...).Save(ctx); err != nil {
-			log.Fatal(err)
-			b.FailNow()
-		}
+		_, err := client.Model.CreateBulk(bulk...).Save(ctx)
+		CheckErr(err)
 
 	}
 }
 
 func EntUpdate(b *B) {
-	var m ent.Model
-	wrapExecute(b, func() {
-		initDB4()
-		m = NewEntModel()
+	var m Model
+	WrapExecute(b, func() {
+		initDBEnt()
+		m = NewModelAlt()
 		_, err := client.Model.Create().
 			SetName(m.Name).
 			SetTitle(m.Title).
@@ -133,15 +110,12 @@ func EntUpdate(b *B) {
 			SetCounter(m.Counter).
 			Save(ctx)
 
-		if err != nil {
-			log.Fatal(err)
-			b.FailNow()
-		}
+		CheckErr(err)
 	})
 
 	for i := 0; i < b.N; i++ {
 		_, err := client.Model.Update().
-			Where(model.IDEQ(m.ID)).
+			Where(model.IDEQ(m.Id)).
 			SetName(m.Name).
 			SetTitle(m.Title).
 			SetFax(m.Fax).
@@ -151,18 +125,15 @@ func EntUpdate(b *B) {
 			SetCounter(m.Counter).
 			Save(ctx)
 
-		if err != nil {
-			log.Fatal(err)
-			b.FailNow()
-		}
+		CheckErr(err)
 	}
 }
 
 func EntRead(b *B) {
-	var m ent.Model
-	wrapExecute(b, func() {
-		initDB4()
-		m = NewEntModel()
+	var m Model
+	WrapExecute(b, func() {
+		initDBEnt()
+		m = NewModelAlt()
 		_, err := client.Model.Create().
 			SetName(m.Name).
 			SetTitle(m.Title).
@@ -173,27 +144,20 @@ func EntRead(b *B) {
 			SetCounter(m.Counter).
 			Save(ctx)
 
-		if err != nil {
-			log.Fatal(err)
-			b.FailNow()
-		}
+		CheckErr(err)
 	})
 
 	for i := 0; i < b.N; i++ {
-		m.ID = 1
-		_, err := client.Model.Query().Where(model.IDEQ(m.ID)).First(ctx)
-		if err != nil {
-			log.Fatal(err)
-			b.FailNow()
-		}
+		_, err := client.Model.Query().Where(model.IDEQ(1)).First(ctx)
+		CheckErr(err)
 	}
 }
 
 func EntReadSlice(b *B) {
-	var m ent.Model
-	wrapExecute(b, func() {
-		initDB4()
-		m = NewEntModel()
+	var m Model
+	WrapExecute(b, func() {
+		initDBEnt()
+		m = NewModelAlt()
 		for i := 0; i < 100; i++ {
 			_, err := client.Model.Create().
 				SetName(m.Name).
@@ -204,18 +168,14 @@ func EntReadSlice(b *B) {
 				SetRight(m.Right).
 				SetCounter(m.Counter).
 				Save(ctx)
-			if err != nil {
-				log.Fatal(err)
-				b.FailNow()
-			}
+
+			CheckErr(err)
 		}
 	})
 
 	for i := 0; i < b.N; i++ {
 		_, err := client.Model.Query().Where(model.IDGT(0)).Unique(false).Limit(100).All(ctx)
-		if err != nil {
-			log.Fatal(err)
-			b.FailNow()
-		}
+
+		CheckErr(err)
 	}
 }

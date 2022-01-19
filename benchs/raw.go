@@ -2,7 +2,6 @@ package benchs
 
 import (
 	"database/sql"
-	"fmt"
 	"strconv"
 )
 
@@ -32,34 +31,30 @@ func init() {
 
 func RawInsert(b *B) {
 	var m *Model
-	wrapExecute(b, func() {
-		initDB()
+	WrapExecute(b, func() {
+		InitDB()
 		m = NewModel()
 	})
 
 	for i := 0; i < b.N; i++ {
 		// pq dose not support the LastInsertId method.
 		_, err := raw.Exec(rawInsertSQL, m.Name, m.Title, m.Fax, m.Web, m.Age, m.Right, m.Counter)
-		if err != nil {
-			fmt.Println(err)
-			b.FailNow()
-		}
+		CheckErr(err, b)
 	}
 }
 
 func rawInsert(m *Model) error {
 	// pq dose not support the LastInsertId method.
 	_, err := raw.Exec(rawInsertSQL, m.Name, m.Title, m.Fax, m.Web, m.Age, m.Right, m.Counter)
-	if err != nil {
-		return err
-	}
+	CheckErr(err)
+
 	return nil
 }
 
 func RawInsertMulti(b *B) {
 	var ms []*Model
-	wrapExecute(b, func() {
-		initDB()
+	WrapExecute(b, func() {
+		InitDB()
 
 		ms = make([]*Model, 0, 100)
 		for i := 0; i < 100; i++ {
@@ -103,44 +98,32 @@ func RawInsertMulti(b *B) {
 		}
 		// pq dose not support the LastInsertId method.
 		_, err := raw.Exec(query, args...)
-		if err != nil {
-			fmt.Println(err)
-			b.FailNow()
-		}
+		CheckErr(err, b)
 	}
 }
 
 func RawUpdate(b *B) {
 	var m *Model
-	wrapExecute(b, func() {
-		initDB()
+	WrapExecute(b, func() {
+		InitDB()
 		m = NewModel()
 		err := rawInsert(m)
-		if err != nil {
-			fmt.Println(err)
-			b.FailNow()
-		}
+		CheckErr(err, b)
 	})
 
 	for i := 0; i < b.N; i++ {
 		_, err := raw.Exec(rawUpdateSQL, m.Name, m.Title, m.Fax, m.Web, m.Age, m.Right, m.Counter, m.Id)
-		if err != nil {
-			fmt.Println(err)
-			b.FailNow()
-		}
+		CheckErr(err, b)
 	}
 }
 
 func RawRead(b *B) {
 	var m *Model
-	wrapExecute(b, func() {
-		initDB()
+	WrapExecute(b, func() {
+		InitDB()
 		m = NewModel()
 		err := rawInsert(m)
-		if err != nil {
-			fmt.Println(err)
-			b.FailNow()
-		}
+		CheckErr(err, b)
 	})
 
 	for i := 0; i < b.N; i++ {
@@ -156,40 +139,28 @@ func RawRead(b *B) {
 			&mout.Right,
 			&mout.Counter,
 		)
-		if err != nil {
-			fmt.Println(err)
-			b.FailNow()
-		}
+		CheckErr(err, b)
 	}
 }
 
 func RawReadSlice(b *B) {
 	var m *Model
-	wrapExecute(b, func() {
+	WrapExecute(b, func() {
 		var err error
-		initDB()
+		InitDB()
 		m = NewModel()
 		for i := 0; i < 100; i++ {
 			err = rawInsert(m)
-			if err != nil {
-				fmt.Println(err)
-				b.FailNow()
-			}
+			CheckErr(err, b)
 		}
-		if err != nil {
-			fmt.Println(err)
-			b.FailNow()
-		}
+		CheckErr(err, b)
 	})
 
 	for i := 0; i < b.N; i++ {
 		var j int
 		models := make([]Model, 100)
 		rows, err := raw.Query(rawSelectMultiSQL)
-		if err != nil {
-			fmt.Println(err)
-			b.FailNow()
-		}
+		CheckErr(err, b)
 		for j = 0; rows.Next() && j < len(models); j++ {
 			err = rows.Scan(
 				&models[j].Id,
@@ -201,18 +172,12 @@ func RawReadSlice(b *B) {
 				&models[j].Right,
 				&models[j].Counter,
 			)
-			if err != nil {
-				fmt.Println(err)
-				b.FailNow()
-			}
+			CheckErr(err, b)
 		}
-		if err = rows.Err(); err != nil {
-			fmt.Println(err)
-			b.FailNow()
-		}
-		if err = rows.Close(); err != nil {
-			fmt.Println(err)
-			b.FailNow()
-		}
+		err = rows.Err()
+		CheckErr(err, b)
+
+		err = rows.Close()
+		CheckErr(err, b)
 	}
 }

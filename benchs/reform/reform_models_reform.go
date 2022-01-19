@@ -20,7 +20,7 @@ func (v *reformModelsTableType) Schema() string {
 	return v.s.SQLSchema
 }
 
-// Name returns a view or table name in SQL database ("reform_models").
+// Name returns a view or table name in SQL database ("models").
 func (v *reformModelsTableType) Name() string {
 	return v.s.SQLName
 }
@@ -54,13 +54,13 @@ func (v *reformModelsTableType) PKColumnIndex() uint {
 	return uint(v.s.PKFieldIndex)
 }
 
-// ReformModelsTable represents reform_models view or table in SQL database.
+// ReformModelsTable represents models view or table in SQL database.
 var ReformModelsTable = &reformModelsTableType{
 	s: parse.StructInfo{
 		Type:    "ReformModels",
-		SQLName: "reform_models",
+		SQLName: "models",
 		Fields: []parse.FieldInfo{
-			{Name: "ID", Type: "int32", Column: "id"},
+			{Name: "ID", Type: "int", Column: "id"},
 			{Name: "Name", Type: "string", Column: "name"},
 			{Name: "Title", Type: "string", Column: "title"},
 			{Name: "Fax", Type: "string", Column: "fax"},

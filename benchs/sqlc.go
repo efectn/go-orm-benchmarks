@@ -28,8 +28,8 @@ func init() {
 func SqlcInsert(b *B) {
 	var m *Model
 
-	wrapExecute(b, func() {
-		initDB()
+	WrapExecute(b, func() {
+		InitDB()
 		m = NewModel()
 	})
 
@@ -45,10 +45,7 @@ func SqlcInsert(b *B) {
 			Right:   m.Right,
 			Counter: m.Counter,
 		})
-		if err != nil {
-			fmt.Println(err)
-			b.FailNow()
-		}
+		CheckErr(err, b)
 
 		m = &Model{
 			Id:      int(created.ID),
@@ -70,8 +67,8 @@ func SqlcInsertMulti(b *B) {
 func SqlcUpdate(b *B) {
 	var m *Model
 
-	wrapExecute(b, func() {
-		initDB()
+	WrapExecute(b, func() {
+		InitDB()
 		m = NewModel()
 		created, err := sqlcQueries.CreateModel(ctx, db.CreateModelParams{
 			Name:    m.Name,
@@ -82,10 +79,7 @@ func SqlcUpdate(b *B) {
 			Right:   m.Right,
 			Counter: m.Counter,
 		})
-		if err != nil {
-			fmt.Println(err)
-			b.FailNow()
-		}
+		CheckErr(err, b)
 
 		m = &Model{
 			Id:      int(created.ID),
@@ -100,7 +94,7 @@ func SqlcUpdate(b *B) {
 	})
 
 	for i := 0; i < b.N; i++ {
-		if err := sqlcQueries.UpdateModel(ctx, db.UpdateModelParams{
+		err := sqlcQueries.UpdateModel(ctx, db.UpdateModelParams{
 			Name:    m.Name,
 			Title:   m.Title,
 			Fax:     m.Fax,
@@ -109,18 +103,16 @@ func SqlcUpdate(b *B) {
 			Right:   m.Right,
 			Counter: m.Counter,
 			ID:      int32(m.Id),
-		}); err != nil {
-			fmt.Println(err)
-			b.FailNow()
-		}
+		})
+		CheckErr(err, b)
 	}
 }
 
 func SqlcRead(b *B) {
 	var m *Model
 
-	wrapExecute(b, func() {
-		initDB()
+	WrapExecute(b, func() {
+		InitDB()
 		m = NewModel()
 		created, err := sqlcQueries.CreateModel(ctx, db.CreateModelParams{
 			Name:    m.Name,
@@ -131,10 +123,7 @@ func SqlcRead(b *B) {
 			Right:   m.Right,
 			Counter: m.Counter,
 		})
-		if err != nil {
-			fmt.Println(err)
-			b.FailNow()
-		}
+		CheckErr(err, b)
 
 		m = &Model{
 			Id:      int(created.ID),
@@ -150,10 +139,7 @@ func SqlcRead(b *B) {
 
 	for i := 0; i < b.N; i++ {
 		readed, err := sqlcQueries.GetModel(ctx, int32(m.Id))
-		if err != nil {
-			fmt.Println(err)
-			b.FailNow()
-		}
+		CheckErr(err, b)
 
 		m = &Model{
 			Id:      int(readed.ID),
@@ -171,8 +157,8 @@ func SqlcRead(b *B) {
 func SqlcReadSlice(b *B) {
 	var m *Model
 
-	wrapExecute(b, func() {
-		initDB()
+	WrapExecute(b, func() {
+		InitDB()
 		m = NewModel()
 		for i := 0; i < 100; i++ {
 			m.Id = 0
@@ -186,10 +172,7 @@ func SqlcReadSlice(b *B) {
 				Right:   m.Right,
 				Counter: m.Counter,
 			})
-			if err != nil {
-				fmt.Println(err)
-				b.FailNow()
-			}
+			CheckErr(err, b)
 
 			m = &Model{
 				Id:      int(created.ID),
@@ -209,10 +192,7 @@ func SqlcReadSlice(b *B) {
 			ID:    0,
 			Limit: 100,
 		})
-		if err != nil {
-			fmt.Println(err)
-			b.FailNow()
-		}
+		CheckErr(err, b)
 
 		models := make([]*Model, len(sqlcModels))
 

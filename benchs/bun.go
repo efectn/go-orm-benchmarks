@@ -3,7 +3,6 @@ package benchs
 import (
 	"context"
 	"database/sql"
-	"fmt"
 
 	"github.com/uptrace/bun"
 	"github.com/uptrace/bun/dialect/pgdialect"
@@ -27,30 +26,29 @@ func init() {
 		sqldb := sql.OpenDB(pgdriver.NewConnector(pgdriver.WithDSN(ConvertSourceToDSN())))
 		sqldb.SetMaxOpenConns(OrmMaxConn)
 		sqldb.SetMaxIdleConns(OrmMaxIdle)
+
 		bundb = bun.NewDB(sqldb, pgdialect.New())
 	}
 }
 
 func BunInsert(b *B) {
 	var m *Model
-	wrapExecute(b, func() {
-		initDB()
+	WrapExecute(b, func() {
+		InitDB()
 		m = NewModel()
 	})
 
 	for i := 0; i < b.N; i++ {
 		m.Id = 0
-		if _, err := bundb.NewInsert().Model(m).Exec(ctx); err != nil {
-			fmt.Println(err)
-			b.FailNow()
-		}
+		_, err := bundb.NewInsert().Model(m).Exec(ctx)
+		CheckErr(err, b)
 	}
 }
 
 func BunInsertMulti(b *B) {
 	var ms []*Model
-	wrapExecute(b, func() {
-		initDB()
+	WrapExecute(b, func() {
+		InitDB()
 		ms = make([]*Model, 0, 100)
 		for i := 0; i < 100; i++ {
 			ms = append(ms, NewModel())
@@ -61,74 +59,63 @@ func BunInsertMulti(b *B) {
 		for _, m := range ms {
 			m.Id = 0
 		}
-		if _, err := bundb.NewInsert().Model(&ms).Exec(ctx); err != nil {
-			fmt.Println(err)
-			b.FailNow()
-		}
+
+		_, err := bundb.NewInsert().Model(&ms).Exec(ctx)
+		CheckErr(err, b)
 	}
 }
 
 func BunUpdate(b *B) {
 	var m *Model
-	wrapExecute(b, func() {
-		initDB()
+	WrapExecute(b, func() {
+		InitDB()
 		m = NewModel()
-		if _, err := bundb.NewInsert().Model(m).Exec(ctx); err != nil {
-			fmt.Println(err)
-			b.FailNow()
-		}
+
+		_, err := bundb.NewInsert().Model(m).Exec(ctx)
+		CheckErr(err, b)
 	})
 
 	for i := 0; i < b.N; i++ {
-		if _, err := bundb.NewUpdate().Model(m).WherePK().Exec(ctx); err != nil {
-			fmt.Println(err)
-			b.FailNow()
-		}
+		_, err := bundb.NewUpdate().Model(m).WherePK().Exec(ctx)
+		CheckErr(err, b)
 	}
 }
 
 func BunRead(b *B) {
 	var m *Model
-	wrapExecute(b, func() {
-		initDB()
+	WrapExecute(b, func() {
+		InitDB()
 		m = NewModel()
-		if _, err := bundb.NewInsert().Model(m).Exec(ctx); err != nil {
-			fmt.Println(err)
-			b.FailNow()
-		}
+
+		_, err := bundb.NewInsert().Model(m).Exec(ctx)
+		CheckErr(err, b)
 	})
 
 	for i := 0; i < b.N; i++ {
-		if err := bundb.NewSelect().Model(m).Scan(ctx); err != nil {
-			fmt.Println(err)
-			b.FailNow()
-		}
+		err := bundb.NewSelect().Model(m).Scan(ctx)
+		CheckErr(err, b)
 	}
 }
 
 func BunReadSlice(b *B) {
 	var m *Model
-	wrapExecute(b, func() {
-		initDB()
+	WrapExecute(b, func() {
+		InitDB()
 		m = NewModel()
 		for i := 0; i < 100; i++ {
 			m.Id = 0
-			if _, err := bundb.NewInsert().Model(m).Exec(ctx); err != nil {
-				fmt.Println(err)
-				b.FailNow()
-			}
+			_, err := bundb.NewInsert().Model(m).Exec(ctx)
+			CheckErr(err, b)
 		}
 	})
 
 	for i := 0; i < b.N; i++ {
 		var models []*Model
-		if err := bundb.NewSelect().
+		err := bundb.NewSelect().
 			Model(&models).
 			Where("id > ?", 0).
 			Limit(100).
-			Scan(ctx); err != nil {
-			fmt.Println(err)
-			b.FailNow()
-		}
+			Scan(ctx)
+		CheckErr(err, b)
 	}
 }

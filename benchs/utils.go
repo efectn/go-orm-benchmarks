@@ -2,45 +2,9 @@ package benchs
 
 import (
 	"database/sql"
-	"fmt"
-	"os"
+	"log"
 	"strings"
 )
-
-type Model struct {
-	Id      int `orm:"auto" gorm:"primary_key" db:"id"`
-	Name    string
-	Title   string
-	Fax     string
-	Web     string
-	Age     int
-	Right   bool
-	Counter int64
-}
-
-type ModelUpper struct {
-	Id      uint   `db:"id,omitempty"`
-	Name    string `db:"name"`
-	Title   string `db:"title"`
-	Fax     string `db:"fax"`
-	Web     string `db:"web"`
-	Age     int    `db:"age"`
-	Right   bool   `db:"right"`
-	Counter int64  `db:"counter"`
-}
-
-func NewModel() *Model {
-	m := new(Model)
-	m.Name = "Orm Benchmark"
-	m.Title = "Just a Benchmark for fun"
-	m.Fax = "99909990"
-	m.Web = "http://blog.milkpod29.me"
-	m.Age = 100
-	m.Right = true
-	m.Counter = 1000
-
-	return m
-}
 
 var (
 	OrmMulti   int
@@ -82,21 +46,24 @@ func SplitSource() map[string]string {
 	return options
 }
 
-func checkErr(err error) {
+func CheckErr(err error, b ...*B) {
 	if err != nil {
-		fmt.Println(err)
-		os.Exit(2)
+		log.Fatalf("[go-orm-benchmarks] ERR: %v", err)
+
+		if len(b) > 0 {
+			b[0].FailNow()
+		}
 	}
 }
 
-func wrapExecute(b *B, cbk func()) {
+func WrapExecute(b *B, cbk func()) {
 	b.StopTimer()
 	defer b.StartTimer()
 	cbk()
 	b.ResetTimer()
 }
 
-func initDB() {
+func InitDB() {
 	sqls := [][]string{
 		{
 			`DROP TABLE IF EXISTS models;`,
@@ -113,8 +80,8 @@ func initDB() {
 			) WITH (OIDS=FALSE);`,
 		},
 		{
-			`DROP TABLE IF EXISTS models_upper;`,
-			`CREATE TABLE models_upper (
+			`DROP TABLE IF EXISTS model5;`,
+			`CREATE TABLE model5 (
 			id SERIAL NOT NULL,
 			name text NOT NULL,
 			title text NOT NULL,
@@ -122,68 +89,25 @@ func initDB() {
 			web text NOT NULL,
 			age integer NOT NULL,
 			"right" boolean NOT NULL,
-			counter bigint NOT NULL,
-			CONSTRAINT models_upper_pkey PRIMARY KEY (id)
-			) WITH (OIDS=FALSE);`,
-		},
-		{
-			`DROP TABLE IF EXISTS models_godb;`,
-			`CREATE TABLE models_godb (
-			id SERIAL NOT NULL,
-			name text NOT NULL,
-			title text NOT NULL,
-			fax text NOT NULL,
-			web text NOT NULL,
-			age integer NOT NULL,
-			"right" boolean NOT NULL,
-			counter bigint NOT NULL,
-			CONSTRAINT models_godb_pkey PRIMARY KEY (id)
-			) WITH (OIDS=FALSE);`,
-		},
-		{
-			`DROP TABLE IF EXISTS pop_models;`,
-			`CREATE TABLE pop_models (
-			id SERIAL NOT NULL,
-			name text NOT NULL,
-			title text NOT NULL,
-			fax text NOT NULL,
-			web text NOT NULL,
-			age integer NOT NULL,
-			"right" boolean NOT NULL,
-			counter bigint NOT NULL,
-			CONSTRAINT pop_models_pkey PRIMARY KEY (id)
-			) WITH (OIDS=FALSE);`,
-		},
-		{
-			`DROP TABLE IF EXISTS reform_models;`,
-			`CREATE TABLE reform_models (
-			id SERIAL NOT NULL,
-			name text NOT NULL,
-			title text NOT NULL,
-			fax text NOT NULL,
-			web text NOT NULL,
-			age integer NOT NULL,
-			"right" boolean NOT NULL,
-			counter bigint NOT NULL,
-			CONSTRAINT reform_models_pkey PRIMARY KEY (id)
+			counter bigint NOT NULL
 			) WITH (OIDS=FALSE);`,
 		},
 	}
 
 	DB, err := sql.Open("postgres", OrmSource)
-	checkErr(err)
+	CheckErr(err)
 	defer func() {
 		err := DB.Close()
-		checkErr(err)
+		CheckErr(err)
 	}()
 
 	err = DB.Ping()
-	checkErr(err)
+	CheckErr(err)
 
 	for _, sql := range sqls {
 		for _, line := range sql {
 			_, err = DB.Exec(line)
-			checkErr(err)
+			CheckErr(err)
 		}
 	}
 

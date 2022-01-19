@@ -3,68 +3,10 @@ package benchs
 import (
 	"fmt"
 
-	"database/sql"
-
 	"xorm.io/xorm"
 )
 
 var xo *xorm.Session
-
-func initDB2() {
-
-	sqls := []string{
-		`DROP TABLE IF EXISTS xorm_model;`,
-		`CREATE TABLE xorm_model (
-		id integer NOT NULL,
-		name text NOT NULL,
-		title text NOT NULL,
-		fax text NOT NULL,
-		web text NOT NULL,
-		age integer NOT NULL,
-		"right" boolean NOT NULL,
-		counter bigint NOT NULL
-		) WITH (OIDS=FALSE);`,
-	}
-
-	DB, err := sql.Open("postgres", OrmSource)
-	checkErr(err)
-	defer func() {
-		err := DB.Close()
-		checkErr(err)
-	}()
-
-	err = DB.Ping()
-	checkErr(err)
-
-	for _, line := range sqls {
-		_, err = DB.Exec(line)
-		checkErr(err)
-	}
-}
-
-type XormModel struct {
-	Id      int
-	Name    string
-	Title   string
-	Fax     string
-	Web     string
-	Age     int
-	Right   bool
-	Counter int64
-}
-
-func NewXormModel() *XormModel {
-	m := new(XormModel)
-	m.Name = "Orm Benchmark"
-	m.Title = "Just a Benchmark for fun"
-	m.Fax = "99909990"
-	m.Web = "http://blog.milkpod29.me"
-	m.Age = 100
-	m.Right = true
-	m.Counter = 1000
-
-	return m
-}
 
 func init() {
 	st := NewSuite("xorm")
@@ -76,97 +18,80 @@ func init() {
 		st.AddBenchmark("MultiRead limit 100", 200*OrmMulti, XormReadSlice)
 
 		engine, err := xorm.NewEngine("postgres", OrmSource)
-		if err != nil {
-			fmt.Print(err)
-		}
-
-		// engine.SetMaxIdleConns(ORM_MAX_IDLE)
-		// engine.SetMaxOpenConns(ORM_MAX_CONN)
+		CheckErr(err)
 
 		xo = engine.NewSession()
 	}
 }
 
 func XormInsert(b *B) {
-	var m *XormModel
-	wrapExecute(b, func() {
-		initDB2()
-		m = NewXormModel()
+	var m *Model5
+	WrapExecute(b, func() {
+		InitDB()
+		m = NewModel5()
 	})
 
 	for i := 0; i < b.N; i++ {
-		m.Id = 0
-		if _, err := xo.Insert(m); err != nil {
-			fmt.Println(err)
-			b.FailNow()
-		}
+		m.ID = 0
+		_, err := xo.Insert(m)
+		CheckErr(err, b)
 	}
 }
 
 func XormInsertMulti(b *B) {
-	var ms []*XormModel
-	wrapExecute(b, func() {
-		initDB2()
-		ms = make([]*XormModel, 0, 100)
+	var ms []*Model5
+	WrapExecute(b, func() {
+		InitDB()
+		ms = make([]*Model5, 0, 100)
 		for i := 0; i < 100; i++ {
-			ms = append(ms, NewXormModel())
+			ms = append(ms, NewModel5())
 		}
 	})
 	for i := 0; i < b.N; i++ {
 		for _, m := range ms {
-			m.Id = 0
+			m.ID = 0
 		}
-		if _, err := xo.InsertMulti(&ms); err != nil {
-			fmt.Println(err)
-			b.FailNow()
-		}
+		_, err := xo.InsertMulti(&ms)
+		CheckErr(err, b)
 	}
 }
 
 func XormUpdate(b *B) {
-	var m *XormModel
-	wrapExecute(b, func() {
-		initDB2()
-		m = NewXormModel()
-		if _, err := xo.Insert(m); err != nil {
-			fmt.Println(err)
-			b.FailNow()
-		}
+	var m *Model5
+	WrapExecute(b, func() {
+		InitDB()
+		m = NewModel5()
+		_, err := xo.Insert(m)
+		CheckErr(err, b)
 	})
 
 	for i := 0; i < b.N; i++ {
-		if _, err := xo.Update(m); err != nil {
-			fmt.Println(err)
-			b.FailNow()
-		}
+		_, err := xo.Update(m)
+		CheckErr(err, b)
 	}
 }
 
 func XormRead(b *B) {
-	var m *XormModel
-	wrapExecute(b, func() {
-		initDB2()
-		m = NewXormModel()
-		if _, err := xo.Insert(m); err != nil {
-			fmt.Println(err)
-			b.FailNow()
-		}
+	var m *Model5
+	WrapExecute(b, func() {
+		InitDB()
+		m = NewModel5()
+		_, err := xo.Insert(m)
+		CheckErr(err, b)
 	})
 
 	for i := 0; i < b.N; i++ {
-		if _, err := xo.Get(m); err != nil {
-			fmt.Println(err)
-			b.FailNow()
-		}
+		_, err := xo.Get(m)
+		CheckErr(err, b)
 	}
 }
 
 func XormReadSlice(_ *B) {
 	panic(fmt.Errorf("doesn't work"))
-	//var m *XormModel
-	//wrapExecute(b, func() {
-	//	initDB2()
-	//	m = NewXormModel()
+	//var m *Model5
+	//WrapExecute(b, func() {
+	//	InitDB()
+	//	m = NewModel5()
 	//	for i := 0; i < 100; i++ {
 	//		m.Id = 0
 	//		if _, err := xo.Insert(m); err != nil {
@@ -178,7 +103,7 @@ func XormReadSlice(_ *B) {
 	//
 	//for i := 0; i < b.N; i++ {
 	//	panic(fmt.Errorf("doesn't work"))
-	//	var models []XormModel
+	//	var models []Model5
 	//	if err := xo.Table("xorm_model").Where("id > ?", 0).Limit(100).Find(&models); err != nil {
 	//		fmt.Println(err)
 	//		b.FailNow()

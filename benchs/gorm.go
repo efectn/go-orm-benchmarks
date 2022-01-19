@@ -1,8 +1,6 @@
 package benchs
 
 import (
-	"fmt"
-
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
@@ -18,6 +16,7 @@ func init() {
 		st.AddBenchmark("Update", 200*OrmMulti, GormUpdate)
 		st.AddBenchmark("Read", 200*OrmMulti, GormRead)
 		st.AddBenchmark("MultiRead limit 100", 200*OrmMulti, GormReadSlice)
+
 		var err error
 		gormdb, err = gorm.Open(postgres.New(postgres.Config{
 			DSN:                  OrmSource,
@@ -27,32 +26,28 @@ func init() {
 			PrepareStmt:            false,
 			Logger:                 logger.Default.LogMode(logger.Silent),
 		})
-		if err != nil {
-			fmt.Println(err)
-		}
+		CheckErr(err)
 	}
 }
 
 func GormInsert(b *B) {
 	var m *Model
-	wrapExecute(b, func() {
-		initDB()
+	WrapExecute(b, func() {
+		InitDB()
 		m = NewModel()
 	})
 
 	for i := 0; i < b.N; i++ {
 		m.Id = 0
-		if err := gormdb.Create(m).Error; err != nil {
-			fmt.Println(err)
-			b.FailNow()
-		}
+		err := gormdb.Create(m).Error
+		CheckErr(err, b)
 	}
 }
 
 func GormInsertMulti(b *B) {
 	var ms []*Model
-	wrapExecute(b, func() {
-		initDB()
+	WrapExecute(b, func() {
+		InitDB()
 		ms = make([]*Model, 0, 100)
 		for i := 0; i < 100; i++ {
 			ms = append(ms, NewModel())
@@ -63,70 +58,56 @@ func GormInsertMulti(b *B) {
 		for _, m := range ms {
 			m.Id = 0
 		}
-		if err := gormdb.Create(&ms).Error; err != nil {
-			fmt.Println(err)
-			b.FailNow()
-		}
+		err := gormdb.Create(&ms).Error
+		CheckErr(err, b)
 	}
 }
 
 func GormUpdate(b *B) {
 	var m *Model
-	wrapExecute(b, func() {
-		initDB()
+	WrapExecute(b, func() {
+		InitDB()
 		m = NewModel()
-		if err := gormdb.Create(m).Error; err != nil {
-			fmt.Println(err)
-			b.FailNow()
-		}
+		err := gormdb.Create(m).Error
+		CheckErr(err, b)
 	})
 
 	for i := 0; i < b.N; i++ {
-		if err := gormdb.Model(m).Updates(m).Error; err != nil {
-			fmt.Println(err)
-			b.FailNow()
-		}
+		err := gormdb.Model(m).Updates(m).Error
+		CheckErr(err, b)
 	}
 }
 
 func GormRead(b *B) {
 	var m *Model
-	wrapExecute(b, func() {
-		initDB()
+	WrapExecute(b, func() {
+		InitDB()
 		m = NewModel()
-		if err := gormdb.Create(m).Error; err != nil {
-			fmt.Println(err)
-			b.FailNow()
-		}
+		err := gormdb.Create(m).Error
+		CheckErr(err, b)
 	})
 
 	for i := 0; i < b.N; i++ {
-		if err := gormdb.Take(m).Error; err != nil {
-			fmt.Println(err)
-			b.FailNow()
-		}
+		err := gormdb.Take(m).Error
+		CheckErr(err, b)
 	}
 }
 
 func GormReadSlice(b *B) {
 	var m *Model
-	wrapExecute(b, func() {
-		initDB()
+	WrapExecute(b, func() {
+		InitDB()
 		m = NewModel()
 		for i := 0; i < 100; i++ {
 			m.Id = 0
-			if err := gormdb.Create(m).Error; err != nil {
-				fmt.Println(err)
-				b.FailNow()
-			}
+			err := gormdb.Create(m).Error
+			CheckErr(err, b)
 		}
 	})
 
 	for i := 0; i < b.N; i++ {
 		var models []*Model
-		if err := gormdb.Where("id > ?", 0).Limit(100).Find(&models).Error; err != nil {
-			fmt.Println(err)
-			b.FailNow()
-		}
+		err := gormdb.Where("id > ?", 0).Limit(100).Find(&models).Error
+		CheckErr(err, b)
 	}
 }
