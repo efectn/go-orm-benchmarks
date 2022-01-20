@@ -1,5 +1,7 @@
 package benchs
 
+import models "github.com/efectn/go-orm-benchmarks/benchs/sqlboiler"
+
 // Model for GORM, GORP, Beego, Bun, Pg, Raw, Sqlc, Ent
 type Model struct {
 	Id      int `orm:"auto" gorm:"primary_key" db:"id"`
@@ -147,6 +149,20 @@ type Model5 struct {
 
 func NewModel5() *Model5 {
 	m := new(Model5)
+	m.Name = "Orm Benchmark"
+	m.Title = "Just a Benchmark for fun"
+	m.Fax = "99909990"
+	m.Web = "http://blog.milkpod29.me"
+	m.Age = 100
+	m.Right = true
+	m.Counter = 1000
+
+	return m
+}
+
+// Model for Sqlboiler
+func NewModel6() *models.Model {
+	m := new(models.Model)
 	m.Name = "Orm Benchmark"
 	m.Title = "Just a Benchmark for fun"
 	m.Fax = "99909990"

@@ -4,6 +4,8 @@ import (
 	"database/sql"
 	"log"
 	"strings"
+
+	_ "github.com/jackc/pgx/v4/stdlib"
 )
 
 var (
@@ -94,7 +96,7 @@ func InitDB() {
 		},
 	}
 
-	DB, err := sql.Open("postgres", OrmSource)
+	DB, err := sql.Open("pgx", OrmSource)
 	CheckErr(err)
 	defer func() {
 		err := DB.Close()
