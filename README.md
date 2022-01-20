@@ -154,7 +154,7 @@ From [`results.md`](results.md):
 ### To-Do List:
 
 - [x] Remove or add prisma again.
-- [ ] Fix TBDs.
+- [x] Fix TBDs.
 - [ ] Add SqlBoiler.
 - [x] Add go-reform.
 - [x] Clean and restructure codebase.

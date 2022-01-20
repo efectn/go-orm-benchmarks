@@ -39,21 +39,7 @@ func XormInsert(b *B) {
 }
 
 func XormInsertMulti(b *B) {
-	var ms []*Model5
-	WrapExecute(b, func() {
-		InitDB()
-		ms = make([]*Model5, 0, 100)
-		for i := 0; i < 100; i++ {
-			ms = append(ms, NewModel5())
-		}
-	})
-	for i := 0; i < b.N; i++ {
-		for _, m := range ms {
-			m.ID = 0
-		}
-		_, err := xo.InsertMulti(&ms)
-		CheckErr(err, b)
-	}
+	panic(fmt.Errorf("doesn't support bulk-insert"))
 }
 
 func XormUpdate(b *B) {
@@ -86,27 +72,21 @@ func XormRead(b *B) {
 	}
 }
 
-func XormReadSlice(_ *B) {
-	panic(fmt.Errorf("doesn't work"))
-	//var m *Model5
-	//WrapExecute(b, func() {
-	//	InitDB()
-	//	m = NewModel5()
-	//	for i := 0; i < 100; i++ {
-	//		m.Id = 0
-	//		if _, err := xo.Insert(m); err != nil {
-	//			fmt.Println(err)
-	//			b.FailNow()
-	//		}
-	//	}
-	//})
-	//
-	//for i := 0; i < b.N; i++ {
-	//	panic(fmt.Errorf("doesn't work"))
-	//	var models []Model5
-	//	if err := xo.Table("xorm_model").Where("id > ?", 0).Limit(100).Find(&models); err != nil {
-	//		fmt.Println(err)
-	//		b.FailNow()
-	//	}
-	//}
+func XormReadSlice(b *B) {
+	var m *Model5
+	WrapExecute(b, func() {
+		InitDB()
+		m = NewModel5()
+		for i := 0; i < 100; i++ {
+			m.ID = 0
+			_, err := xo.Insert(m)
+			CheckErr(err, b)
+		}
+	})
+
+	for i := 0; i < b.N; i++ {
+		var models []*Model5
+		err := xo.Table("model5").Where("id > 0").Limit(100).Find(&models)
+		CheckErr(err, b)
+	}
 }

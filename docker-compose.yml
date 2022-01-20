@@ -24,7 +24,7 @@ services:
       - default
     links:
       - postgres  
-
+  
   #pgweb:
   #  restart: always 
   #  image: sosedoff/pgweb

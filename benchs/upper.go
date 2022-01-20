@@ -1,8 +1,6 @@
 package benchs
 
 import (
-	"fmt"
-
 	db "github.com/upper/db/v4"
 	"github.com/upper/db/v4/adapter/postgresql"
 )
@@ -51,7 +49,25 @@ func UpperInsert(b *B) {
 }
 
 func UpperInsertMulti(b *B) {
-	panic(fmt.Errorf("TBD"))
+	var m *Model4
+	WrapExecute(b, func() {
+		InitDB()
+		m = NewModel4()
+	})
+
+	for i := 1; i < b.N+1; i++ {
+		batch := upper.SQL().InsertInto("models").Columns("name", "title", "fax", "web", "age", "right", "counter").Batch(100)
+
+		go func() {
+			for i := 0; i < 100; i++ {
+				batch.Values(m.Name, m.Title, m.Fax, m.Web, m.Age, m.Right, m.Counter)
+			}
+			batch.Done()
+		}()
+
+		err := batch.Wait()
+		CheckErr(err, b)
+	}
 }
 
 func UpperUpdate(b *B) {

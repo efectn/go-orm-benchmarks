@@ -61,7 +61,7 @@ func SqlcInsert(b *B) {
 }
 
 func SqlcInsertMulti(b *B) {
-	panic(fmt.Errorf("TBD"))
+	panic(fmt.Errorf("doesn't support bulk-insert"))
 }
 
 func SqlcUpdate(b *B) {

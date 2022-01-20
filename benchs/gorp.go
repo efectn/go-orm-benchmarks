@@ -2,6 +2,7 @@ package benchs
 
 import (
 	"database/sql"
+	"fmt"
 
 	_ "github.com/jackc/pgx/v4/stdlib"
 	_ "github.com/lib/pq"
@@ -14,7 +15,7 @@ func init() {
 	st := NewSuite("gorp")
 	st.InitF = func() {
 		st.AddBenchmark("Insert", 200*OrmMulti, GorpInsert)
-		st.AddBenchmark("MultiInsert 100 row", 200*OrmMulti, EntInsertMulti)
+		st.AddBenchmark("MultiInsert 100 row", 200*OrmMulti, GorpInsertMulti)
 		st.AddBenchmark("Update", 200*OrmMulti, GorpUpdate)
 		st.AddBenchmark("Read", 200*OrmMulti, GorpRead)
 		st.AddBenchmark("MultiRead limit 100", 200*OrmMulti, GorpReadSlice)
@@ -24,7 +25,6 @@ func init() {
 
 		gorp = &gorpware.DbMap{Db: db, Dialect: gorpware.PostgresDialect{}}
 
-		InitDB()
 		gorp.AddTableWithName(Model{}, "models").SetKeys(true, "Id")
 	}
 }
@@ -43,20 +43,7 @@ func GorpInsert(b *B) {
 }
 
 func GorpInsertMulti(b *B) {
-	var ms []Model
-	WrapExecute(b, func() {
-		InitDB()
-		ms = make([]Model, 0, 100)
-		for i := 0; i < 100; i++ {
-			ms = append(ms, NewModelAlt())
-		}
-	})
-
-	for i := 0; i < b.N; i++ {
-		err := gorp.Insert(&ms)
-		CheckErr(err, b)
-
-	}
+	panic(fmt.Errorf("doesn't support bulk-insert"))
 }
 
 func GorpUpdate(b *B) {
