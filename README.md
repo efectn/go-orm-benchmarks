@@ -12,7 +12,7 @@ All package run in no-cache mode.
 - [bun](https://github.com/uptrace/bun)
 - [gorm 2](https://github.com/go-gorm/gorm)
 - [pg](https://github.com/go-pg/pg)
-- [sqlc](https://github.com/kyleconroy/sqlc) (partially)
+- [sqlc](https://github.com/kyleconroy/sqlc)
 - [xorm](https://github.com/xormplus/xorm)
 - [ent](https://github.com/ent/ent)
 - [upper](https://github.com/upper/db)
