@@ -8,6 +8,6 @@ jobs:
     runs-on: ${{ matrix.platform }}
     steps:
     - name: Fetch Repository
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
     - name: Run Benchmark
-      run: ./run_benchmark.sh
+      run: ./run_benchmarks.sh
