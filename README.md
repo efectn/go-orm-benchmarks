@@ -45,10 +45,10 @@ go-orm-benchmarks -multi=15 -orm=bun
 
 #### Benchmark Enviroment:
 
-- go version go1.17.6 linux/amd64
+- go version go1.18.1 linux/amd64
 - Intel(R) Core(TM) i5-5200U CPU @ 2.20GHz
 - 16GB 1600MHz memory
-- PostgreSQL 14.1
+- PostgreSQL 14.2
 
 From [`results.md`](results.md):
 
@@ -148,14 +148,8 @@ From [`results.md`](results.md):
 
 ### To-Do List:
 
-- [x] Remove or add prisma again.
-- [x] Fix TBDs.
-- [x] Add SqlBoiler.
-- [x] Add go-reform.
-- [x] Clean and restructure codebase.
-- [x] Add ~~makefile~~ script to run benchmarks easily, run benchmarks inside of container.
-- [x] Add final benchmark results with details.
-- [x] Tag release and be ready to compare ORMs performances.
+- [ ] Add prisma or new ORMs?
+- [ ] Use benchmark tools of `testing` as benchmark suite.
 
 ### License
 

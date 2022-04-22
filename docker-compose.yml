@@ -22,5 +22,7 @@ services:
       dockerfile: Dockerfile
     networks:
       - default
+    depends_on:
+      - postgres
     links:
       - postgres  
