@@ -1,8 +1,6 @@
 package benchs
 
 import (
-	"fmt"
-
 	"xorm.io/xorm"
 )
 
@@ -39,7 +37,19 @@ func XormInsert(b *B) {
 }
 
 func XormInsertMulti(b *B) {
-	panic(fmt.Errorf("doesn't support bulk-insert"))
+	var ms []*Model5
+	WrapExecute(b, func() {
+		InitDB()
+		ms = make([]*Model5, 0, 100)
+		for i := 0; i < 100; i++ {
+			ms = append(ms, NewModel5())
+		}
+	})
+
+	for i := 0; i < b.N; i++ {
+		_, err := xo.Insert(&ms)
+		CheckErr(err, b)
+	}
 }
 
 func XormUpdate(b *B) {
