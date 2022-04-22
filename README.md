@@ -22,6 +22,7 @@ All package run in no-cache mode.
 - [pop](https://github.com/gobuffalo/pop)
 - [rel](https://github.com/go-rel/rel)
 - [reform](https://github.com/go-reform/reform)
+- [sqlboiler](https://github.com/volatiletech/sqlboiler)
 
 See [`go.mod`](go.mod) for their latest versions.
 
