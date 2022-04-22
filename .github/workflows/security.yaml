@@ -1,0 +1,10 @@
+on: [push, pull_request]
+name: GoSec
+jobs:
+  GoSec:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Fetch Repository
+        uses: actions/checkout@v2
+      - name: Run GoSec Security Scanner
+        uses: securego/gosec@master

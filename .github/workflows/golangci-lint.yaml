@@ -1,0 +1,10 @@
+on: [push, pull_request]
+name: GoLint
+jobs:
+  GoLint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Fetch Repository
+        uses: actions/checkout@v2
+      - name: Check GoLint Errors
+        uses: reviewdog/action-golangci-lint@v2

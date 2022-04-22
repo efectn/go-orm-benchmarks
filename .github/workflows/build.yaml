@@ -1,0 +1,13 @@
+on: [push, pull_request]
+name: Benchmark
+jobs:
+  Build:
+    strategy:
+      matrix:
+        platform: [ubuntu-latest]
+    runs-on: ${{ matrix.platform }}
+    steps:
+    - name: Fetch Repository
+      uses: actions/checkout@v2
+    - name: Run Benchmark
+      run: ./run_benchmark.sh
