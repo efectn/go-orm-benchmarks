@@ -62,7 +62,7 @@ func XormUpdate(b *B) {
 	})
 
 	for i := 0; i < b.N; i++ {
-		_, err := xo.Update(m)
+		_, err := xo.ID(m.ID).Update(m)
 		CheckErr(err, b)
 	}
 }
@@ -77,7 +77,7 @@ func XormRead(b *B) {
 	})
 
 	for i := 0; i < b.N; i++ {
-		_, err := xo.Get(m)
+		_, err := xo.ID(1).NoAutoCondition().Get(m)
 		CheckErr(err, b)
 	}
 }
@@ -96,7 +96,7 @@ func XormReadSlice(b *B) {
 
 	for i := 0; i < b.N; i++ {
 		var models []*Model5
-		err := xo.Table("model5").Where("id > 0").Limit(100).Find(&models)
+		err := xo.Where("id > 0").Limit(100).Find(&models)
 		CheckErr(err, b)
 	}
 }
