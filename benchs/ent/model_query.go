@@ -106,7 +106,7 @@ func (mq *ModelQuery) FirstIDX(ctx context.Context) int {
 }
 
 // Only returns a single Model entity found by the query, ensuring it only returns one.
-// Returns a *NotSingularError when exactly one Model entity is not found.
+// Returns a *NotSingularError when more than one Model entity is found.
 // Returns a *NotFoundError when no Model entities are found.
 func (mq *ModelQuery) Only(ctx context.Context) (*Model, error) {
 	nodes, err := mq.Limit(2).All(ctx)
@@ -133,7 +133,7 @@ func (mq *ModelQuery) OnlyX(ctx context.Context) *Model {
 }
 
 // OnlyID is like Only, but returns the only Model ID in the query.
-// Returns a *NotSingularError when exactly one Model ID is not found.
+// Returns a *NotSingularError when more than one Model ID is found.
 // Returns a *NotFoundError when no entities are found.
 func (mq *ModelQuery) OnlyID(ctx context.Context) (id int, err error) {
 	var ids []int
@@ -242,8 +242,9 @@ func (mq *ModelQuery) Clone() *ModelQuery {
 		order:      append([]OrderFunc{}, mq.order...),
 		predicates: append([]predicate.Model{}, mq.predicates...),
 		// clone intermediate query.
-		sql:  mq.sql.Clone(),
-		path: mq.path,
+		sql:    mq.sql.Clone(),
+		path:   mq.path,
+		unique: mq.unique,
 	}
 }
 

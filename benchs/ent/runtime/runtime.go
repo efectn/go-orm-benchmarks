@@ -5,6 +5,6 @@ package runtime
 // The schema-stitching logic is generated in github.com/efectn/go-orm-benchmarks/benchs/ent/runtime.go
 
 const (
-	Version = "v0.9.2-0.20220115210437-b70754d12f85"            // Version of ent codegen.
-	Sum     = "h1:z7GcfGTfroVoGXGAAkQFkRH1iA0IvNGZ+9y28W+t/Bw=" // Sum of ent codegen.
+	Version = "v0.10.1"                                         // Version of ent codegen.
+	Sum     = "h1:dM5h4Zk6yHGIgw4dCqVzGw3nWgpGYJiV4/kyHEF6PFo=" // Sum of ent codegen.
 )
