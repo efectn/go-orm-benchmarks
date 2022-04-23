@@ -6,8 +6,19 @@ jobs:
       matrix:
         platform: [ubuntu-latest]
     runs-on: ${{ matrix.platform }}
+    services:
+      postgres:
+        image: 'postgres:latest'
+        ports:
+          - '5432:5432'
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: test
     steps:
     - name: Fetch Repository
       uses: actions/checkout@v3
-    - name: Run Benchmark
-      run: docker-compose up
+    - name: Build Benchmarker
+      run: go build main.go
+    - name: Run Benchmarker
+      run: ./main -source="host=localhost user=postgres password=postgres dbname=test sslmode=disable" -orm=all -multi=1 -debug=false
