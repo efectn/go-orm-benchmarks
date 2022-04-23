@@ -137,7 +137,7 @@ func NewModel4() *Model4 {
 
 // Model for XORM
 type Model5 struct {
-	ID      int `xorm:"id"`
+	ID      int `xorm:"pk autoincr 'id'"`
 	Name    string
 	Title   string
 	Fax     string
