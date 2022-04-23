@@ -149,7 +149,7 @@ From [`results.md`](results.md):
 
 ### To-Do List:
 
-- [ ] Add prisma or new ORMs?
+- [ ] Add [sqlh](github.com/nofeaturesonlybugs/sqlh).
 - [ ] Use benchmark tools of `testing` as benchmark suite.
 
 ### License
