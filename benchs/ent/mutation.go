@@ -31,13 +31,13 @@ type ModelMutation struct {
 	config
 	op            Op
 	typ           string
-	id            *int
+	id            *int32
 	name          *string
 	title         *string
 	fax           *string
 	web           *string
-	age           *int
-	addage        *int
+	age           *int32
+	addage        *int32
 	right         *bool
 	counter       *int64
 	addcounter    *int64
@@ -67,7 +67,7 @@ func newModelMutation(c config, op Op, opts ...modelOption) *ModelMutation {
 }
 
 // withModelID sets the ID field of the mutation.
-func withModelID(id int) modelOption {
+func withModelID(id int32) modelOption {
 	return func(m *ModelMutation) {
 		var (
 			err   error
@@ -117,9 +117,15 @@ func (m ModelMutation) Tx() (*Tx, error) {
 	return tx, nil
 }
 
+// SetID sets the value of the id field. Note that this
+// operation is only accepted on creation of Model entities.
+func (m *ModelMutation) SetID(id int32) {
+	m.id = &id
+}
+
 // ID returns the ID value in the mutation. Note that the ID is only available
 // if it was provided to the builder or after it was returned from the database.
-func (m *ModelMutation) ID() (id int, exists bool) {
+func (m *ModelMutation) ID() (id int32, exists bool) {
 	if m.id == nil {
 		return
 	}
@@ -130,12 +136,12 @@ func (m *ModelMutation) ID() (id int, exists bool) {
 // That means, if the mutation is applied within a transaction with an isolation level such
 // as sql.LevelSerializable, the returned ids match the ids of the rows that will be updated
 // or updated by the mutation.
-func (m *ModelMutation) IDs(ctx context.Context) ([]int, error) {
+func (m *ModelMutation) IDs(ctx context.Context) ([]int32, error) {
 	switch {
 	case m.op.Is(OpUpdateOne | OpDeleteOne):
 		id, exists := m.ID()
 		if exists {
-			return []int{id}, nil
+			return []int32{id}, nil
 		}
 		fallthrough
 	case m.op.Is(OpUpdate | OpDelete):
@@ -290,13 +296,13 @@ func (m *ModelMutation) ResetWeb() {
 }
 
 // SetAge sets the "age" field.
-func (m *ModelMutation) SetAge(i int) {
+func (m *ModelMutation) SetAge(i int32) {
 	m.age = &i
 	m.addage = nil
 }
 
 // Age returns the value of the "age" field in the mutation.
-func (m *ModelMutation) Age() (r int, exists bool) {
+func (m *ModelMutation) Age() (r int32, exists bool) {
 	v := m.age
 	if v == nil {
 		return
@@ -307,7 +313,7 @@ func (m *ModelMutation) Age() (r int, exists bool) {
 // OldAge returns the old "age" field's value of the Model entity.
 // If the Model object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *ModelMutation) OldAge(ctx context.Context) (v int, err error) {
+func (m *ModelMutation) OldAge(ctx context.Context) (v int32, err error) {
 	if !m.op.Is(OpUpdateOne) {
 		return v, errors.New("OldAge is only allowed on UpdateOne operations")
 	}
@@ -322,7 +328,7 @@ func (m *ModelMutation) OldAge(ctx context.Context) (v int, err error) {
 }
 
 // AddAge adds i to the "age" field.
-func (m *ModelMutation) AddAge(i int) {
+func (m *ModelMutation) AddAge(i int32) {
 	if m.addage != nil {
 		*m.addage += i
 	} else {
@@ -331,7 +337,7 @@ func (m *ModelMutation) AddAge(i int) {
 }
 
 // AddedAge returns the value that was added to the "age" field in this mutation.
-func (m *ModelMutation) AddedAge() (r int, exists bool) {
+func (m *ModelMutation) AddedAge() (r int32, exists bool) {
 	v := m.addage
 	if v == nil {
 		return
@@ -561,7 +567,7 @@ func (m *ModelMutation) SetField(name string, value ent.Value) error {
 		m.SetWeb(v)
 		return nil
 	case model.FieldAge:
-		v, ok := value.(int)
+		v, ok := value.(int32)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
@@ -617,7 +623,7 @@ func (m *ModelMutation) AddedField(name string) (ent.Value, bool) {
 func (m *ModelMutation) AddField(name string, value ent.Value) error {
 	switch name {
 	case model.FieldAge:
-		v, ok := value.(int)
+		v, ok := value.(int32)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}

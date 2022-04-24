@@ -27,6 +27,7 @@ func init() {
 
 func SqlcInsert(b *B) {
 	var m *Model
+	var err error
 
 	WrapExecute(b, func() {
 		InitDB()
@@ -36,27 +37,16 @@ func SqlcInsert(b *B) {
 	for i := 0; i < b.N; i++ {
 		m.Id = 0
 
-		created, err := sqlcQueries.CreateModel(ctx, db.CreateModelParams{
+		m.Id, err = sqlcQueries.CreateModel(ctx, db.CreateModelParams{
 			Name:    m.Name,
 			Title:   m.Title,
 			Fax:     m.Fax,
 			Web:     m.Web,
-			Age:     int32(m.Age),
+			Age:     m.Age,
 			Right:   m.Right,
 			Counter: m.Counter,
 		})
 		CheckErr(err, b)
-
-		m = &Model{
-			Id:      int(created.ID),
-			Name:    created.Name,
-			Title:   created.Title,
-			Fax:     created.Fax,
-			Web:     created.Web,
-			Age:     int(created.Age),
-			Right:   created.Right,
-			Counter: created.Counter,
-		}
 	}
 }
 
@@ -66,31 +56,21 @@ func SqlcInsertMulti(b *B) {
 
 func SqlcUpdate(b *B) {
 	var m *Model
+	var err error
 
 	WrapExecute(b, func() {
 		InitDB()
 		m = NewModel()
-		created, err := sqlcQueries.CreateModel(ctx, db.CreateModelParams{
+		m.Id, err = sqlcQueries.CreateModel(ctx, db.CreateModelParams{
 			Name:    m.Name,
 			Title:   m.Title,
 			Fax:     m.Fax,
 			Web:     m.Web,
-			Age:     int32(m.Age),
+			Age:     m.Age,
 			Right:   m.Right,
 			Counter: m.Counter,
 		})
 		CheckErr(err, b)
-
-		m = &Model{
-			Id:      int(created.ID),
-			Name:    created.Name,
-			Title:   created.Title,
-			Fax:     created.Fax,
-			Web:     created.Web,
-			Age:     int(created.Age),
-			Right:   created.Right,
-			Counter: created.Counter,
-		}
 	})
 
 	for i := 0; i < b.N; i++ {
@@ -99,10 +79,10 @@ func SqlcUpdate(b *B) {
 			Title:   m.Title,
 			Fax:     m.Fax,
 			Web:     m.Web,
-			Age:     int32(m.Age),
+			Age:     m.Age,
 			Right:   m.Right,
 			Counter: m.Counter,
-			ID:      int32(m.Id),
+			ID:      m.Id,
 		})
 		CheckErr(err, b)
 	}
@@ -110,44 +90,34 @@ func SqlcUpdate(b *B) {
 
 func SqlcRead(b *B) {
 	var m *Model
+	var err error
 
 	WrapExecute(b, func() {
 		InitDB()
 		m = NewModel()
-		created, err := sqlcQueries.CreateModel(ctx, db.CreateModelParams{
+		m.Id, err = sqlcQueries.CreateModel(ctx, db.CreateModelParams{
 			Name:    m.Name,
 			Title:   m.Title,
 			Fax:     m.Fax,
 			Web:     m.Web,
-			Age:     int32(m.Age),
+			Age:     m.Age,
 			Right:   m.Right,
 			Counter: m.Counter,
 		})
 		CheckErr(err, b)
-
-		m = &Model{
-			Id:      int(created.ID),
-			Name:    created.Name,
-			Title:   created.Title,
-			Fax:     created.Fax,
-			Web:     created.Web,
-			Age:     int(created.Age),
-			Right:   created.Right,
-			Counter: created.Counter,
-		}
 	})
 
 	for i := 0; i < b.N; i++ {
-		readed, err := sqlcQueries.GetModel(ctx, int32(m.Id))
+		readed, err := sqlcQueries.GetModel(ctx, m.Id)
 		CheckErr(err, b)
 
 		m = &Model{
-			Id:      int(readed.ID),
+			Id:      readed.ID,
 			Name:    readed.Name,
 			Title:   readed.Title,
 			Fax:     readed.Fax,
 			Web:     readed.Web,
-			Age:     int(readed.Age),
+			Age:     readed.Age,
 			Right:   readed.Right,
 			Counter: readed.Counter,
 		}
@@ -156,6 +126,7 @@ func SqlcRead(b *B) {
 
 func SqlcReadSlice(b *B) {
 	var m *Model
+	var err error
 
 	WrapExecute(b, func() {
 		InitDB()
@@ -163,27 +134,16 @@ func SqlcReadSlice(b *B) {
 		for i := 0; i < 100; i++ {
 			m.Id = 0
 
-			created, err := sqlcQueries.CreateModel(ctx, db.CreateModelParams{
+			m.Id, err = sqlcQueries.CreateModel(ctx, db.CreateModelParams{
 				Name:    m.Name,
 				Title:   m.Title,
 				Fax:     m.Fax,
 				Web:     m.Web,
-				Age:     int32(m.Age),
+				Age:     m.Age,
 				Right:   m.Right,
 				Counter: m.Counter,
 			})
 			CheckErr(err, b)
-
-			m = &Model{
-				Id:      int(created.ID),
-				Name:    created.Name,
-				Title:   created.Title,
-				Fax:     created.Fax,
-				Web:     created.Web,
-				Age:     int(created.Age),
-				Right:   created.Right,
-				Counter: created.Counter,
-			}
 		}
 	})
 
@@ -202,7 +162,7 @@ func SqlcReadSlice(b *B) {
 				Title:   sqlcModels[i2].Title,
 				Fax:     sqlcModels[i2].Fax,
 				Web:     sqlcModels[i2].Web,
-				Age:     int(sqlcModels[i2].Age),
+				Age:     sqlcModels[i2].Age,
 				Right:   sqlcModels[i2].Right,
 				Counter: sqlcModels[i2].Counter,
 			}

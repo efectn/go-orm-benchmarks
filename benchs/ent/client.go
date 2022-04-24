@@ -162,7 +162,7 @@ func (c *ModelClient) UpdateOne(m *Model) *ModelUpdateOne {
 }
 
 // UpdateOneID returns an update builder for the given id.
-func (c *ModelClient) UpdateOneID(id int) *ModelUpdateOne {
+func (c *ModelClient) UpdateOneID(id int32) *ModelUpdateOne {
 	mutation := newModelMutation(c.config, OpUpdateOne, withModelID(id))
 	return &ModelUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
 }
@@ -179,7 +179,7 @@ func (c *ModelClient) DeleteOne(m *Model) *ModelDeleteOne {
 }
 
 // DeleteOneID returns a delete builder for the given id.
-func (c *ModelClient) DeleteOneID(id int) *ModelDeleteOne {
+func (c *ModelClient) DeleteOneID(id int32) *ModelDeleteOne {
 	builder := c.Delete().Where(model.ID(id))
 	builder.mutation.id = &id
 	builder.mutation.op = OpDeleteOne
@@ -194,12 +194,12 @@ func (c *ModelClient) Query() *ModelQuery {
 }
 
 // Get returns a Model entity by its id.
-func (c *ModelClient) Get(ctx context.Context, id int) (*Model, error) {
+func (c *ModelClient) Get(ctx context.Context, id int32) (*Model, error) {
 	return c.Query().Where(model.ID(id)).Only(ctx)
 }
 
 // GetX is like Get, but panics if an error occurs.
-func (c *ModelClient) GetX(ctx context.Context, id int) *Model {
+func (c *ModelClient) GetX(ctx context.Context, id int32) *Model {
 	obj, err := c.Get(ctx, id)
 	if err != nil {
 		panic(err)

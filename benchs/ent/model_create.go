@@ -44,7 +44,7 @@ func (mc *ModelCreate) SetWeb(s string) *ModelCreate {
 }
 
 // SetAge sets the "age" field.
-func (mc *ModelCreate) SetAge(i int) *ModelCreate {
+func (mc *ModelCreate) SetAge(i int32) *ModelCreate {
 	mc.mutation.SetAge(i)
 	return mc
 }
@@ -58,6 +58,12 @@ func (mc *ModelCreate) SetRight(b bool) *ModelCreate {
 // SetCounter sets the "counter" field.
 func (mc *ModelCreate) SetCounter(i int64) *ModelCreate {
 	mc.mutation.SetCounter(i)
+	return mc
+}
+
+// SetID sets the "id" field.
+func (mc *ModelCreate) SetID(i int32) *ModelCreate {
+	mc.mutation.SetID(i)
 	return mc
 }
 
@@ -163,8 +169,10 @@ func (mc *ModelCreate) sqlSave(ctx context.Context) (*Model, error) {
 		}
 		return nil, err
 	}
-	id := _spec.ID.Value.(int64)
-	_node.ID = int(id)
+	if _spec.ID.Value != _node.ID {
+		id := _spec.ID.Value.(int64)
+		_node.ID = int32(id)
+	}
 	return _node, nil
 }
 
@@ -174,11 +182,15 @@ func (mc *ModelCreate) createSpec() (*Model, *sqlgraph.CreateSpec) {
 		_spec = &sqlgraph.CreateSpec{
 			Table: model.Table,
 			ID: &sqlgraph.FieldSpec{
-				Type:   field.TypeInt,
+				Type:   field.TypeInt32,
 				Column: model.FieldID,
 			},
 		}
 	)
+	if id, ok := mc.mutation.ID(); ok {
+		_node.ID = id
+		_spec.ID.Value = id
+	}
 	if value, ok := mc.mutation.Name(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
@@ -213,7 +225,7 @@ func (mc *ModelCreate) createSpec() (*Model, *sqlgraph.CreateSpec) {
 	}
 	if value, ok := mc.mutation.Age(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeInt,
+			Type:   field.TypeInt32,
 			Value:  value,
 			Column: model.FieldAge,
 		})
@@ -279,9 +291,9 @@ func (mcb *ModelCreateBulk) Save(ctx context.Context) ([]*Model, error) {
 				}
 				mutation.id = &nodes[i].ID
 				mutation.done = true
-				if specs[i].ID.Value != nil {
+				if specs[i].ID.Value != nil && nodes[i].ID == 0 {
 					id := specs[i].ID.Value.(int64)
-					nodes[i].ID = int(id)
+					nodes[i].ID = int32(id)
 				}
 				return nodes[i], nil
 			})

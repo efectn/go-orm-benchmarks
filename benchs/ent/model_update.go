@@ -52,14 +52,14 @@ func (mu *ModelUpdate) SetWeb(s string) *ModelUpdate {
 }
 
 // SetAge sets the "age" field.
-func (mu *ModelUpdate) SetAge(i int) *ModelUpdate {
+func (mu *ModelUpdate) SetAge(i int32) *ModelUpdate {
 	mu.mutation.ResetAge()
 	mu.mutation.SetAge(i)
 	return mu
 }
 
 // AddAge adds i to the "age" field.
-func (mu *ModelUpdate) AddAge(i int) *ModelUpdate {
+func (mu *ModelUpdate) AddAge(i int32) *ModelUpdate {
 	mu.mutation.AddAge(i)
 	return mu
 }
@@ -148,7 +148,7 @@ func (mu *ModelUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Table:   model.Table,
 			Columns: model.Columns,
 			ID: &sqlgraph.FieldSpec{
-				Type:   field.TypeInt,
+				Type:   field.TypeInt32,
 				Column: model.FieldID,
 			},
 		},
@@ -190,14 +190,14 @@ func (mu *ModelUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	}
 	if value, ok := mu.mutation.Age(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeInt,
+			Type:   field.TypeInt32,
 			Value:  value,
 			Column: model.FieldAge,
 		})
 	}
 	if value, ok := mu.mutation.AddedAge(); ok {
 		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
-			Type:   field.TypeInt,
+			Type:   field.TypeInt32,
 			Value:  value,
 			Column: model.FieldAge,
 		})
@@ -267,14 +267,14 @@ func (muo *ModelUpdateOne) SetWeb(s string) *ModelUpdateOne {
 }
 
 // SetAge sets the "age" field.
-func (muo *ModelUpdateOne) SetAge(i int) *ModelUpdateOne {
+func (muo *ModelUpdateOne) SetAge(i int32) *ModelUpdateOne {
 	muo.mutation.ResetAge()
 	muo.mutation.SetAge(i)
 	return muo
 }
 
 // AddAge adds i to the "age" field.
-func (muo *ModelUpdateOne) AddAge(i int) *ModelUpdateOne {
+func (muo *ModelUpdateOne) AddAge(i int32) *ModelUpdateOne {
 	muo.mutation.AddAge(i)
 	return muo
 }
@@ -370,7 +370,7 @@ func (muo *ModelUpdateOne) sqlSave(ctx context.Context) (_node *Model, err error
 			Table:   model.Table,
 			Columns: model.Columns,
 			ID: &sqlgraph.FieldSpec{
-				Type:   field.TypeInt,
+				Type:   field.TypeInt32,
 				Column: model.FieldID,
 			},
 		},
@@ -429,14 +429,14 @@ func (muo *ModelUpdateOne) sqlSave(ctx context.Context) (_node *Model, err error
 	}
 	if value, ok := muo.mutation.Age(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeInt,
+			Type:   field.TypeInt32,
 			Value:  value,
 			Column: model.FieldAge,
 		})
 	}
 	if value, ok := muo.mutation.AddedAge(); ok {
 		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
-			Type:   field.TypeInt,
+			Type:   field.TypeInt32,
 			Value:  value,
 			Column: model.FieldAge,
 		})

@@ -4,12 +4,12 @@ import models "github.com/efectn/go-orm-benchmarks/benchs/sqlboiler"
 
 // Model for GORM, GORP, Beego, Bun, Pg, Raw, Sqlc, Ent
 type Model struct {
-	Id      int `orm:"auto" gorm:"primary_key" db:"id" bun:",pk,autoincrement"`
+	Id      int32 `orm:"auto" gorm:"primary_key" db:"id" bun:",pk,autoincrement"`
 	Name    string
 	Title   string
 	Fax     string
 	Web     string
-	Age     int
+	Age     int32
 	Right   bool
 	Counter int64
 }

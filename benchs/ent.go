@@ -52,7 +52,7 @@ func EntInsert(b *B) {
 	})
 
 	for i := 0; i < b.N; i++ {
-		_, err := client.Model.Create().
+		created, err := client.Model.Create().
 			SetName(m.Name).
 			SetTitle(m.Title).
 			SetFax(m.Fax).
@@ -61,8 +61,9 @@ func EntInsert(b *B) {
 			SetRight(m.Right).
 			SetCounter(m.Counter).
 			Save(ctx)
-
 		CheckErr(err)
+
+		m.Id = created.ID
 	}
 }
 
@@ -100,7 +101,7 @@ func EntUpdate(b *B) {
 	WrapExecute(b, func() {
 		initDBEnt()
 		m = NewModelAlt()
-		_, err := client.Model.Create().
+		created, err := client.Model.Create().
 			SetName(m.Name).
 			SetTitle(m.Title).
 			SetFax(m.Fax).
@@ -109,8 +110,9 @@ func EntUpdate(b *B) {
 			SetRight(m.Right).
 			SetCounter(m.Counter).
 			Save(ctx)
-
 		CheckErr(err)
+
+		m.Id = created.ID
 	})
 
 	for i := 0; i < b.N; i++ {
@@ -143,7 +145,6 @@ func EntRead(b *B) {
 			SetRight(m.Right).
 			SetCounter(m.Counter).
 			Save(ctx)
-
 		CheckErr(err)
 	})
 
@@ -168,14 +169,12 @@ func EntReadSlice(b *B) {
 				SetRight(m.Right).
 				SetCounter(m.Counter).
 				Save(ctx)
-
 			CheckErr(err)
 		}
 	})
 
 	for i := 0; i < b.N; i++ {
 		_, err := client.Model.Query().Where(model.IDGT(0)).Unique(false).Limit(100).All(ctx)
-
 		CheckErr(err)
 	}
 }
