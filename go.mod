@@ -12,6 +12,7 @@ require (
 	github.com/gobuffalo/pop/v6 v6.0.2
 	github.com/gocraft/dbr/v2 v2.7.3
 	github.com/jackc/pgx/v4 v4.16.0
+	github.com/jmoiron/sqlx v1.3.5
 	github.com/lib/pq v1.10.5
 	github.com/samonzeweb/godb v1.0.15
 	github.com/upper/db/v4 v4.5.2
@@ -65,7 +66,6 @@ require (
 	github.com/jackc/pgtype v1.11.0 // indirect
 	github.com/jinzhu/inflection v1.0.0 // indirect
 	github.com/jinzhu/now v1.1.5 // indirect
-	github.com/jmoiron/sqlx v1.3.5 // indirect
 	github.com/joho/godotenv v1.4.0 // indirect
 	github.com/json-iterator/go v1.1.12 // indirect
 	github.com/kballard/go-shellquote v0.0.0-20180428030007-95032a82bc51 // indirect
