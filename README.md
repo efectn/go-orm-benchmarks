@@ -24,6 +24,7 @@ All package run in no-cache mode.
 - [reform](https://github.com/go-reform/reform)
 - [sqlboiler](https://github.com/volatiletech/sqlboiler)
 - [sqlx](https://github.com/jmoiron/sqlx)
+- [pgx](https://github.com/jackc/pgx)
 
 See [`go.mod`](go.mod) for their latest versions.
 
