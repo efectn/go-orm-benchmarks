@@ -23,7 +23,7 @@ jobs:
         git config user.name 'github-actions[bot]'
         git config user.email 'github-actions[bot]@users.noreply.github.com'
         
-        ./run_benchmarks_without_docker.sh > results.md
+        .github/run_benchmarks_actions.sh > results.md
         git add results.md
         git commit -am "Generate benchmark results automatically."
         git push
