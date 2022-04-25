@@ -13,7 +13,8 @@ jobs:
       run: |
         git config --global user.name 'github-actions[bot]'
         git config --global user.email '27856297+dependabot-preview[bot]@users.noreply.github.com'
+        
+        ./run_benchmarks.sh > results.md
+        git add .
         git commit -am "Generate benchmark results automatically."
         git push
-    - name: Run Benchmarker
-      run: ./run_benchmarks.sh > results.md
