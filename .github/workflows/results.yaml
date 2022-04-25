@@ -1,0 +1,19 @@
+on: [push]
+name: Generate Results
+jobs:
+  Results:
+    strategy:
+      matrix:
+        platform: [ubuntu-latest]
+    runs-on: ${{ matrix.platform }}
+    steps:
+    - name: Fetch Repository
+      uses: actions/checkout@v3
+    - name: Commit report
+      run: |
+        git config --global user.name 'github-actions[bot]'
+        git config --global user.email '27856297+dependabot-preview[bot]@users.noreply.github.com'
+        git commit -am "Generate benchmark results automatically."
+        git push
+    - name: Run Benchmarker
+      run: ./run_benchmarks.sh > results.md
