@@ -77,19 +77,19 @@ func EntInsertMulti(b *B) {
 		}
 	})
 
-	bulk := make([]*ent.ModelCreate, len(ms))
-	for i, m := range ms {
-		bulk[i] = client.Model.Create().
-			SetName(m.Name).
-			SetTitle(m.Title).
-			SetFax(m.Fax).
-			SetWeb(m.Web).
-			SetAge(m.Age).
-			SetRight(m.Right).
-			SetCounter(m.Counter)
-	}
-
 	for i := 0; i < b.N; i++ {
+		bulk := make([]*ent.ModelCreate, len(ms))
+		for i, m := range ms {
+			bulk[i] = client.Model.Create().
+				SetName(m.Name).
+				SetTitle(m.Title).
+				SetFax(m.Fax).
+				SetWeb(m.Web).
+				SetAge(m.Age).
+				SetRight(m.Right).
+				SetCounter(m.Counter)
+		}
+
 		_, err := client.Model.CreateBulk(bulk...).Save(ctx)
 		CheckErr(err)
 
