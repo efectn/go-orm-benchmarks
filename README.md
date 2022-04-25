@@ -23,6 +23,7 @@ All package run in no-cache mode.
 - [rel](https://github.com/go-rel/rel)
 - [reform](https://github.com/go-reform/reform)
 - [sqlboiler](https://github.com/volatiletech/sqlboiler)
+- [sqlx](https://github.com/jmoiron/sqlx)
 
 See [`go.mod`](go.mod) for their latest versions.
 
