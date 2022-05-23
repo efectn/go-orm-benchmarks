@@ -9,7 +9,7 @@ require (
 	github.com/go-pg/pg/v10 v10.10.6
 	github.com/go-rel/postgres v0.7.0
 	github.com/go-rel/rel v0.34.0
-	github.com/gobuffalo/pop/v6 v6.0.2
+	github.com/gobuffalo/pop/v6 v6.0.3
 	github.com/gocraft/dbr/v2 v2.7.3
 	github.com/jackc/pgx/v4 v4.16.1
 	github.com/jmoiron/sqlx v1.3.5
@@ -24,7 +24,7 @@ require (
 	gopkg.in/gorp.v1 v1.7.2
 	gopkg.in/reform.v1 v1.5.1
 	gorm.io/driver/postgres v1.3.4
-	gorm.io/gorm v1.23.4
+	gorm.io/gorm v1.23.5
 	xorm.io/xorm v1.3.0
 )
 
@@ -46,7 +46,7 @@ require (
 	github.com/gobuffalo/github_flavored_markdown v1.1.1 // indirect
 	github.com/gobuffalo/helpers v0.6.4 // indirect
 	github.com/gobuffalo/nulls v0.4.1 // indirect
-	github.com/gobuffalo/plush/v4 v4.1.10 // indirect
+	github.com/gobuffalo/plush/v4 v4.1.11 // indirect
 	github.com/gobuffalo/tags/v3 v3.1.2 // indirect
 	github.com/gobuffalo/validate/v3 v3.3.1 // indirect
 	github.com/goccy/go-json v0.9.7 // indirect
