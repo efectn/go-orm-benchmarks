@@ -13,7 +13,7 @@ require (
 	github.com/gocraft/dbr/v2 v2.7.3
 	github.com/jackc/pgx/v4 v4.16.1
 	github.com/jmoiron/sqlx v1.3.5
-	github.com/lib/pq v1.10.5
+	github.com/lib/pq v1.10.6
 	github.com/samonzeweb/godb v1.0.15
 	github.com/upper/db/v4 v4.5.2
 	github.com/uptrace/bun v1.1.5
