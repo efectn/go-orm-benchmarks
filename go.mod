@@ -18,7 +18,7 @@ require (
 	github.com/upper/db/v4 v4.5.2
 	github.com/uptrace/bun v1.1.5
 	github.com/uptrace/bun/dialect/pgdialect v1.1.5
-	github.com/uptrace/bun/driver/pgdriver v1.1.4
+	github.com/uptrace/bun/driver/pgdriver v1.1.5
 	github.com/volatiletech/sqlboiler/v4 v4.11.0
 	github.com/volatiletech/strmangle v0.0.4
 	gopkg.in/gorp.v1 v1.7.2
@@ -85,7 +85,7 @@ require (
 	github.com/vmihailenco/tagparser v0.1.2 // indirect
 	github.com/vmihailenco/tagparser/v2 v2.0.0 // indirect
 	github.com/volatiletech/inflect v0.0.1 // indirect
-	golang.org/x/crypto v0.0.0-20220411220226-7b82a4e95df4 // indirect
+	golang.org/x/crypto v0.0.0-20220511200225-c6db032c6c88 // indirect
 	golang.org/x/mod v0.5.1 // indirect
 	golang.org/x/net v0.0.0-20220421235706-1d1ef9303861 // indirect
 	golang.org/x/sync v0.0.0-20210220032951-036812b2e83c // indirect
