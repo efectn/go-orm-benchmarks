@@ -9,7 +9,7 @@ require (
 	github.com/go-pg/pg/v10 v10.10.6
 	github.com/go-rel/postgres v0.7.0
 	github.com/go-rel/rel v0.34.0
-	github.com/gobuffalo/pop/v6 v6.0.3
+	github.com/gobuffalo/pop/v6 v6.0.4
 	github.com/gocraft/dbr/v2 v2.7.3
 	github.com/jackc/pgx/v4 v4.16.1
 	github.com/jmoiron/sqlx v1.3.5
