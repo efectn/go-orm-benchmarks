@@ -25,7 +25,7 @@ require (
 	gopkg.in/reform.v1 v1.5.1
 	gorm.io/driver/postgres v1.3.6
 	gorm.io/gorm v1.23.5
-	xorm.io/xorm v1.3.0
+	xorm.io/xorm v1.3.1
 )
 
 require (
@@ -102,5 +102,5 @@ require (
 	golang.org/x/xerrors v0.0.0-20220411194840-2f41105eb62f // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 	mellium.im/sasl v0.2.1 // indirect
-	xorm.io/builder v0.3.10 // indirect
+	xorm.io/builder v0.3.11-0.20220531020008-1bd24a7dc978 // indirect
 )
