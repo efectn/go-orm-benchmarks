@@ -13,6 +13,9 @@ import (
 	_ "github.com/lib/pq"
 )
 
+// Version constant
+const VERSION = "1.0.2"
+
 type ListOpts []string
 
 func (opts *ListOpts) String() string {
