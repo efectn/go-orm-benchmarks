@@ -10,12 +10,12 @@ import (
 var (
 	// ModelsColumns holds the columns for the "models" table.
 	ModelsColumns = []*schema.Column{
-		{Name: "id", Type: field.TypeInt, Increment: true},
+		{Name: "id", Type: field.TypeInt32, Increment: true},
 		{Name: "name", Type: field.TypeString},
 		{Name: "title", Type: field.TypeString},
 		{Name: "fax", Type: field.TypeString},
 		{Name: "web", Type: field.TypeString},
-		{Name: "age", Type: field.TypeInt},
+		{Name: "age", Type: field.TypeInt32},
 		{Name: "right", Type: field.TypeBool},
 		{Name: "counter", Type: field.TypeInt64},
 	}

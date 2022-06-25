@@ -8,28 +8,28 @@ import (
 )
 
 // ID filters vertices based on their ID field.
-func ID(id int) predicate.Model {
+func ID(id int32) predicate.Model {
 	return predicate.Model(func(s *sql.Selector) {
 		s.Where(sql.EQ(s.C(FieldID), id))
 	})
 }
 
 // IDEQ applies the EQ predicate on the ID field.
-func IDEQ(id int) predicate.Model {
+func IDEQ(id int32) predicate.Model {
 	return predicate.Model(func(s *sql.Selector) {
 		s.Where(sql.EQ(s.C(FieldID), id))
 	})
 }
 
 // IDNEQ applies the NEQ predicate on the ID field.
-func IDNEQ(id int) predicate.Model {
+func IDNEQ(id int32) predicate.Model {
 	return predicate.Model(func(s *sql.Selector) {
 		s.Where(sql.NEQ(s.C(FieldID), id))
 	})
 }
 
 // IDIn applies the In predicate on the ID field.
-func IDIn(ids ...int) predicate.Model {
+func IDIn(ids ...int32) predicate.Model {
 	return predicate.Model(func(s *sql.Selector) {
 		// if not arguments were provided, append the FALSE constants,
 		// since we can't apply "IN ()". This will make this predicate falsy.
@@ -46,7 +46,7 @@ func IDIn(ids ...int) predicate.Model {
 }
 
 // IDNotIn applies the NotIn predicate on the ID field.
-func IDNotIn(ids ...int) predicate.Model {
+func IDNotIn(ids ...int32) predicate.Model {
 	return predicate.Model(func(s *sql.Selector) {
 		// if not arguments were provided, append the FALSE constants,
 		// since we can't apply "IN ()". This will make this predicate falsy.
@@ -63,28 +63,28 @@ func IDNotIn(ids ...int) predicate.Model {
 }
 
 // IDGT applies the GT predicate on the ID field.
-func IDGT(id int) predicate.Model {
+func IDGT(id int32) predicate.Model {
 	return predicate.Model(func(s *sql.Selector) {
 		s.Where(sql.GT(s.C(FieldID), id))
 	})
 }
 
 // IDGTE applies the GTE predicate on the ID field.
-func IDGTE(id int) predicate.Model {
+func IDGTE(id int32) predicate.Model {
 	return predicate.Model(func(s *sql.Selector) {
 		s.Where(sql.GTE(s.C(FieldID), id))
 	})
 }
 
 // IDLT applies the LT predicate on the ID field.
-func IDLT(id int) predicate.Model {
+func IDLT(id int32) predicate.Model {
 	return predicate.Model(func(s *sql.Selector) {
 		s.Where(sql.LT(s.C(FieldID), id))
 	})
 }
 
 // IDLTE applies the LTE predicate on the ID field.
-func IDLTE(id int) predicate.Model {
+func IDLTE(id int32) predicate.Model {
 	return predicate.Model(func(s *sql.Selector) {
 		s.Where(sql.LTE(s.C(FieldID), id))
 	})
@@ -119,7 +119,7 @@ func Web(v string) predicate.Model {
 }
 
 // Age applies equality check predicate on the "age" field. It's identical to AgeEQ.
-func Age(v int) predicate.Model {
+func Age(v int32) predicate.Model {
 	return predicate.Model(func(s *sql.Selector) {
 		s.Where(sql.EQ(s.C(FieldAge), v))
 	})
@@ -584,21 +584,21 @@ func WebContainsFold(v string) predicate.Model {
 }
 
 // AgeEQ applies the EQ predicate on the "age" field.
-func AgeEQ(v int) predicate.Model {
+func AgeEQ(v int32) predicate.Model {
 	return predicate.Model(func(s *sql.Selector) {
 		s.Where(sql.EQ(s.C(FieldAge), v))
 	})
 }
 
 // AgeNEQ applies the NEQ predicate on the "age" field.
-func AgeNEQ(v int) predicate.Model {
+func AgeNEQ(v int32) predicate.Model {
 	return predicate.Model(func(s *sql.Selector) {
 		s.Where(sql.NEQ(s.C(FieldAge), v))
 	})
 }
 
 // AgeIn applies the In predicate on the "age" field.
-func AgeIn(vs ...int) predicate.Model {
+func AgeIn(vs ...int32) predicate.Model {
 	v := make([]interface{}, len(vs))
 	for i := range v {
 		v[i] = vs[i]
@@ -615,7 +615,7 @@ func AgeIn(vs ...int) predicate.Model {
 }
 
 // AgeNotIn applies the NotIn predicate on the "age" field.
-func AgeNotIn(vs ...int) predicate.Model {
+func AgeNotIn(vs ...int32) predicate.Model {
 	v := make([]interface{}, len(vs))
 	for i := range v {
 		v[i] = vs[i]
@@ -632,28 +632,28 @@ func AgeNotIn(vs ...int) predicate.Model {
 }
 
 // AgeGT applies the GT predicate on the "age" field.
-func AgeGT(v int) predicate.Model {
+func AgeGT(v int32) predicate.Model {
 	return predicate.Model(func(s *sql.Selector) {
 		s.Where(sql.GT(s.C(FieldAge), v))
 	})
 }
 
 // AgeGTE applies the GTE predicate on the "age" field.
-func AgeGTE(v int) predicate.Model {
+func AgeGTE(v int32) predicate.Model {
 	return predicate.Model(func(s *sql.Selector) {
 		s.Where(sql.GTE(s.C(FieldAge), v))
 	})
 }
 
 // AgeLT applies the LT predicate on the "age" field.
-func AgeLT(v int) predicate.Model {
+func AgeLT(v int32) predicate.Model {
 	return predicate.Model(func(s *sql.Selector) {
 		s.Where(sql.LT(s.C(FieldAge), v))
 	})
 }
 
 // AgeLTE applies the LTE predicate on the "age" field.
-func AgeLTE(v int) predicate.Model {
+func AgeLTE(v int32) predicate.Model {
 	return predicate.Model(func(s *sql.Selector) {
 		s.Where(sql.LTE(s.C(FieldAge), v))
 	})

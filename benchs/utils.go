@@ -2,7 +2,7 @@ package benchs
 
 import (
 	"database/sql"
-	"log"
+	"fmt"
 	"strings"
 
 	_ "github.com/jackc/pgx/v4/stdlib"
@@ -50,11 +50,7 @@ func SplitSource() map[string]string {
 
 func CheckErr(err error, b ...*B) {
 	if err != nil {
-		log.Fatalf("[go-orm-benchmarks] ERR: %v", err)
-
-		if len(b) > 0 {
-			b[0].FailNow()
-		}
+		panic(fmt.Sprintf("[go-orm-benchmarks] ERR: %v", err))
 	}
 }
 

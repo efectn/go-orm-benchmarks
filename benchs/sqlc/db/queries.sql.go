@@ -12,7 +12,7 @@ import (
 const createModel = `-- name: CreateModel :one
 INSERT INTO models (NAME, title, fax, web, age, "right", counter)
 VALUES ($1, $2, $3, $4, $5, $6, $7)
-RETURNING id, name, title, fax, web, age, "right", counter
+RETURNING id
 `
 
 type CreateModelParams struct {
@@ -25,7 +25,7 @@ type CreateModelParams struct {
 	Counter int64
 }
 
-func (q *Queries) CreateModel(ctx context.Context, arg CreateModelParams) (Model, error) {
+func (q *Queries) CreateModel(ctx context.Context, arg CreateModelParams) (int32, error) {
 	row := q.db.QueryRowContext(ctx, createModel,
 		arg.Name,
 		arg.Title,
@@ -35,18 +35,9 @@ func (q *Queries) CreateModel(ctx context.Context, arg CreateModelParams) (Model
 		arg.Right,
 		arg.Counter,
 	)
-	var i Model
-	err := row.Scan(
-		&i.ID,
-		&i.Name,
-		&i.Title,
-		&i.Fax,
-		&i.Web,
-		&i.Age,
-		&i.Right,
-		&i.Counter,
-	)
-	return i, err
+	var id int32
+	err := row.Scan(&id)
+	return id, err
 }
 
 const getModel = `-- name: GetModel :one

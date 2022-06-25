@@ -14,7 +14,7 @@ import (
 type Model struct {
 	config `json:"-"`
 	// ID of the ent.
-	ID int `json:"id,omitempty"`
+	ID int32 `json:"id,omitempty"`
 	// Name holds the value of the "name" field.
 	Name string `json:"name,omitempty"`
 	// Title holds the value of the "title" field.
@@ -24,7 +24,7 @@ type Model struct {
 	// Web holds the value of the "web" field.
 	Web string `json:"web,omitempty"`
 	// Age holds the value of the "age" field.
-	Age int `json:"age,omitempty"`
+	Age int32 `json:"age,omitempty"`
 	// Right holds the value of the "right" field.
 	Right bool `json:"right,omitempty"`
 	// Counter holds the value of the "counter" field.
@@ -62,7 +62,7 @@ func (m *Model) assignValues(columns []string, values []interface{}) error {
 			if !ok {
 				return fmt.Errorf("unexpected type %T for field id", value)
 			}
-			m.ID = int(value.Int64)
+			m.ID = int32(value.Int64)
 		case model.FieldName:
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field name", values[i])
@@ -91,7 +91,7 @@ func (m *Model) assignValues(columns []string, values []interface{}) error {
 			if value, ok := values[i].(*sql.NullInt64); !ok {
 				return fmt.Errorf("unexpected type %T for field age", values[i])
 			} else if value.Valid {
-				m.Age = int(value.Int64)
+				m.Age = int32(value.Int64)
 			}
 		case model.FieldRight:
 			if value, ok := values[i].(*sql.NullBool); !ok {

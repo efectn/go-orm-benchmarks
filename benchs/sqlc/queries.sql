@@ -1,7 +1,7 @@
 -- name: CreateModel :one
 INSERT INTO models (NAME, title, fax, web, age, "right", counter)
 VALUES ($1, $2, $3, $4, $5, $6, $7)
-RETURNING *;
+RETURNING id;
 -- name: UpdateModel :exec
 UPDATE models
 SET name = $1,
