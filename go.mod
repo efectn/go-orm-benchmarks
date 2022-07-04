@@ -23,8 +23,8 @@ require (
 	github.com/volatiletech/strmangle v0.0.4
 	gopkg.in/gorp.v1 v1.7.2
 	gopkg.in/reform.v1 v1.5.1
-	gorm.io/driver/postgres v1.3.6
-	gorm.io/gorm v1.23.5
+	gorm.io/driver/postgres v1.3.8
+	gorm.io/gorm v1.23.6
 	xorm.io/xorm v1.3.0
 )
 
