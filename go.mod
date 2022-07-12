@@ -9,7 +9,7 @@ require (
 	github.com/go-pg/pg/v10 v10.10.6
 	github.com/go-rel/postgres v0.7.0
 	github.com/go-rel/rel v0.34.0
-	github.com/gobuffalo/pop/v6 v6.0.3
+	github.com/gobuffalo/pop/v6 v6.0.5
 	github.com/gocraft/dbr/v2 v2.7.3
 	github.com/jackc/pgx/v4 v4.16.1
 	github.com/jmoiron/sqlx v1.3.5
@@ -41,14 +41,14 @@ require (
 	github.com/go-rel/sql v0.10.0 // indirect
 	github.com/go-sql-driver/mysql v1.6.0 // indirect
 	github.com/gobuffalo/envy v1.10.1 // indirect
-	github.com/gobuffalo/fizz v1.14.0 // indirect
+	github.com/gobuffalo/fizz v1.14.2 // indirect
 	github.com/gobuffalo/flect v0.2.5 // indirect
 	github.com/gobuffalo/github_flavored_markdown v1.1.1 // indirect
-	github.com/gobuffalo/helpers v0.6.4 // indirect
+	github.com/gobuffalo/helpers v0.6.5 // indirect
 	github.com/gobuffalo/nulls v0.4.1 // indirect
-	github.com/gobuffalo/plush/v4 v4.1.11 // indirect
-	github.com/gobuffalo/tags/v3 v3.1.2 // indirect
-	github.com/gobuffalo/validate/v3 v3.3.1 // indirect
+	github.com/gobuffalo/plush/v4 v4.1.13 // indirect
+	github.com/gobuffalo/tags/v3 v3.1.3 // indirect
+	github.com/gobuffalo/validate/v3 v3.3.2 // indirect
 	github.com/goccy/go-json v0.9.7 // indirect
 	github.com/gofrs/uuid v4.2.0+incompatible // indirect
 	github.com/golang/snappy v0.0.4 // indirect
@@ -94,9 +94,9 @@ require (
 	github.com/volatiletech/inflect v0.0.1 // indirect
 	github.com/zclconf/go-cty v1.8.0 // indirect
 	golang.org/x/crypto v0.0.0-20220511200225-c6db032c6c88 // indirect
-	golang.org/x/mod v0.5.1 // indirect
+	golang.org/x/mod v0.6.0-dev.0.20220419223038-86c51ed26bb4 // indirect
 	golang.org/x/net v0.0.0-20220421235706-1d1ef9303861 // indirect
-	golang.org/x/sync v0.0.0-20210220032951-036812b2e83c // indirect
+	golang.org/x/sync v0.0.0-20220601150217-0de741cfad7f // indirect
 	golang.org/x/sys v0.0.0-20220503163025-988cb79eb6c6 // indirect
 	golang.org/x/text v0.3.7 // indirect
 	golang.org/x/xerrors v0.0.0-20220411194840-2f41105eb62f // indirect
