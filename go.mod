@@ -9,11 +9,11 @@ require (
 	github.com/go-pg/pg/v10 v10.10.6
 	github.com/go-rel/postgres v0.7.0
 	github.com/go-rel/rel v0.34.0
-	github.com/gobuffalo/pop/v6 v6.0.3
+	github.com/gobuffalo/pop/v6 v6.1.1
 	github.com/gocraft/dbr/v2 v2.7.3
-	github.com/jackc/pgx/v4 v4.16.1
+	github.com/jackc/pgx/v4 v4.17.2
 	github.com/jmoiron/sqlx v1.3.5
-	github.com/lib/pq v1.10.6
+	github.com/lib/pq v1.10.7
 	github.com/samonzeweb/godb v1.0.15
 	github.com/upper/db/v4 v4.5.2
 	github.com/uptrace/bun v1.1.5
@@ -39,18 +39,18 @@ require (
 	github.com/go-openapi/inflect v0.19.0 // indirect
 	github.com/go-pg/zerochecker v0.2.0 // indirect
 	github.com/go-rel/sql v0.10.0 // indirect
-	github.com/go-sql-driver/mysql v1.6.0 // indirect
-	github.com/gobuffalo/envy v1.10.1 // indirect
-	github.com/gobuffalo/fizz v1.14.0 // indirect
-	github.com/gobuffalo/flect v0.2.5 // indirect
-	github.com/gobuffalo/github_flavored_markdown v1.1.1 // indirect
-	github.com/gobuffalo/helpers v0.6.4 // indirect
-	github.com/gobuffalo/nulls v0.4.1 // indirect
-	github.com/gobuffalo/plush/v4 v4.1.11 // indirect
-	github.com/gobuffalo/tags/v3 v3.1.2 // indirect
-	github.com/gobuffalo/validate/v3 v3.3.1 // indirect
+	github.com/go-sql-driver/mysql v1.7.0 // indirect
+	github.com/gobuffalo/envy v1.10.2 // indirect
+	github.com/gobuffalo/fizz v1.14.4 // indirect
+	github.com/gobuffalo/flect v1.0.0 // indirect
+	github.com/gobuffalo/github_flavored_markdown v1.1.3 // indirect
+	github.com/gobuffalo/helpers v0.6.7 // indirect
+	github.com/gobuffalo/nulls v0.4.2 // indirect
+	github.com/gobuffalo/plush/v4 v4.1.18 // indirect
+	github.com/gobuffalo/tags/v3 v3.1.4 // indirect
+	github.com/gobuffalo/validate/v3 v3.3.3 // indirect
 	github.com/goccy/go-json v0.9.7 // indirect
-	github.com/gofrs/uuid v4.2.0+incompatible // indirect
+	github.com/gofrs/uuid v4.3.1+incompatible // indirect
 	github.com/golang/snappy v0.0.4 // indirect
 	github.com/google/go-cmp v0.5.6 // indirect
 	github.com/google/uuid v1.3.0 // indirect
@@ -58,13 +58,13 @@ require (
 	github.com/hashicorp/golang-lru v0.5.4 // indirect
 	github.com/hashicorp/hcl/v2 v2.10.0 // indirect
 	github.com/jackc/chunkreader/v2 v2.0.1 // indirect
-	github.com/jackc/pgconn v1.12.1 // indirect
+	github.com/jackc/pgconn v1.13.0 // indirect
 	github.com/jackc/pgio v1.0.0 // indirect
 	github.com/jackc/pgpassfile v1.0.0 // indirect
-	github.com/jackc/pgproto3/v2 v2.3.0 // indirect
+	github.com/jackc/pgproto3/v2 v2.3.1 // indirect
 	github.com/jackc/pgservicefile v0.0.0-20200714003250-2b9c44734f2b // indirect
-	github.com/jackc/pgtype v1.11.0 // indirect
-	github.com/jackc/puddle v1.2.1 // indirect
+	github.com/jackc/pgtype v1.12.0 // indirect
+	github.com/jackc/puddle v1.3.0 // indirect
 	github.com/jinzhu/inflection v1.0.0 // indirect
 	github.com/jinzhu/now v1.1.5 // indirect
 	github.com/joho/godotenv v1.4.0 // indirect
@@ -74,12 +74,12 @@ require (
 	github.com/mattn/go-colorable v0.1.12 // indirect
 	github.com/mattn/go-isatty v0.0.14 // indirect
 	github.com/mattn/go-sqlite3 v2.0.3+incompatible // indirect
-	github.com/microcosm-cc/bluemonday v1.0.18 // indirect
+	github.com/microcosm-cc/bluemonday v1.0.20 // indirect
 	github.com/mitchellh/go-wordwrap v0.0.0-20150314170334-ad45545899c7 // indirect
 	github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd // indirect
 	github.com/modern-go/reflect2 v1.0.2 // indirect
 	github.com/pkg/errors v0.9.1 // indirect
-	github.com/rogpeppe/go-internal v1.8.1 // indirect
+	github.com/rogpeppe/go-internal v1.9.0 // indirect
 	github.com/serenize/snaker v0.0.0-20201027110005-a7ad2135616e // indirect
 	github.com/sergi/go-diff v1.2.0 // indirect
 	github.com/sourcegraph/annotate v0.0.0-20160123013949-f4cad6c6324d // indirect
@@ -93,11 +93,11 @@ require (
 	github.com/vmihailenco/tagparser/v2 v2.0.0 // indirect
 	github.com/volatiletech/inflect v0.0.1 // indirect
 	github.com/zclconf/go-cty v1.8.0 // indirect
-	golang.org/x/crypto v0.0.0-20220511200225-c6db032c6c88 // indirect
-	golang.org/x/mod v0.5.1 // indirect
-	golang.org/x/net v0.0.0-20220421235706-1d1ef9303861 // indirect
-	golang.org/x/sync v0.0.0-20210220032951-036812b2e83c // indirect
-	golang.org/x/sys v0.0.0-20220503163025-988cb79eb6c6 // indirect
+	golang.org/x/crypto v0.0.0-20220722155217-630584e8d5aa // indirect
+	golang.org/x/mod v0.6.0-dev.0.20220419223038-86c51ed26bb4 // indirect
+	golang.org/x/net v0.0.0-20221002022538-bcab6841153b // indirect
+	golang.org/x/sync v0.1.0 // indirect
+	golang.org/x/sys v0.0.0-20220728004956-3c1f35247d10 // indirect
 	golang.org/x/text v0.3.7 // indirect
 	golang.org/x/xerrors v0.0.0-20220411194840-2f41105eb62f // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
