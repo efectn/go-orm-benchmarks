@@ -30,7 +30,7 @@ func init() {
 		CheckErr(err)
 
 		// Disable debug logging
-		rel.Instrumentation(func(ctx context.Context, op string, message string) func(err error) {
+		rel.Instrumentation(func(ctx context.Context, op string, message string, args ...any) func(err error) {
 			return func(err error) {
 				CheckErr(err)
 			}
