@@ -25,6 +25,7 @@ All package run in no-cache mode.
 - [sqlboiler](https://github.com/volatiletech/sqlboiler)
 - [sqlx](https://github.com/jmoiron/sqlx)
 - [pgx](https://github.com/jackc/pgx)
+- [zorm](https://gitee.com/chunanyong/zorm)
 
 See [`go.mod`](go.mod) for their latest versions.
 

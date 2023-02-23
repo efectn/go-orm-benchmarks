@@ -1,6 +1,9 @@
 package benchs
 
-import models "github.com/efectn/go-orm-benchmarks/benchs/sqlboiler"
+import (
+	"gitee.com/chunanyong/zorm"
+	models "github.com/efectn/go-orm-benchmarks/benchs/sqlboiler"
+)
 
 // Model for GORM, GORP, Beego, Bun, Pg, Raw, Sqlc, Ent
 type Model struct {
@@ -163,6 +166,40 @@ func NewModel5() *Model5 {
 // Model for Sqlboiler
 func NewModel6() *models.Model {
 	m := new(models.Model)
+	m.Name = "Orm Benchmark"
+	m.Title = "Just a Benchmark for fun"
+	m.Fax = "99909990"
+	m.Web = "http://blog.milkpod29.me"
+	m.Age = 100
+	m.Right = true
+	m.Counter = 1000
+
+	return m
+}
+
+// Model for zorm
+type Model7 struct {
+	zorm.EntityStruct
+	ID      int    `column:"id"`
+	Name    string `column:"name"`
+	Title   string `column:"title"`
+	Fax     string `column:"fax"`
+	Web     string `column:"web"`
+	Age     int    `column:"age"`
+	Right   bool   `column:"\"right\""`
+	Counter int64  `column:"counter"`
+}
+
+func (entity *Model7) GetTableName() string {
+	return "models"
+}
+
+func (entity *Model7) GetPKColumnName() string {
+	return "id"
+}
+
+func NewModel7() *Model7 {
+	m := new(Model7)
 	m.Name = "Orm Benchmark"
 	m.Title = "Just a Benchmark for fun"
 	m.Fax = "99909990"
