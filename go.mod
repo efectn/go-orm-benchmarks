@@ -17,9 +17,9 @@ require (
 	github.com/lib/pq v1.10.7
 	github.com/samonzeweb/godb v1.0.15
 	github.com/upper/db/v4 v4.6.0
-	github.com/uptrace/bun v1.1.11
+	github.com/uptrace/bun v1.1.12
 	github.com/uptrace/bun/dialect/pgdialect v1.1.11
-	github.com/uptrace/bun/driver/pgdriver v1.1.11
+	github.com/uptrace/bun/driver/pgdriver v1.1.12
 	github.com/volatiletech/sqlboiler/v4 v4.14.1
 	github.com/volatiletech/strmangle v0.0.4
 	gopkg.in/gorp.v1 v1.7.2
