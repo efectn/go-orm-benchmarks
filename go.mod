@@ -12,7 +12,7 @@ require (
 	github.com/go-rel/rel v0.39.0
 	github.com/gobuffalo/pop/v6 v6.1.1
 	github.com/gocraft/dbr/v2 v2.7.3
-	github.com/jackc/pgx/v4 v4.18.0
+	github.com/jackc/pgx/v4 v4.18.1
 	github.com/jmoiron/sqlx v1.3.5
 	github.com/lib/pq v1.10.7
 	github.com/samonzeweb/godb v1.0.15
