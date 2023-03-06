@@ -3,8 +3,8 @@ module github.com/efectn/go-orm-benchmarks
 go 1.18
 
 require (
-	entgo.io/ent v0.11.8
-	gitee.com/chunanyong/zorm v1.6.6
+	entgo.io/ent v0.11.9
+	gitee.com/chunanyong/zorm v1.6.7
 	github.com/astaxie/beego v1.12.3
 	github.com/friendsofgo/errors v0.9.2
 	github.com/go-pg/pg/v10 v10.11.0
@@ -12,25 +12,25 @@ require (
 	github.com/go-rel/rel v0.39.0
 	github.com/gobuffalo/pop/v6 v6.1.1
 	github.com/gocraft/dbr/v2 v2.7.3
-	github.com/jackc/pgx/v4 v4.18.0
+	github.com/jackc/pgx/v4 v4.18.1
 	github.com/jmoiron/sqlx v1.3.5
 	github.com/lib/pq v1.10.7
 	github.com/samonzeweb/godb v1.0.15
 	github.com/upper/db/v4 v4.6.0
-	github.com/uptrace/bun v1.1.11
-	github.com/uptrace/bun/dialect/pgdialect v1.1.11
-	github.com/uptrace/bun/driver/pgdriver v1.1.11
+	github.com/uptrace/bun v1.1.12
+	github.com/uptrace/bun/dialect/pgdialect v1.1.12
+	github.com/uptrace/bun/driver/pgdriver v1.1.12
 	github.com/volatiletech/sqlboiler/v4 v4.14.1
 	github.com/volatiletech/strmangle v0.0.4
 	gopkg.in/gorp.v1 v1.7.2
 	gopkg.in/reform.v1 v1.5.1
 	gorm.io/driver/postgres v1.4.5
-	gorm.io/gorm v1.24.5
+	gorm.io/gorm v1.24.6
 	xorm.io/xorm v1.3.2
 )
 
 require (
-	ariga.io/atlas v0.9.1-0.20230119145809-92243f7c55cb // indirect
+	ariga.io/atlas v0.9.1 // indirect
 	github.com/Masterminds/semver/v3 v3.1.1 // indirect
 	github.com/agext/levenshtein v1.2.1 // indirect
 	github.com/apparentlymart/go-textseg/v13 v13.0.0 // indirect
@@ -67,7 +67,7 @@ require (
 	github.com/jackc/pgtype v1.14.0 // indirect
 	github.com/jackc/puddle v1.3.0 // indirect
 	github.com/jinzhu/inflection v1.0.0 // indirect
-	github.com/jinzhu/now v1.1.4 // indirect
+	github.com/jinzhu/now v1.1.5 // indirect
 	github.com/joho/godotenv v1.4.0 // indirect
 	github.com/json-iterator/go v1.1.12 // indirect
 	github.com/kballard/go-shellquote v0.0.0-20180428030007-95032a82bc51 // indirect
@@ -96,7 +96,7 @@ require (
 	github.com/volatiletech/inflect v0.0.1 // indirect
 	github.com/zclconf/go-cty v1.8.0 // indirect
 	golang.org/x/crypto v0.6.0 // indirect
-	golang.org/x/mod v0.7.0 // indirect
+	golang.org/x/mod v0.8.0 // indirect
 	golang.org/x/net v0.6.0 // indirect
 	golang.org/x/sync v0.1.0 // indirect
 	golang.org/x/sys v0.5.0 // indirect
