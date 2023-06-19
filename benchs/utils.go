@@ -2,19 +2,31 @@ package benchs
 
 import (
 	"database/sql"
-	"log"
+	"fmt"
+	"reflect"
+	"regexp"
+	"runtime"
 	"strings"
 
 	_ "github.com/jackc/pgx/v4/stdlib"
 )
 
-var (
-	OrmMulti   int
-	OrmMaxIdle int
-	OrmMaxConn int
-	OrmSource  string
-	DebugMode  bool
-)
+// from https://stackoverflow.com/questions/56616196/how-to-convert-camel-case-string-to-snake-case, needs cleaner solution
+var matchFirstCap = regexp.MustCompile("(.)([A-Z][a-z]+)")
+var matchAllCap = regexp.MustCompile("([a-z0-9])([A-Z])")
+
+func ToSnakeCase(str string) string {
+	snake := matchFirstCap.ReplaceAllString(str, "${1}_${2}")
+	snake = matchAllCap.ReplaceAllString(snake, "${1}_${2}")
+	return strings.ToLower(snake)
+}
+
+func getFuncName(function any) string {
+	name := strings.Split(runtime.FuncForPC(reflect.ValueOf(function).Pointer()).Name(), ".")
+	straightName := strings.Split(name[len(name)-1], "-")[0]
+
+	return ToSnakeCase(straightName)
+}
 
 // Convert ORMSource to DSN (dburl)
 func ConvertSourceToDSN() string {
@@ -48,25 +60,8 @@ func SplitSource() map[string]string {
 	return options
 }
 
-func CheckErr(err error, b ...*B) {
-	if err != nil {
-		log.Fatalf("[go-orm-benchmarks] ERR: %v", err)
-
-		if len(b) > 0 {
-			b[0].FailNow()
-		}
-	}
-}
-
-func WrapExecute(b *B, cbk func()) {
-	b.StopTimer()
-	defer b.StartTimer()
-	cbk()
-	b.ResetTimer()
-}
-
-func InitDB() {
-	sqls := [][]string{
+func CreateTables() error {
+	queries := [][]string{
 		{
 			`DROP TABLE IF EXISTS models;`,
 			`CREATE TABLE models (
@@ -96,21 +91,28 @@ func InitDB() {
 		},
 	}
 
-	DB, err := sql.Open("pgx", OrmSource)
-	CheckErr(err)
+	db, err := sql.Open("pgx", OrmSource)
+	if err != nil {
+		return fmt.Errorf("init_tables: %w", err)
+	}
+
 	defer func() {
-		err := DB.Close()
-		CheckErr(err)
+		_ = db.Close()
 	}()
 
-	err = DB.Ping()
-	CheckErr(err)
+	err = db.Ping()
+	if err != nil {
+		return fmt.Errorf("init_tables: %w", err)
+	}
 
-	for _, sql := range sqls {
-		for _, line := range sql {
-			_, err = DB.Exec(line)
-			CheckErr(err)
+	for _, query := range queries {
+		for _, line := range query {
+			_, err = db.Exec(line)
+			if err != nil {
+				return fmt.Errorf("init_tables: %w", err)
+			}
 		}
 	}
 
+	return nil
 }
