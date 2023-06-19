@@ -2,6 +2,7 @@ package benchs
 
 import (
 	"gitee.com/chunanyong/zorm"
+	r "github.com/efectn/go-orm-benchmarks/benchs/reform"
 	models "github.com/efectn/go-orm-benchmarks/benchs/sqlboiler"
 )
 
@@ -200,6 +201,19 @@ func (entity *Model7) GetPKColumnName() string {
 
 func NewModel7() *Model7 {
 	m := new(Model7)
+	m.Name = "Orm Benchmark"
+	m.Title = "Just a Benchmark for fun"
+	m.Fax = "99909990"
+	m.Web = "http://blog.milkpod29.me"
+	m.Age = 100
+	m.Right = true
+	m.Counter = 1000
+
+	return m
+}
+
+func NewReformModel() *r.ReformModels {
+	m := new(r.ReformModels)
 	m.Name = "Orm Benchmark"
 	m.Title = "Just a Benchmark for fun"
 	m.Fax = "99909990"
