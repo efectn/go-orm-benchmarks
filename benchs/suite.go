@@ -16,7 +16,7 @@ type Instance interface {
 	Name() string
 	GetError(method string) string
 	Init() error
-	Close()
+	Close() error
 	Insert(b *testing.B)
 	InsertMulti(b *testing.B)
 	Update(b *testing.B)
@@ -44,7 +44,9 @@ func RunBenchmarks(orm Instance) (BenchmarkResult, error) {
 		return BenchmarkResult{}, err
 	}
 
-	defer orm.Close()
+	defer func(orm Instance) {
+		_ = orm.Close()
+	}(orm)
 
 	var result BenchmarkResult
 	operations := []func(b *testing.B){orm.Insert, orm.InsertMulti, orm.Update, orm.Read, orm.ReadSlice}

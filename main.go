@@ -16,7 +16,7 @@ import (
 // Version constant
 const VERSION = "1.0.2"
 
-var defaultBenchmarkNames = []string{"beego"}
+var defaultBenchmarkNames = []string{"beego", "bun", "dbr", "ent", "godb", "gorm", "gorm_prep", "gorp", "pg", "pgx", "pgx_pool"}
 
 type ListOpts []string
 
@@ -73,7 +73,20 @@ func main() {
 	orms.Shuffle()
 
 	// Run benchmarks
-	benchmarks := map[string]benchs.Instance{"beego": benchs.CreateBeego(200 * benchs.OrmMulti)}
+	benchmarks := map[string]benchs.Instance{
+		"beego":     benchs.CreateBeego(200 * benchs.OrmMulti),
+		"bun":       benchs.CreateBun(200 * benchs.OrmMulti),
+		"dbr":       benchs.CreateDbr(200 * benchs.OrmMulti),
+		"ent":       benchs.CreateEnt(200 * benchs.OrmMulti),
+		"godb":      benchs.CreateGodb(200 * benchs.OrmMulti),
+		"gorm":      benchs.CreateGorm(200 * benchs.OrmMulti),
+		"gorm_prep": benchs.CreateGormPrep(200 * benchs.OrmMulti),
+		"gorp":      benchs.CreateGorp(200 * benchs.OrmMulti),
+		"pg":        benchs.CreatePg(200 * benchs.OrmMulti),
+		"pgx":       benchs.CreatePgx(200 * benchs.OrmMulti),
+		"pgx_pool":  benchs.CreatePgxPool(200 * benchs.OrmMulti),
+	}
+
 	for _, n := range orms {
 		if benchs.DebugMode {
 			fmt.Printf("ORM: %s\n", n)

@@ -40,8 +40,8 @@ func (beego *Beego) Init() error {
 	return nil
 }
 
-func (beego *Beego) Close() {
-	//
+func (beego *Beego) Close() error {
+	return nil
 }
 
 func (beego *Beego) GetError(method string) string {

@@ -1,6 +1,7 @@
 package benchs
 
 import (
+	"context"
 	"database/sql"
 	"fmt"
 	"reflect"
@@ -10,6 +11,8 @@ import (
 
 	_ "github.com/jackc/pgx/v4/stdlib"
 )
+
+var ctx = context.Background()
 
 // from https://stackoverflow.com/questions/56616196/how-to-convert-camel-case-string-to-snake-case, needs cleaner solution
 var matchFirstCap = regexp.MustCompile("(.)([A-Z][a-z]+)")
