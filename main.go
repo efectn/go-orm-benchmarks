@@ -16,7 +16,12 @@ import (
 // Version constant
 const VERSION = "1.0.2"
 
-var defaultBenchmarkNames = []string{"beego", "bun", "dbr", "ent", "godb", "gorm", "gorm_prep", "gorp", "pg", "pgx", "pgx_pool"}
+var defaultBenchmarkNames = []string{
+	"beego", "bun", "dbr", "ent",
+	"godb", "gorm", "gorm_prep", "gorp",
+	"pg", "pgx", "pgx_pool", "pop",
+	"raw", "reform",
+}
 
 type ListOpts []string
 
@@ -85,6 +90,9 @@ func main() {
 		"pg":        benchs.CreatePg(200 * benchs.OrmMulti),
 		"pgx":       benchs.CreatePgx(200 * benchs.OrmMulti),
 		"pgx_pool":  benchs.CreatePgxPool(200 * benchs.OrmMulti),
+		"pop":       benchs.CreatePop(200 * benchs.OrmMulti),
+		"raw":       benchs.CreateRaw(200 * benchs.OrmMulti),
+		"reform":    benchs.CreateReform(200 * benchs.OrmMulti),
 	}
 
 	for _, n := range orms {
@@ -95,11 +103,6 @@ func main() {
 		bench := benchmarks[n]
 		if bench == nil {
 			panic(fmt.Sprintf("Unknown ORM: %s", n))
-		}
-
-		err := benchs.CreateTables()
-		if err != nil {
-			panic(err)
 		}
 
 		res, err := benchs.RunBenchmarks(bench)

@@ -53,6 +53,12 @@ func RunBenchmarks(orm Instance) (BenchmarkResult, error) {
 
 	result.ORM = orm.Name()
 	for _, operation := range operations {
+		// Clean tables for each run
+		err := CreateTables()
+		if err != nil {
+			panic(err)
+		}
+
 		br := testing.Benchmark(operation)
 		name := getFuncName(operation)
 
