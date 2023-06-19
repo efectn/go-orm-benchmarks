@@ -16,6 +16,8 @@ import (
 // Version constant
 const VERSION = "1.0.2"
 
+var defaultBenchmarkNames = []string{"beego"}
+
 type ListOpts []string
 
 func (opts *ListOpts) String() string {
@@ -23,9 +25,10 @@ func (opts *ListOpts) String() string {
 }
 
 func (opts *ListOpts) Set(value string) error {
-	if value != "all" && !strings.Contains(" "+strings.Join(benchs.BrandNames, " ")+" ", " "+value+" ") {
+	if value != "all" && !strings.Contains(" "+strings.Join(defaultBenchmarkNames, " ")+" ", " "+value+" ") {
 		return fmt.Errorf("wrong run name %s", value)
 	}
+
 	*opts = append(*opts, value)
 	return nil
 }
@@ -43,16 +46,17 @@ func main() {
 	runtime.GOMAXPROCS(runtime.NumCPU())
 
 	var orms ListOpts
+	var all bool
+
 	flag.IntVar(&benchs.OrmMaxIdle, "max_idle", 200, "max idle conns")
 	flag.IntVar(&benchs.OrmMaxConn, "max_conn", 200, "max open conns")
 	flag.StringVar(&benchs.OrmSource, "source", "host=localhost user=postgres password=postgres dbname=test sslmode=disable", "postgres dsn source")
 	flag.IntVar(&benchs.OrmMulti, "multi", 1, "base query nums x multi")
 	flag.BoolVar(&benchs.DebugMode, "debug", true, "Enable debug mode (print not-sorted results of ORMs)")
-	flag.Var(&orms, "orm", "orm name: all, "+strings.Join(benchs.BrandNames, ", "))
+	flag.Var(&orms, "orm", "orm name: all, "+strings.Join(defaultBenchmarkNames, ", "))
 	flag.Parse()
 
-	var all bool
-
+	// Check it is all
 	if len(orms) == 0 {
 		all = true
 	} else {
@@ -64,19 +68,32 @@ func main() {
 	}
 
 	if all {
-		orms = benchs.BrandNames
+		orms = defaultBenchmarkNames
 	}
-
 	orms.Shuffle()
 
+	// Run benchmarks
+	benchmarks := map[string]benchs.Instance{"beego": benchs.CreateBeego(200 * benchs.OrmMulti)}
 	for _, n := range orms {
 		if benchs.DebugMode {
-			fmt.Println(n)
+			fmt.Printf("ORM: %s\n", n)
 		}
-		benchs.RunBenchmark(n)
+
+		bench := benchmarks[n]
+		if bench == nil {
+			panic(fmt.Sprintf("Unknown ORM: %s", n))
+		}
+
+		err := benchs.CreateTables()
+		if err != nil {
+			panic(err)
+		}
+
+		res, err := benchs.RunBenchmarks(bench)
+		if err != nil {
+			panic(fmt.Sprintf("An error occured while running the benchmarks: %v", err))
+		}
+
+		fmt.Println(res)
 	}
-
-	fmt.Print("\nReports:\n\n")
-	fmt.Print(benchs.MakeReport())
-
 }
