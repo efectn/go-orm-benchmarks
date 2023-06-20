@@ -1,0 +1,171 @@
+package bench
+
+import (
+	"database/sql"
+	"github.com/efectn/go-orm-benchmarks/helper"
+	"sync"
+	"testing"
+
+	"github.com/efectn/go-orm-benchmarks/bench/sqlc/db"
+)
+
+type Sqlc struct {
+	helper.ORMInterface
+	mu         sync.Mutex
+	conn       *db.Queries
+	db         *sql.DB
+	iterations int // Same as b.N, just to customize it
+}
+
+func CreateSqlc(iterations int) helper.ORMInterface {
+	sqlc := &Sqlc{
+		iterations: iterations,
+	}
+
+	return sqlc
+}
+
+func (sqlc *Sqlc) Name() string {
+	return "sqlc"
+}
+
+func (sqlc *Sqlc) Init() error {
+	var err error
+	sqlc.db, err = sql.Open("pgx", helper.OrmSource)
+	if err != nil {
+		return err
+	}
+
+	sqlc.conn = db.New(sqlc.db)
+
+	return nil
+}
+
+func (sqlc *Sqlc) Close() error {
+	return sqlc.db.Close()
+}
+
+func (sqlc *Sqlc) Insert(b *testing.B) {
+	m := NewModel()
+
+	b.ReportAllocs()
+	b.ResetTimer()
+
+	for i := 0; i < b.N; i++ {
+		m.Id = 0
+		_, err := sqlc.conn.CreateModel(ctx, db.CreateModelParams{
+			Name:    m.Name,
+			Title:   m.Title,
+			Fax:     m.Fax,
+			Web:     m.Web,
+			Age:     int32(m.Age),
+			Right:   m.Right,
+			Counter: m.Counter,
+		})
+		if err != nil {
+			helper.SetError(b, sqlc.Name(), "insert", err.Error())
+		}
+	}
+}
+
+func (sqlc *Sqlc) InsertMulti(b *testing.B) {
+	helper.SetError(b, sqlc.Name(), "insert_multi", "insert multi is not supported on sqlc")
+}
+
+func (sqlc *Sqlc) Update(b *testing.B) {
+	m := NewModel()
+
+	_, err := sqlc.conn.CreateModel(ctx, db.CreateModelParams{
+		Name:    m.Name,
+		Title:   m.Title,
+		Fax:     m.Fax,
+		Web:     m.Web,
+		Age:     int32(m.Age),
+		Right:   m.Right,
+		Counter: m.Counter,
+	})
+	if err != nil {
+		helper.SetError(b, sqlc.Name(), "update", err.Error())
+	}
+
+	b.ReportAllocs()
+	b.ResetTimer()
+
+	for i := 0; i < b.N; i++ {
+		err := sqlc.conn.UpdateModel(ctx, db.UpdateModelParams{
+			Name:    m.Name,
+			Title:   m.Title,
+			Fax:     m.Fax,
+			Web:     m.Web,
+			Age:     int32(m.Age),
+			Right:   m.Right,
+			Counter: m.Counter,
+			ID:      int32(m.Id),
+		})
+		if err != nil {
+			helper.SetError(b, sqlc.Name(), "update", err.Error())
+		}
+	}
+}
+
+func (sqlc *Sqlc) Read(b *testing.B) {
+	m := NewModel()
+
+	output, err := sqlc.conn.CreateModel(ctx, db.CreateModelParams{
+		Name:    m.Name,
+		Title:   m.Title,
+		Fax:     m.Fax,
+		Web:     m.Web,
+		Age:     int32(m.Age),
+		Right:   m.Right,
+		Counter: m.Counter,
+	})
+	m.Id = int(output.ID)
+	if err != nil {
+		helper.SetError(b, sqlc.Name(), "read", err.Error())
+	}
+
+	b.ReportAllocs()
+	b.ResetTimer()
+
+	for i := 0; i < b.N; i++ {
+		_, err := sqlc.conn.GetModel(ctx, int32(m.Id))
+		if err != nil {
+			helper.SetError(b, sqlc.Name(), "read", err.Error())
+		}
+	}
+}
+
+func (sqlc *Sqlc) ReadSlice(b *testing.B) {
+	m := NewModel()
+
+	for i := 0; i < 100; i++ {
+		m.Id = 0
+
+		_, err := sqlc.conn.CreateModel(ctx, db.CreateModelParams{
+			Name:    m.Name,
+			Title:   m.Title,
+			Fax:     m.Fax,
+			Web:     m.Web,
+			Age:     int32(m.Age),
+			Right:   m.Right,
+			Counter: m.Counter,
+		})
+		if err != nil {
+			helper.SetError(b, sqlc.Name(), "read_slice", err.Error())
+		}
+	}
+
+	b.ReportAllocs()
+	b.ResetTimer()
+
+	for i := 0; i < b.N; i++ {
+		_, err := sqlc.conn.ListModels(ctx, db.ListModelsParams{
+			ID:    0,
+			Limit: 100,
+		})
+		if err != nil {
+			helper.SetError(b, sqlc.Name(), "read_slice", err.Error())
+		}
+	}
+}

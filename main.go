@@ -3,12 +3,16 @@ package main
 import (
 	"flag"
 	"fmt"
+	"github.com/efectn/go-orm-benchmarks/helper"
 	"math/rand"
+	"os"
 	"runtime"
+	"sort"
 	"strings"
+	"text/tabwriter"
 	"time"
 
-	"github.com/efectn/go-orm-benchmarks/benchs"
+	"github.com/efectn/go-orm-benchmarks/bench"
 
 	_ "github.com/lib/pq"
 )
@@ -55,11 +59,11 @@ func main() {
 	var orms ListOpts
 	var all bool
 
-	flag.IntVar(&benchs.OrmMaxIdle, "max_idle", 200, "max idle conns")
-	flag.IntVar(&benchs.OrmMaxConn, "max_conn", 200, "max open conns")
-	flag.StringVar(&benchs.OrmSource, "source", "host=localhost user=postgres password=postgres dbname=test sslmode=disable", "postgres dsn source")
-	flag.IntVar(&benchs.OrmMulti, "multi", 1, "base query nums x multi")
-	flag.BoolVar(&benchs.DebugMode, "debug", true, "Enable debug mode (print not-sorted results of ORMs)")
+	flag.IntVar(&helper.OrmMaxIdle, "max_idle", 200, "max idle conns")
+	flag.IntVar(&helper.OrmMaxConn, "max_conn", 200, "max open conns")
+	flag.StringVar(&helper.OrmSource, "source", "host=localhost user=postgres password=postgres dbname=test sslmode=disable", "postgres dsn source")
+	flag.IntVar(&helper.OrmMulti, "multi", 1, "base query nums x multi")
+	flag.BoolVar(&helper.DebugMode, "debug", true, "Enable debug mode (also prints not-sorted results of ORMs)")
 	flag.Var(&orms, "orm", "orm name: all, "+strings.Join(defaultBenchmarkNames, ", "))
 	flag.Parse()
 
@@ -79,46 +83,85 @@ func main() {
 	}
 	orms.Shuffle()
 
-	// Run benchmarks
-	benchmarks := map[string]benchs.Instance{
-		"beego":     benchs.CreateBeego(200 * benchs.OrmMulti),
-		"bun":       benchs.CreateBun(200 * benchs.OrmMulti),
-		"dbr":       benchs.CreateDbr(200 * benchs.OrmMulti),
-		"ent":       benchs.CreateEnt(200 * benchs.OrmMulti),
-		"godb":      benchs.CreateGodb(200 * benchs.OrmMulti),
-		"gorm":      benchs.CreateGorm(200 * benchs.OrmMulti),
-		"gorm_prep": benchs.CreateGormPrep(200 * benchs.OrmMulti),
-		"gorp":      benchs.CreateGorp(200 * benchs.OrmMulti),
-		"pg":        benchs.CreatePg(200 * benchs.OrmMulti),
-		"pgx":       benchs.CreatePgx(200 * benchs.OrmMulti),
-		"pgx_pool":  benchs.CreatePgxPool(200 * benchs.OrmMulti),
-		"pop":       benchs.CreatePop(200 * benchs.OrmMulti),
-		"raw":       benchs.CreateRaw(200 * benchs.OrmMulti),
-		"reform":    benchs.CreateReform(200 * benchs.OrmMulti),
-		"rel":       benchs.CreateRel(200 * benchs.OrmMulti),
-		"sqlboiler": benchs.CreateSqlboiler(200 * benchs.OrmMulti),
-		"sqlc":      benchs.CreateSqlc(200 * benchs.OrmMulti),
-		"sqlx":      benchs.CreateSqlx(200 * benchs.OrmMulti),
-		"upper":     benchs.CreateUpper(200 * benchs.OrmMulti),
-		"xorm":      benchs.CreateXorm(200 * benchs.OrmMulti),
-		"zorm":      benchs.CreateZorm(200 * benchs.OrmMulti),
+	// Init error map
+	helper.Errors = make(map[string]map[string]string, 0)
+	for _, name := range defaultBenchmarkNames {
+		helper.Errors[name] = make(map[string]string, 0)
 	}
 
-	for _, n := range orms {
-		if benchs.DebugMode {
-			fmt.Printf("ORM: %s\n", n)
-		}
+	runBenchmarks(orms)
+}
 
-		bench := benchmarks[n]
-		if bench == nil {
+func runBenchmarks(orms ListOpts) {
+	// Run benchmarks
+	benchmarks := map[string]helper.ORMInterface{
+		"beego":     bench.CreateBeego(200 * helper.OrmMulti),
+		"bun":       bench.CreateBun(200 * helper.OrmMulti),
+		"dbr":       bench.CreateDbr(200 * helper.OrmMulti),
+		"ent":       bench.CreateEnt(200 * helper.OrmMulti),
+		"godb":      bench.CreateGodb(200 * helper.OrmMulti),
+		"gorm":      bench.CreateGorm(200 * helper.OrmMulti),
+		"gorm_prep": bench.CreateGormPrep(200 * helper.OrmMulti),
+		"gorp":      bench.CreateGorp(200 * helper.OrmMulti),
+		"pg":        bench.CreatePg(200 * helper.OrmMulti),
+		"pgx":       bench.CreatePgx(200 * helper.OrmMulti),
+		"pgx_pool":  bench.CreatePgxPool(200 * helper.OrmMulti),
+		"pop":       bench.CreatePop(200 * helper.OrmMulti),
+		"raw":       bench.CreateRaw(200 * helper.OrmMulti),
+		"reform":    bench.CreateReform(200 * helper.OrmMulti),
+		"rel":       bench.CreateRel(200 * helper.OrmMulti),
+		"sqlboiler": bench.CreateSqlboiler(200 * helper.OrmMulti),
+		"sqlc":      bench.CreateSqlc(200 * helper.OrmMulti),
+		"sqlx":      bench.CreateSqlx(200 * helper.OrmMulti),
+		"upper":     bench.CreateUpper(200 * helper.OrmMulti),
+		"xorm":      bench.CreateXorm(200 * helper.OrmMulti),
+		"zorm":      bench.CreateZorm(200 * helper.OrmMulti),
+	}
+
+	debugTable := new(tabwriter.Writer)
+	debugTable.Init(os.Stdout, 0, 8, 2, '\t', tabwriter.AlignRight)
+
+	reports := make(map[string]helper.BenchmarkReport, 0)
+	for _, n := range orms {
+		orm := benchmarks[n]
+		if orm == nil {
 			panic(fmt.Sprintf("Unknown ORM: %s", n))
 		}
 
-		res, err := benchs.RunBenchmarks(bench)
+		res, err := helper.RunBenchmarks(orm, reports)
 		if err != nil {
 			panic(fmt.Sprintf("An error occured while running the benchmarks: %v", err))
 		}
 
-		fmt.Println(res)
+		if helper.DebugMode {
+			fmt.Printf("\n%s ORM Benchmark Results:\n", n)
+			for _, result := range res.Results {
+				_, _ = fmt.Fprintf(debugTable, "%s:\t%s\t%d ns/op\t%d B/op\t%d allocs/op\n", result.Method, result.Time, result.NsPerOp, result.MemBytes, result.MemAllocs)
+			}
+			_ = debugTable.Flush()
+		}
 	}
+
+	// Sort results
+	for _, v := range reports {
+		sort.Sort(v)
+	}
+
+	// Print final reports
+	reportTable := new(tabwriter.Writer)
+	reportTable.Init(os.Stdout, 0, 8, 2, '\t', tabwriter.AlignRight)
+
+	_, _ = fmt.Fprintf(reportTable, "Reports:\n\n")
+	for method, report := range reports {
+		_, _ = fmt.Fprintf(reportTable, "%s - %d Times\n", method, 200*helper.OrmMulti)
+		for _, result := range report {
+			if result.ErrorMsg == "" {
+				_, _ = fmt.Fprintf(reportTable, "%s:\t%s\t%d ns/op\t%d B/op\t%d allocs/op\n", result.Name, result.Time, result.NsPerOp, result.MemBytes, result.MemAllocs)
+			} else {
+				_, _ = fmt.Fprintf(reportTable, "%s:\t%s\n", result.Name, result.ErrorMsg)
+			}
+		}
+		_, _ = fmt.Fprintf(reportTable, "\n")
+	}
+	_ = reportTable.Flush()
 }
