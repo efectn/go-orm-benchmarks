@@ -108,12 +108,13 @@ func (gorp *Gorp) Read(b *testing.B) {
 	}
 }
 
-// TODO: not working
 func (gorp *Gorp) ReadSlice(b *testing.B) {
 	m := NewModel()
 	for i := 0; i < 100; i++ {
 		err := gorp.conn.Insert(m)
-		gorp.error(b, "read_slice", fmt.Sprintf("gorp: read_slice: %v", err))
+		if err != nil {
+			gorp.error(b, "read_slice", fmt.Sprintf("gorp: read_slice: %v", err))
+		}
 	}
 
 	b.ReportAllocs()

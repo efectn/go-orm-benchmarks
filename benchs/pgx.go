@@ -7,17 +7,6 @@ import (
 	"testing"
 )
 
-const (
-	sqlxInsertBaseSQL   = `INSERT INTO models (name, title, fax, web, age, "right", counter) VALUES `
-	sqlxInsertValuesSQL = `($1, $2, $3, $4, $5, $6, $7)`
-	sqlxInsertSQL       = sqlxInsertBaseSQL + sqlxInsertValuesSQL
-	sqlxInsertNamesSQL  = `(:name, :title, :fax, :web, :age, :right, :counter)`
-	sqlxInsertMultiSQL  = sqlxInsertBaseSQL + sqlxInsertNamesSQL
-	sqlxUpdateSQL       = `UPDATE models SET name = $1, title = $2, fax = $3, web = $4, age = $5, "right" = $6, counter = $7 WHERE id = $8`
-	sqlxSelectSQL       = `SELECT * FROM models WHERE id = $1`
-	sqlxSelectMultiSQL  = `SELECT * FROM models WHERE id > 0 LIMIT 100`
-)
-
 type Pgx struct {
 	Instance
 	mu         sync.Mutex

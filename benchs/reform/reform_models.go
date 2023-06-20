@@ -3,6 +3,7 @@ package reform
 //go:generate reform
 
 // reform_models represents a row in models table.
+//
 //reform:models
 type ReformModels struct {
 	ID      int    `reform:"id,pk"`

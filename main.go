@@ -20,7 +20,9 @@ var defaultBenchmarkNames = []string{
 	"beego", "bun", "dbr", "ent",
 	"godb", "gorm", "gorm_prep", "gorp",
 	"pg", "pgx", "pgx_pool", "pop",
-	"raw", "reform",
+	"raw", "reform", "rel", "sqlboiler",
+	"sqlc", "sqlx", "upper", "xorm",
+	"zorm",
 }
 
 type ListOpts []string
@@ -93,6 +95,13 @@ func main() {
 		"pop":       benchs.CreatePop(200 * benchs.OrmMulti),
 		"raw":       benchs.CreateRaw(200 * benchs.OrmMulti),
 		"reform":    benchs.CreateReform(200 * benchs.OrmMulti),
+		"rel":       benchs.CreateRel(200 * benchs.OrmMulti),
+		"sqlboiler": benchs.CreateSqlboiler(200 * benchs.OrmMulti),
+		"sqlc":      benchs.CreateSqlc(200 * benchs.OrmMulti),
+		"sqlx":      benchs.CreateSqlx(200 * benchs.OrmMulti),
+		"upper":     benchs.CreateUpper(200 * benchs.OrmMulti),
+		"xorm":      benchs.CreateXorm(200 * benchs.OrmMulti),
+		"zorm":      benchs.CreateZorm(200 * benchs.OrmMulti),
 	}
 
 	for _, n := range orms {
