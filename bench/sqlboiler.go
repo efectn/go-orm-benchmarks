@@ -57,13 +57,13 @@ func (sqlboiler *Sqlboiler) Insert(b *testing.B) {
 		m.ID = 0
 		err := m.Insert(ctx, sqlboiler.conn, boil.Infer())
 		if err != nil {
-			helper.SetError(b, sqlboiler.Name(), "insert", err.Error())
+			helper.SetError(b, sqlboiler.Name(), "Insert", err.Error())
 		}
 	}
 }
 
 func (sqlboiler *Sqlboiler) InsertMulti(b *testing.B) {
-	helper.SetError(b, sqlboiler.Name(), "insert_multi", "insert multi is not supported on sqlboiler")
+	helper.SetError(b, sqlboiler.Name(), "InsertMulti", "bulk-insert is not supported")
 }
 
 func (sqlboiler *Sqlboiler) Update(b *testing.B) {
@@ -71,7 +71,7 @@ func (sqlboiler *Sqlboiler) Update(b *testing.B) {
 	m.ID = 0
 	err := m.Insert(ctx, sqlboiler.conn, boil.Infer())
 	if err != nil {
-		helper.SetError(b, sqlboiler.Name(), "update", err.Error())
+		helper.SetError(b, sqlboiler.Name(), "Update", err.Error())
 	}
 
 	b.ReportAllocs()
@@ -80,7 +80,7 @@ func (sqlboiler *Sqlboiler) Update(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		_, err := m.Update(ctx, sqlboiler.conn, boil.Infer())
 		if err != nil {
-			helper.SetError(b, sqlboiler.Name(), "update", err.Error())
+			helper.SetError(b, sqlboiler.Name(), "Update", err.Error())
 		}
 	}
 }
@@ -90,7 +90,7 @@ func (sqlboiler *Sqlboiler) Read(b *testing.B) {
 	m.ID = 0
 	err := m.Insert(ctx, sqlboiler.conn, boil.Infer())
 	if err != nil {
-		helper.SetError(b, sqlboiler.Name(), "read", err.Error())
+		helper.SetError(b, sqlboiler.Name(), "Read", err.Error())
 	}
 
 	b.ReportAllocs()
@@ -99,7 +99,7 @@ func (sqlboiler *Sqlboiler) Read(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		_, err := models.Models(qm.Where("id = 0")).Exec(sqlboiler.conn)
 		if err != nil {
-			helper.SetError(b, sqlboiler.Name(), "read", err.Error())
+			helper.SetError(b, sqlboiler.Name(), "Read", err.Error())
 		}
 	}
 }
@@ -110,7 +110,7 @@ func (sqlboiler *Sqlboiler) ReadSlice(b *testing.B) {
 		m.ID = 0
 		err := m.Insert(ctx, sqlboiler.conn, boil.Infer())
 		if err != nil {
-			helper.SetError(b, sqlboiler.Name(), "read_slice", err.Error())
+			helper.SetError(b, sqlboiler.Name(), "ReadSlice", err.Error())
 		}
 	}
 
@@ -120,7 +120,7 @@ func (sqlboiler *Sqlboiler) ReadSlice(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		_, err := models.Models(qm.Where("id > 0"), qm.Limit(100)).All(ctx, sqlboiler.conn)
 		if err != nil {
-			helper.SetError(b, sqlboiler.Name(), "read_slice", err.Error())
+			helper.SetError(b, sqlboiler.Name(), "ReadSlice", err.Error())
 		}
 	}
 }

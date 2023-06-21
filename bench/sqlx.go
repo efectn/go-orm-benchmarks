@@ -61,7 +61,7 @@ func (sqlx *Sqlx) Insert(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		_, err := sqlx.conn.Exec(sqlxInsertSQL, m.Name, m.Title, m.Fax, m.Web, m.Age, m.Right, m.Counter)
 		if err != nil {
-			helper.SetError(b, sqlx.Name(), "insert", err.Error())
+			helper.SetError(b, sqlx.Name(), "Insert", err.Error())
 		}
 	}
 }
@@ -78,7 +78,7 @@ func (sqlx *Sqlx) InsertMulti(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		_, err := sqlx.conn.NamedExec(sqlxInsertMultiSQL, ms)
 		if err != nil {
-			helper.SetError(b, sqlx.Name(), "insert_multi", err.Error())
+			helper.SetError(b, sqlx.Name(), "InsertMulti", err.Error())
 		}
 	}
 }
@@ -87,7 +87,7 @@ func (sqlx *Sqlx) Update(b *testing.B) {
 	m := NewModel()
 	_, err := sqlx.conn.Exec(sqlxInsertSQL, m.Name, m.Title, m.Fax, m.Web, m.Age, m.Right, m.Counter)
 	if err != nil {
-		helper.SetError(b, sqlx.Name(), "update", err.Error())
+		helper.SetError(b, sqlx.Name(), "Update", err.Error())
 	}
 
 	b.ReportAllocs()
@@ -96,7 +96,7 @@ func (sqlx *Sqlx) Update(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		_, err := sqlx.conn.Exec(sqlxUpdateSQL, m.Name, m.Title, m.Fax, m.Web, m.Age, m.Right, m.Counter, m.Id)
 		if err != nil {
-			helper.SetError(b, sqlx.Name(), "update", err.Error())
+			helper.SetError(b, sqlx.Name(), "Update", err.Error())
 		}
 	}
 }
@@ -105,7 +105,7 @@ func (sqlx *Sqlx) Read(b *testing.B) {
 	m := NewModel()
 	_, err := sqlx.conn.Exec(sqlxInsertSQL, m.Name, m.Title, m.Fax, m.Web, m.Age, m.Right, m.Counter)
 	if err != nil {
-		helper.SetError(b, sqlx.Name(), "read", err.Error())
+		helper.SetError(b, sqlx.Name(), "Read", err.Error())
 	}
 
 	b.ReportAllocs()
@@ -115,7 +115,7 @@ func (sqlx *Sqlx) Read(b *testing.B) {
 		var m []Model
 		err := sqlx.conn.Select(&m, sqlxSelectSQL, 1)
 		if err != nil {
-			helper.SetError(b, sqlx.Name(), "read", err.Error())
+			helper.SetError(b, sqlx.Name(), "Read", err.Error())
 		}
 	}
 }
@@ -125,7 +125,7 @@ func (sqlx *Sqlx) ReadSlice(b *testing.B) {
 	for i := 0; i < 100; i++ {
 		_, err := sqlx.conn.Exec(sqlxInsertSQL, m.Name, m.Title, m.Fax, m.Web, m.Age, m.Right, m.Counter)
 		if err != nil {
-			helper.SetError(b, sqlx.Name(), "read_slice", err.Error())
+			helper.SetError(b, sqlx.Name(), "ReadSlice", err.Error())
 		}
 	}
 
@@ -136,7 +136,7 @@ func (sqlx *Sqlx) ReadSlice(b *testing.B) {
 		ms := make([]Model, 100)
 		err := sqlx.conn.Select(&ms, sqlxSelectMultiSQL)
 		if err != nil {
-			helper.SetError(b, sqlx.Name(), "read_slice", err.Error())
+			helper.SetError(b, sqlx.Name(), "ReadSlice", err.Error())
 		}
 	}
 }

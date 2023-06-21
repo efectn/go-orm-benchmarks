@@ -57,13 +57,13 @@ func (pop *Pop) Insert(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		err := pop.conn.Create(m)
 		if err != nil {
-			helper.SetError(b, pop.Name(), "insert", err.Error())
+			helper.SetError(b, pop.Name(), "Insert", err.Error())
 		}
 	}
 }
 
 func (pop *Pop) InsertMulti(b *testing.B) {
-	helper.SetError(b, pop.Name(), "insert_multi", "insert multi is not supported on pop")
+	helper.SetError(b, pop.Name(), "InsertMulti", "bulk-insert is not supported")
 }
 
 func (pop *Pop) Update(b *testing.B) {
@@ -71,7 +71,7 @@ func (pop *Pop) Update(b *testing.B) {
 
 	err := pop.conn.Create(m)
 	if err != nil {
-		helper.SetError(b, pop.Name(), "update", err.Error())
+		helper.SetError(b, pop.Name(), "Update", err.Error())
 	}
 
 	b.ReportAllocs()
@@ -80,7 +80,7 @@ func (pop *Pop) Update(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		err := pop.conn.Update(m)
 		if err != nil {
-			helper.SetError(b, pop.Name(), "update", err.Error())
+			helper.SetError(b, pop.Name(), "Update", err.Error())
 		}
 	}
 }
@@ -90,7 +90,7 @@ func (pop *Pop) Read(b *testing.B) {
 
 	err := pop.conn.Create(m)
 	if err != nil {
-		helper.SetError(b, pop.Name(), "read", err.Error())
+		helper.SetError(b, pop.Name(), "Read", err.Error())
 	}
 
 	b.ReportAllocs()
@@ -99,7 +99,7 @@ func (pop *Pop) Read(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		err := pop.conn.First(m)
 		if err != nil {
-			helper.SetError(b, pop.Name(), "read", err.Error())
+			helper.SetError(b, pop.Name(), "Read", err.Error())
 		}
 	}
 }
@@ -109,7 +109,7 @@ func (pop *Pop) ReadSlice(b *testing.B) {
 	for i := 0; i < 100; i++ {
 		err := pop.conn.Create(m)
 		if err != nil {
-			helper.SetError(b, pop.Name(), "read_slice", err.Error())
+			helper.SetError(b, pop.Name(), "ReadSlice", err.Error())
 		}
 	}
 
@@ -120,7 +120,7 @@ func (pop *Pop) ReadSlice(b *testing.B) {
 		var ms []Model3
 		err := pop.conn.Where("id > 0").Limit(100).All(&ms)
 		if err != nil {
-			helper.SetError(b, pop.Name(), "read_slice", err.Error())
+			helper.SetError(b, pop.Name(), "ReadSlice", err.Error())
 		}
 	}
 }

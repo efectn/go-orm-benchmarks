@@ -78,7 +78,7 @@ func (ent *Ent) Insert(b *testing.B) {
 			SetCounter(m.Counter).
 			Save(ctx)
 		if err != nil {
-			helper.SetError(b, ent.Name(), "insert", err.Error())
+			helper.SetError(b, ent.Name(), "Insert", err.Error())
 		}
 	}
 }
@@ -107,7 +107,7 @@ func (ent *Ent) InsertMulti(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		_, err := ent.conn.Model.CreateBulk(bulk...).Save(ctx)
 		if err != nil {
-			helper.SetError(b, ent.Name(), "insert_multi", err.Error())
+			helper.SetError(b, ent.Name(), "InsertMulti", err.Error())
 		}
 	}
 }
@@ -125,7 +125,7 @@ func (ent *Ent) Update(b *testing.B) {
 		SetCounter(m.Counter).
 		Save(ctx)
 	if err != nil {
-		helper.SetError(b, ent.Name(), "update", err.Error())
+		helper.SetError(b, ent.Name(), "Update", err.Error())
 	}
 
 	b.ReportAllocs()
@@ -143,7 +143,7 @@ func (ent *Ent) Update(b *testing.B) {
 			SetCounter(m.Counter).
 			Save(ctx)
 		if err != nil {
-			helper.SetError(b, ent.Name(), "update", err.Error())
+			helper.SetError(b, ent.Name(), "Update", err.Error())
 		}
 	}
 }
@@ -161,7 +161,7 @@ func (ent *Ent) Read(b *testing.B) {
 		SetCounter(m.Counter).
 		Save(ctx)
 	if err != nil {
-		helper.SetError(b, ent.Name(), "read", err.Error())
+		helper.SetError(b, ent.Name(), "Read", err.Error())
 	}
 
 	b.ReportAllocs()
@@ -170,7 +170,7 @@ func (ent *Ent) Read(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		_, err := ent.conn.Model.Query().Where(model.IDEQ(1)).First(ctx)
 		if err != nil {
-			helper.SetError(b, ent.Name(), "read", err.Error())
+			helper.SetError(b, ent.Name(), "Read", err.Error())
 		}
 	}
 }
@@ -188,7 +188,7 @@ func (ent *Ent) ReadSlice(b *testing.B) {
 			SetCounter(m.Counter).
 			Save(ctx)
 		if err != nil {
-			helper.SetError(b, ent.Name(), "read_slice", err.Error())
+			helper.SetError(b, ent.Name(), "ReadSlice", err.Error())
 		}
 	}
 
@@ -198,7 +198,7 @@ func (ent *Ent) ReadSlice(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		_, err := ent.conn.Model.Query().Where(model.IDGT(0)).Unique(false).Limit(100).All(ctx)
 		if err != nil {
-			helper.SetError(b, ent.Name(), "read_slice", err.Error())
+			helper.SetError(b, ent.Name(), "ReadSlice", err.Error())
 		}
 	}
 }

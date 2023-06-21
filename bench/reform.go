@@ -58,7 +58,7 @@ func (reform *Reform) Insert(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		err := reform.conn.Save(m)
 		if err != nil {
-			helper.SetError(b, reform.Name(), "insert", err.Error())
+			helper.SetError(b, reform.Name(), "Insert", err.Error())
 		}
 	}
 }
@@ -75,7 +75,7 @@ func (reform *Reform) InsertMulti(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		err := reform.conn.InsertMulti(ms...)
 		if err != nil {
-			helper.SetError(b, reform.Name(), "insert_multi", err.Error())
+			helper.SetError(b, reform.Name(), "InsertMulti", err.Error())
 		}
 	}
 }
@@ -85,7 +85,7 @@ func (reform *Reform) Update(b *testing.B) {
 
 	err := reform.conn.Save(m)
 	if err != nil {
-		helper.SetError(b, reform.Name(), "update", err.Error())
+		helper.SetError(b, reform.Name(), "Update", err.Error())
 	}
 
 	b.ReportAllocs()
@@ -94,7 +94,7 @@ func (reform *Reform) Update(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		err := reform.conn.Update(m)
 		if err != nil {
-			helper.SetError(b, reform.Name(), "update", err.Error())
+			helper.SetError(b, reform.Name(), "Update", err.Error())
 		}
 	}
 }
@@ -104,7 +104,7 @@ func (reform *Reform) Read(b *testing.B) {
 
 	err := reform.conn.Save(m)
 	if err != nil {
-		helper.SetError(b, reform.Name(), "read", err.Error())
+		helper.SetError(b, reform.Name(), "Read", err.Error())
 	}
 
 	b.ReportAllocs()
@@ -113,7 +113,7 @@ func (reform *Reform) Read(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		_, err := reform.conn.FindByPrimaryKeyFrom(r.ReformModelsTable, m.ID)
 		if err != nil {
-			helper.SetError(b, reform.Name(), "read", err.Error())
+			helper.SetError(b, reform.Name(), "Read", err.Error())
 		}
 	}
 }
@@ -123,7 +123,7 @@ func (reform *Reform) ReadSlice(b *testing.B) {
 	for i := 0; i < 100; i++ {
 		err := reform.conn.Save(m)
 		if err != nil {
-			helper.SetError(b, reform.Name(), "read_slice", err.Error())
+			helper.SetError(b, reform.Name(), "ReadSlice", err.Error())
 		}
 	}
 
@@ -133,7 +133,7 @@ func (reform *Reform) ReadSlice(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		_, err := reform.conn.SelectAllFrom(r.ReformModelsTable, "WHERE id > 0 LIMIT 100")
 		if err != nil {
-			helper.SetError(b, reform.Name(), "read_slice", err.Error())
+			helper.SetError(b, reform.Name(), "ReadSlice", err.Error())
 		}
 	}
 }

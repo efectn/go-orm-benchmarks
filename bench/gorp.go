@@ -55,13 +55,13 @@ func (gorp *Gorp) Insert(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		err := gorp.conn.Insert(m)
 		if err != nil {
-			helper.SetError(b, gorp.Name(), "insert", err.Error())
+			helper.SetError(b, gorp.Name(), "Insert", err.Error())
 		}
 	}
 }
 
 func (gorp *Gorp) InsertMulti(b *testing.B) {
-	helper.SetError(b, gorp.Name(), "insert_multi", "insert multi is not supported on gorp")
+	helper.SetError(b, gorp.Name(), "InsertMulti", "bulk-insert is not supported")
 }
 
 func (gorp *Gorp) Update(b *testing.B) {
@@ -69,7 +69,7 @@ func (gorp *Gorp) Update(b *testing.B) {
 
 	err := gorp.conn.Insert(m)
 	if err != nil {
-		helper.SetError(b, gorp.Name(), "update", err.Error())
+		helper.SetError(b, gorp.Name(), "Update", err.Error())
 	}
 
 	b.ReportAllocs()
@@ -78,7 +78,7 @@ func (gorp *Gorp) Update(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		_, err := gorp.conn.Update(m)
 		if err != nil {
-			helper.SetError(b, gorp.Name(), "update", err.Error())
+			helper.SetError(b, gorp.Name(), "Update", err.Error())
 		}
 	}
 }
@@ -88,7 +88,7 @@ func (gorp *Gorp) Read(b *testing.B) {
 
 	err := gorp.conn.Insert(m)
 	if err != nil {
-		helper.SetError(b, gorp.Name(), "read", err.Error())
+		helper.SetError(b, gorp.Name(), "Read", err.Error())
 	}
 
 	b.ReportAllocs()
@@ -97,7 +97,7 @@ func (gorp *Gorp) Read(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		err := gorp.conn.SelectOne(m, "SELECT * FROM models LIMIT 1")
 		if err != nil {
-			helper.SetError(b, gorp.Name(), "read", err.Error())
+			helper.SetError(b, gorp.Name(), "Read", err.Error())
 		}
 	}
 }
@@ -107,7 +107,7 @@ func (gorp *Gorp) ReadSlice(b *testing.B) {
 	for i := 0; i < 100; i++ {
 		err := gorp.conn.Insert(m)
 		if err != nil {
-			helper.SetError(b, gorp.Name(), "read_slice", err.Error())
+			helper.SetError(b, gorp.Name(), "ReadSlice", err.Error())
 		}
 	}
 
@@ -118,7 +118,7 @@ func (gorp *Gorp) ReadSlice(b *testing.B) {
 		var ms []*Model
 		_, err := gorp.conn.Select(&ms, "select * from models where id > 0 LIMIT 100")
 		if err != nil {
-			helper.SetError(b, gorp.Name(), "read_slice", err.Error())
+			helper.SetError(b, gorp.Name(), "ReadSlice", err.Error())
 		}
 	}
 }

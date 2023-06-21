@@ -69,7 +69,7 @@ func (rel *Rel) Insert(b *testing.B) {
 		m.ID = 0
 		err := rel.conn.Insert(ctx, m)
 		if err != nil {
-			helper.SetError(b, rel.Name(), "insert", err.Error())
+			helper.SetError(b, rel.Name(), "Insert", err.Error())
 		}
 	}
 }
@@ -89,7 +89,7 @@ func (rel *Rel) InsertMulti(b *testing.B) {
 		}
 		err := rel.conn.InsertAll(ctx, &ms)
 		if err != nil {
-			helper.SetError(b, rel.Name(), "insert_multi", err.Error())
+			helper.SetError(b, rel.Name(), "InsertMulti", err.Error())
 		}
 	}
 }
@@ -99,7 +99,7 @@ func (rel *Rel) Update(b *testing.B) {
 	m.ID = 0
 	err := rel.conn.Insert(ctx, m)
 	if err != nil {
-		helper.SetError(b, rel.Name(), "update", err.Error())
+		helper.SetError(b, rel.Name(), "Update", err.Error())
 	}
 
 	b.ReportAllocs()
@@ -108,7 +108,7 @@ func (rel *Rel) Update(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		err := rel.conn.Update(ctx, m)
 		if err != nil {
-			helper.SetError(b, rel.Name(), "update", err.Error())
+			helper.SetError(b, rel.Name(), "Update", err.Error())
 		}
 	}
 }
@@ -118,7 +118,7 @@ func (rel *Rel) Read(b *testing.B) {
 	m.ID = 0
 	err := rel.conn.Insert(ctx, m)
 	if err != nil {
-		helper.SetError(b, rel.Name(), "read", err.Error())
+		helper.SetError(b, rel.Name(), "Read", err.Error())
 	}
 
 	b.ReportAllocs()
@@ -127,7 +127,7 @@ func (rel *Rel) Read(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		err := rel.conn.Find(ctx, m)
 		if err != nil {
-			helper.SetError(b, rel.Name(), "read", err.Error())
+			helper.SetError(b, rel.Name(), "Read", err.Error())
 		}
 	}
 }
@@ -138,7 +138,7 @@ func (rel *Rel) ReadSlice(b *testing.B) {
 		m.ID = 0
 		err := rel.conn.Insert(ctx, m)
 		if err != nil {
-			helper.SetError(b, rel.Name(), "read_slice", err.Error())
+			helper.SetError(b, rel.Name(), "ReadSlice", err.Error())
 		}
 	}
 
@@ -149,7 +149,7 @@ func (rel *Rel) ReadSlice(b *testing.B) {
 		var ms []Model3
 		err := rel.conn.FindAll(ctx, &ms, where.Gt("id", 0), relware.Limit(100))
 		if err != nil {
-			helper.SetError(b, rel.Name(), "read_slice", err.Error())
+			helper.SetError(b, rel.Name(), "ReadSlice", err.Error())
 		}
 	}
 }
