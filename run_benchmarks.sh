@@ -18,7 +18,7 @@ for operation in "${operations[@]}"; do
     docker-compose up --exit-code-from benchmarker
 
     # Apply output to template
-    logs=$(docker logs go-orm-benchmarks-benchmarker-1 --tail 102) 
+    logs=$(docker logs go-orm-benchmarks-benchmarker-1 --tail 116)
     escaped=$(echo "${logs}" | sed '$!s@$@\\@g')
 
     proto=$(sed "s|@(${operation[0]})|${escaped}|g" <<< $proto)
