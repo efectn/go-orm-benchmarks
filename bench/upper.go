@@ -64,7 +64,7 @@ func (upper *Upper) Insert(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		_, err := upper.conn.Collection("models").Insert(m)
 		if err != nil {
-			helper.SetError(b, upper.Name(), "insert", err.Error())
+			helper.SetError(b, upper.Name(), "Insert", err.Error())
 		}
 	}
 }
@@ -86,7 +86,7 @@ func (upper *Upper) InsertMulti(b *testing.B) {
 		}()
 
 		if err := batch.Wait(); err != nil {
-			helper.SetError(b, upper.Name(), "insert_multi", err.Error())
+			helper.SetError(b, upper.Name(), "InsertMulti", err.Error())
 		}
 	}
 }
@@ -96,7 +96,7 @@ func (upper *Upper) Update(b *testing.B) {
 
 	err := upper.conn.Collection("models").InsertReturning(m)
 	if err != nil {
-		helper.SetError(b, upper.Name(), "update", err.Error())
+		helper.SetError(b, upper.Name(), "Update", err.Error())
 	}
 
 	b.ReportAllocs()
@@ -105,7 +105,7 @@ func (upper *Upper) Update(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		err := upper.conn.Collection("models").UpdateReturning(m)
 		if err != nil {
-			helper.SetError(b, upper.Name(), "update", err.Error())
+			helper.SetError(b, upper.Name(), "Update", err.Error())
 		}
 	}
 }
@@ -115,7 +115,7 @@ func (upper *Upper) Read(b *testing.B) {
 
 	err := upper.conn.Collection("models").InsertReturning(m)
 	if err != nil {
-		helper.SetError(b, upper.Name(), "read", err.Error())
+		helper.SetError(b, upper.Name(), "Read", err.Error())
 	}
 
 	b.ReportAllocs()
@@ -124,7 +124,7 @@ func (upper *Upper) Read(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		err := upper.conn.SQL().SelectFrom("models").Where("id = ?", m.ID).One(m)
 		if err != nil {
-			helper.SetError(b, upper.Name(), "read", err.Error())
+			helper.SetError(b, upper.Name(), "Read", err.Error())
 		}
 	}
 }
@@ -135,7 +135,7 @@ func (upper *Upper) ReadSlice(b *testing.B) {
 		m.ID = 0
 		err := upper.conn.Collection("models").InsertReturning(m)
 		if err != nil {
-			helper.SetError(b, upper.Name(), "read_slice", err.Error())
+			helper.SetError(b, upper.Name(), "ReadSlice", err.Error())
 		}
 	}
 
@@ -146,7 +146,7 @@ func (upper *Upper) ReadSlice(b *testing.B) {
 		var ms []*Model4
 		err := upper.conn.SQL().SelectFrom("models").Where("id > ?", m.ID).Limit(100).All(&ms)
 		if err != nil {
-			helper.SetError(b, upper.Name(), "read_slice", err.Error())
+			helper.SetError(b, upper.Name(), "ReadSlice", err.Error())
 		}
 	}
 }

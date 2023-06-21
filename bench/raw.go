@@ -60,7 +60,7 @@ func (raw *Raw) Insert(b *testing.B) {
 		// pq dose not support the LastInsertId method.
 		_, err := raw.conn.Exec(rawInsertSQL, m.Name, m.Title, m.Fax, m.Web, m.Age, m.Right, m.Counter)
 		if err != nil {
-			helper.SetError(b, raw.Name(), "insert", err.Error())
+			helper.SetError(b, raw.Name(), "Insert", err.Error())
 		}
 	}
 }
@@ -111,7 +111,7 @@ func (raw *Raw) InsertMulti(b *testing.B) {
 		// pq dose not support the LastInsertId method.
 		_, err := raw.conn.Exec(query, args...)
 		if err != nil {
-			helper.SetError(b, raw.Name(), "insert_multi", err.Error())
+			helper.SetError(b, raw.Name(), "InsertMulti", err.Error())
 		}
 	}
 }
@@ -121,7 +121,7 @@ func (raw *Raw) Update(b *testing.B) {
 
 	_, err := raw.conn.Exec(rawInsertSQL, m.Name, m.Title, m.Fax, m.Web, m.Age, m.Right, m.Counter)
 	if err != nil {
-		helper.SetError(b, raw.Name(), "update", err.Error())
+		helper.SetError(b, raw.Name(), "Update", err.Error())
 	}
 
 	b.ReportAllocs()
@@ -130,7 +130,7 @@ func (raw *Raw) Update(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		_, err := raw.conn.Exec(rawUpdateSQL, m.Name, m.Title, m.Fax, m.Web, m.Age, m.Right, m.Counter, m.Id)
 		if err != nil {
-			helper.SetError(b, raw.Name(), "update", err.Error())
+			helper.SetError(b, raw.Name(), "Update", err.Error())
 		}
 	}
 }
@@ -140,7 +140,7 @@ func (raw *Raw) Read(b *testing.B) {
 
 	_, err := raw.conn.Exec(rawInsertSQL, m.Name, m.Title, m.Fax, m.Web, m.Age, m.Right, m.Counter)
 	if err != nil {
-		helper.SetError(b, raw.Name(), "read", err.Error())
+		helper.SetError(b, raw.Name(), "Read", err.Error())
 	}
 
 	b.ReportAllocs()
@@ -160,7 +160,7 @@ func (raw *Raw) Read(b *testing.B) {
 			&mout.Counter,
 		)
 		if err != nil {
-			helper.SetError(b, raw.Name(), "read", err.Error())
+			helper.SetError(b, raw.Name(), "Read", err.Error())
 		}
 	}
 }
@@ -170,7 +170,7 @@ func (raw *Raw) ReadSlice(b *testing.B) {
 	for i := 0; i < 100; i++ {
 		_, err := raw.conn.Exec(rawInsertSQL, m.Name, m.Title, m.Fax, m.Web, m.Age, m.Right, m.Counter)
 		if err != nil {
-			helper.SetError(b, raw.Name(), "read_slice", err.Error())
+			helper.SetError(b, raw.Name(), "ReadSlice", err.Error())
 		}
 	}
 
@@ -182,7 +182,7 @@ func (raw *Raw) ReadSlice(b *testing.B) {
 		models := make([]Model, 100)
 		rows, err := raw.conn.Query(rawSelectMultiSQL)
 		if err != nil {
-			helper.SetError(b, raw.Name(), "read_slice", err.Error())
+			helper.SetError(b, raw.Name(), "ReadSlice", err.Error())
 		}
 
 		for j = 0; rows.Next() && j < len(models); j++ {
@@ -197,16 +197,16 @@ func (raw *Raw) ReadSlice(b *testing.B) {
 				&models[j].Counter,
 			)
 			if err != nil {
-				helper.SetError(b, raw.Name(), "read_slice", err.Error())
+				helper.SetError(b, raw.Name(), "ReadSlice", err.Error())
 			}
 		}
 		err = rows.Err()
 		if err != nil {
-			helper.SetError(b, raw.Name(), "read_slice", err.Error())
+			helper.SetError(b, raw.Name(), "ReadSlice", err.Error())
 		}
 		err = rows.Close()
 		if err != nil {
-			helper.SetError(b, raw.Name(), "read_slice", err.Error())
+			helper.SetError(b, raw.Name(), "ReadSlice", err.Error())
 		}
 	}
 }

@@ -61,7 +61,7 @@ func (gorm *Gorm) Insert(b *testing.B) {
 		m.Id = 0
 		err := gorm.conn.Create(m).Error
 		if err != nil {
-			helper.SetError(b, gorm.Name(), "insert", err.Error())
+			helper.SetError(b, gorm.Name(), "Insert", err.Error())
 		}
 	}
 }
@@ -81,7 +81,7 @@ func (gorm *Gorm) InsertMulti(b *testing.B) {
 		}
 		err := gorm.conn.Create(&ms).Error
 		if err != nil {
-			helper.SetError(b, gorm.Name(), "insert_multi", err.Error())
+			helper.SetError(b, gorm.Name(), "InsertMulti", err.Error())
 		}
 	}
 }
@@ -91,7 +91,7 @@ func (gorm *Gorm) Update(b *testing.B) {
 
 	err := gorm.conn.Create(m).Error
 	if err != nil {
-		helper.SetError(b, gorm.Name(), "update", err.Error())
+		helper.SetError(b, gorm.Name(), "Update", err.Error())
 	}
 
 	b.ReportAllocs()
@@ -100,7 +100,7 @@ func (gorm *Gorm) Update(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		err := gorm.conn.Model(m).Updates(m).Error
 		if err != nil {
-			helper.SetError(b, gorm.Name(), "update", err.Error())
+			helper.SetError(b, gorm.Name(), "Update", err.Error())
 		}
 	}
 }
@@ -110,7 +110,7 @@ func (gorm *Gorm) Read(b *testing.B) {
 
 	err := gorm.conn.Create(m).Error
 	if err != nil {
-		helper.SetError(b, gorm.Name(), "read", err.Error())
+		helper.SetError(b, gorm.Name(), "Read", err.Error())
 	}
 
 	b.ReportAllocs()
@@ -119,7 +119,7 @@ func (gorm *Gorm) Read(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		err := gorm.conn.Take(m).Error
 		if err != nil {
-			helper.SetError(b, gorm.Name(), "read", err.Error())
+			helper.SetError(b, gorm.Name(), "Read", err.Error())
 		}
 	}
 }
@@ -130,7 +130,7 @@ func (gorm *Gorm) ReadSlice(b *testing.B) {
 		m.Id = 0
 		err := gorm.conn.Create(m).Error
 		if err != nil {
-			helper.SetError(b, gorm.Name(), "read_slice", err.Error())
+			helper.SetError(b, gorm.Name(), "ReadSlice", err.Error())
 		}
 	}
 
@@ -141,7 +141,7 @@ func (gorm *Gorm) ReadSlice(b *testing.B) {
 		var models []*Model
 		err := gorm.conn.Where("id > ?", 0).Limit(100).Find(&models).Error
 		if err != nil {
-			helper.SetError(b, gorm.Name(), "read_slice", err.Error())
+			helper.SetError(b, gorm.Name(), "ReadSlice", err.Error())
 		}
 	}
 }

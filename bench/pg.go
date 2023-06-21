@@ -56,7 +56,7 @@ func (pg *Pg) Insert(b *testing.B) {
 		m.Id = 0
 		_, err := pg.conn.Model(m).Insert()
 		if err != nil {
-			helper.SetError(b, pg.Name(), "insert", err.Error())
+			helper.SetError(b, pg.Name(), "Insert", err.Error())
 		}
 	}
 }
@@ -77,7 +77,7 @@ func (pg *Pg) InsertMulti(b *testing.B) {
 
 		_, err := pg.conn.Model(&ms).Insert()
 		if err != nil {
-			helper.SetError(b, pg.Name(), "insert_multi", err.Error())
+			helper.SetError(b, pg.Name(), "InsertMulti", err.Error())
 		}
 	}
 }
@@ -87,7 +87,7 @@ func (pg *Pg) Update(b *testing.B) {
 
 	_, err := pg.conn.Model(m).Insert()
 	if err != nil {
-		helper.SetError(b, pg.Name(), "update", err.Error())
+		helper.SetError(b, pg.Name(), "Update", err.Error())
 	}
 
 	b.ReportAllocs()
@@ -96,7 +96,7 @@ func (pg *Pg) Update(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		_, err := pg.conn.Model(m).WherePK().Update()
 		if err != nil {
-			helper.SetError(b, pg.Name(), "update", err.Error())
+			helper.SetError(b, pg.Name(), "Update", err.Error())
 		}
 	}
 }
@@ -106,7 +106,7 @@ func (pg *Pg) Read(b *testing.B) {
 
 	_, err := pg.conn.Model(m).Insert()
 	if err != nil {
-		helper.SetError(b, pg.Name(), "read", err.Error())
+		helper.SetError(b, pg.Name(), "Read", err.Error())
 	}
 
 	b.ReportAllocs()
@@ -115,7 +115,7 @@ func (pg *Pg) Read(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		err := pg.conn.Model(m).Limit(1).Select()
 		if err != nil {
-			helper.SetError(b, pg.Name(), "read", err.Error())
+			helper.SetError(b, pg.Name(), "Read", err.Error())
 		}
 	}
 }
@@ -126,7 +126,7 @@ func (pg *Pg) ReadSlice(b *testing.B) {
 		m.Id = 0
 		_, err := pg.conn.Model(m).Insert()
 		if err != nil {
-			helper.SetError(b, pg.Name(), "read_slice", err.Error())
+			helper.SetError(b, pg.Name(), "ReadSlice", err.Error())
 		}
 	}
 
@@ -137,7 +137,7 @@ func (pg *Pg) ReadSlice(b *testing.B) {
 		var models []*Model
 		err := pg.conn.Model(&models).Where("id > ?", 0).Limit(100).Select()
 		if err != nil {
-			helper.SetError(b, pg.Name(), "read_slice", err.Error())
+			helper.SetError(b, pg.Name(), "ReadSlice", err.Error())
 		}
 	}
 }

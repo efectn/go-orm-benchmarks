@@ -58,13 +58,13 @@ func (dbr *Dbr) Insert(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		_, err := dbr.conn.InsertInto("models").Columns(columns...).Record(m).Exec()
 		if err != nil {
-			helper.SetError(b, dbr.Name(), "insert", err.Error())
+			helper.SetError(b, dbr.Name(), "Insert", err.Error())
 		}
 	}
 }
 
 func (dbr *Dbr) InsertMulti(b *testing.B) {
-	helper.SetError(b, dbr.Name(), "insert_multi", "insert multi is not supported on dbr")
+	helper.SetError(b, dbr.Name(), "InsertMulti", "bulk-insert is not supported")
 }
 
 func (dbr *Dbr) Update(b *testing.B) {
@@ -72,7 +72,7 @@ func (dbr *Dbr) Update(b *testing.B) {
 
 	_, err := dbr.conn.InsertInto("models").Columns(columns...).Record(m).Exec()
 	if err != nil {
-		helper.SetError(b, dbr.Name(), "update", err.Error())
+		helper.SetError(b, dbr.Name(), "Update", err.Error())
 	}
 
 	b.ReportAllocs()
@@ -89,7 +89,7 @@ func (dbr *Dbr) Update(b *testing.B) {
 			"counter": m.Counter,
 		}).Exec()
 		if err != nil {
-			helper.SetError(b, dbr.Name(), "update", err.Error())
+			helper.SetError(b, dbr.Name(), "Update", err.Error())
 		}
 	}
 }
@@ -99,7 +99,7 @@ func (dbr *Dbr) Read(b *testing.B) {
 
 	_, err := dbr.conn.InsertInto("models").Columns(columns...).Record(m).Exec()
 	if err != nil {
-		helper.SetError(b, dbr.Name(), "read", err.Error())
+		helper.SetError(b, dbr.Name(), "Read", err.Error())
 	}
 
 	b.ReportAllocs()
@@ -108,7 +108,7 @@ func (dbr *Dbr) Read(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		_, err := dbr.conn.Select("*").From("models").Where("id = ?", m.ID).Load(m)
 		if err != nil {
-			helper.SetError(b, dbr.Name(), "read", err.Error())
+			helper.SetError(b, dbr.Name(), "Read", err.Error())
 		}
 	}
 }
@@ -118,7 +118,7 @@ func (dbr *Dbr) ReadSlice(b *testing.B) {
 	for i := 0; i < 100; i++ {
 		_, err := dbr.conn.InsertInto("models").Columns(columns...).Record(m).Exec()
 		if err != nil {
-			helper.SetError(b, dbr.Name(), "read_slice", err.Error())
+			helper.SetError(b, dbr.Name(), "ReadSlice", err.Error())
 		}
 	}
 
@@ -129,7 +129,7 @@ func (dbr *Dbr) ReadSlice(b *testing.B) {
 		var ms []*Model2
 		_, err := dbr.conn.Select("*").From("models").Where("id > 0").Limit(100).Load(&ms)
 		if err != nil {
-			helper.SetError(b, dbr.Name(), "read_slice", err.Error())
+			helper.SetError(b, dbr.Name(), "ReadSlice", err.Error())
 		}
 	}
 }

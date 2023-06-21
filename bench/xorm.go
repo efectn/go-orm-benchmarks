@@ -51,7 +51,7 @@ func (xorm *Xorm) Insert(b *testing.B) {
 		m.ID = 0
 		_, err := xorm.conn.Insert(m)
 		if err != nil {
-			helper.SetError(b, xorm.Name(), "insert", err.Error())
+			helper.SetError(b, xorm.Name(), "Insert", err.Error())
 		}
 	}
 }
@@ -68,7 +68,7 @@ func (xorm *Xorm) InsertMulti(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		_, err := xorm.conn.Insert(&ms)
 		if err != nil {
-			helper.SetError(b, xorm.Name(), "insert_multi", err.Error())
+			helper.SetError(b, xorm.Name(), "InsertMulti", err.Error())
 		}
 	}
 }
@@ -78,7 +78,7 @@ func (xorm *Xorm) Update(b *testing.B) {
 
 	_, err := xorm.conn.Insert(m)
 	if err != nil {
-		helper.SetError(b, xorm.Name(), "update", err.Error())
+		helper.SetError(b, xorm.Name(), "Update", err.Error())
 	}
 
 	b.ReportAllocs()
@@ -87,7 +87,7 @@ func (xorm *Xorm) Update(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		_, err := xorm.conn.ID(m.ID).Update(m)
 		if err != nil {
-			helper.SetError(b, xorm.Name(), "update", err.Error())
+			helper.SetError(b, xorm.Name(), "Update", err.Error())
 		}
 	}
 }
@@ -97,7 +97,7 @@ func (xorm *Xorm) Read(b *testing.B) {
 
 	_, err := xorm.conn.Insert(m)
 	if err != nil {
-		helper.SetError(b, xorm.Name(), "read", err.Error())
+		helper.SetError(b, xorm.Name(), "Read", err.Error())
 	}
 
 	b.ReportAllocs()
@@ -106,7 +106,7 @@ func (xorm *Xorm) Read(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		_, err := xorm.conn.ID(1).NoAutoCondition().Get(m)
 		if err != nil {
-			helper.SetError(b, xorm.Name(), "read", err.Error())
+			helper.SetError(b, xorm.Name(), "Read", err.Error())
 		}
 	}
 }
@@ -118,7 +118,7 @@ func (xorm *Xorm) ReadSlice(b *testing.B) {
 		m.ID = 0
 		_, err := xorm.conn.Insert(m)
 		if err != nil {
-			helper.SetError(b, xorm.Name(), "read_slice", err.Error())
+			helper.SetError(b, xorm.Name(), "ReadSlice", err.Error())
 		}
 	}
 
@@ -129,7 +129,7 @@ func (xorm *Xorm) ReadSlice(b *testing.B) {
 		var models []*Model5
 		err := xorm.conn.Where("id > 0").Limit(100).Find(&models)
 		if err != nil {
-			helper.SetError(b, xorm.Name(), "read_slice", err.Error())
+			helper.SetError(b, xorm.Name(), "ReadSlice", err.Error())
 		}
 	}
 }

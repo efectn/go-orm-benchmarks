@@ -63,13 +63,13 @@ func (sqlc *Sqlc) Insert(b *testing.B) {
 			Counter: m.Counter,
 		})
 		if err != nil {
-			helper.SetError(b, sqlc.Name(), "insert", err.Error())
+			helper.SetError(b, sqlc.Name(), "Insert", err.Error())
 		}
 	}
 }
 
 func (sqlc *Sqlc) InsertMulti(b *testing.B) {
-	helper.SetError(b, sqlc.Name(), "insert_multi", "insert multi is not supported on sqlc")
+	helper.SetError(b, sqlc.Name(), "InsertMulti", "bulk-insert is not supported")
 }
 
 func (sqlc *Sqlc) Update(b *testing.B) {
@@ -85,7 +85,7 @@ func (sqlc *Sqlc) Update(b *testing.B) {
 		Counter: m.Counter,
 	})
 	if err != nil {
-		helper.SetError(b, sqlc.Name(), "update", err.Error())
+		helper.SetError(b, sqlc.Name(), "Update", err.Error())
 	}
 
 	b.ReportAllocs()
@@ -103,7 +103,7 @@ func (sqlc *Sqlc) Update(b *testing.B) {
 			ID:      int32(m.Id),
 		})
 		if err != nil {
-			helper.SetError(b, sqlc.Name(), "update", err.Error())
+			helper.SetError(b, sqlc.Name(), "Update", err.Error())
 		}
 	}
 }
@@ -122,7 +122,7 @@ func (sqlc *Sqlc) Read(b *testing.B) {
 	})
 	m.Id = int(output.ID)
 	if err != nil {
-		helper.SetError(b, sqlc.Name(), "read", err.Error())
+		helper.SetError(b, sqlc.Name(), "Read", err.Error())
 	}
 
 	b.ReportAllocs()
@@ -131,7 +131,7 @@ func (sqlc *Sqlc) Read(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		_, err := sqlc.conn.GetModel(ctx, int32(m.Id))
 		if err != nil {
-			helper.SetError(b, sqlc.Name(), "read", err.Error())
+			helper.SetError(b, sqlc.Name(), "Read", err.Error())
 		}
 	}
 }
@@ -152,7 +152,7 @@ func (sqlc *Sqlc) ReadSlice(b *testing.B) {
 			Counter: m.Counter,
 		})
 		if err != nil {
-			helper.SetError(b, sqlc.Name(), "read_slice", err.Error())
+			helper.SetError(b, sqlc.Name(), "ReadSlice", err.Error())
 		}
 	}
 
@@ -165,7 +165,7 @@ func (sqlc *Sqlc) ReadSlice(b *testing.B) {
 			Limit: 100,
 		})
 		if err != nil {
-			helper.SetError(b, sqlc.Name(), "read_slice", err.Error())
+			helper.SetError(b, sqlc.Name(), "ReadSlice", err.Error())
 		}
 	}
 }

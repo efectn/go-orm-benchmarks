@@ -51,7 +51,7 @@ func (godb *Godb) Insert(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		err := godb.conn.Insert(m).Do()
 		if err != nil {
-			helper.SetError(b, godb.Name(), "insert", err.Error())
+			helper.SetError(b, godb.Name(), "Insert", err.Error())
 		}
 	}
 }
@@ -68,7 +68,7 @@ func (godb *Godb) InsertMulti(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		err := godb.conn.BulkInsert(&ms).Do()
 		if err != nil {
-			helper.SetError(b, godb.Name(), "insert_multi", err.Error())
+			helper.SetError(b, godb.Name(), "InsertMulti", err.Error())
 		}
 	}
 }
@@ -78,7 +78,7 @@ func (godb *Godb) Update(b *testing.B) {
 
 	err := godb.conn.Insert(m).Do()
 	if err != nil {
-		helper.SetError(b, godb.Name(), "update", err.Error())
+		helper.SetError(b, godb.Name(), "Update", err.Error())
 	}
 
 	b.ReportAllocs()
@@ -87,7 +87,7 @@ func (godb *Godb) Update(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		err := godb.conn.Update(m).Do()
 		if err != nil {
-			helper.SetError(b, godb.Name(), "update", err.Error())
+			helper.SetError(b, godb.Name(), "Update", err.Error())
 		}
 	}
 }
@@ -97,7 +97,7 @@ func (godb *Godb) Read(b *testing.B) {
 
 	err := godb.conn.Insert(m).Do()
 	if err != nil {
-		helper.SetError(b, godb.Name(), "read", err.Error())
+		helper.SetError(b, godb.Name(), "Read", err.Error())
 	}
 
 	b.ReportAllocs()
@@ -106,7 +106,7 @@ func (godb *Godb) Read(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		err := godb.conn.Select(m).Do()
 		if err != nil {
-			helper.SetError(b, godb.Name(), "read", err.Error())
+			helper.SetError(b, godb.Name(), "Read", err.Error())
 		}
 	}
 }
@@ -116,7 +116,7 @@ func (godb *Godb) ReadSlice(b *testing.B) {
 	for i := 0; i < 100; i++ {
 		err := godb.conn.Insert(m).Do()
 		if err != nil {
-			helper.SetError(b, godb.Name(), "read_slice", err.Error())
+			helper.SetError(b, godb.Name(), "ReadSlice", err.Error())
 		}
 	}
 
@@ -127,7 +127,7 @@ func (godb *Godb) ReadSlice(b *testing.B) {
 		var ms []*Model2
 		err := godb.conn.Select(&ms).Where("id > 0").Limit(100).Do()
 		if err != nil {
-			helper.SetError(b, godb.Name(), "read_slice", err.Error())
+			helper.SetError(b, godb.Name(), "ReadSlice", err.Error())
 		}
 	}
 }

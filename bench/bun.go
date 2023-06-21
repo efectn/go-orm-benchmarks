@@ -54,7 +54,7 @@ func (bun *Bun) Insert(b *testing.B) {
 
 		_, err := bun.conn.NewInsert().Model(m).Exec(ctx)
 		if err != nil {
-			helper.SetError(b, bun.Name(), "insert", err.Error())
+			helper.SetError(b, bun.Name(), "Insert", err.Error())
 		}
 	}
 }
@@ -75,7 +75,7 @@ func (bun *Bun) InsertMulti(b *testing.B) {
 
 		_, err := bun.conn.NewInsert().Model(&ms).Exec(ctx)
 		if err != nil {
-			helper.SetError(b, bun.Name(), "insert_multi", err.Error())
+			helper.SetError(b, bun.Name(), "InsertMulti", err.Error())
 		}
 	}
 }
@@ -85,7 +85,7 @@ func (bun *Bun) Update(b *testing.B) {
 
 	_, err := bun.conn.NewInsert().Model(m).Exec(ctx)
 	if err != nil {
-		helper.SetError(b, bun.Name(), "update", err.Error())
+		helper.SetError(b, bun.Name(), "Update", err.Error())
 	}
 
 	b.ReportAllocs()
@@ -94,7 +94,7 @@ func (bun *Bun) Update(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		_, err := bun.conn.NewUpdate().Model(m).WherePK().Exec(ctx)
 		if err != nil {
-			helper.SetError(b, bun.Name(), "update", err.Error())
+			helper.SetError(b, bun.Name(), "Update", err.Error())
 		}
 	}
 }
@@ -104,7 +104,7 @@ func (bun *Bun) Read(b *testing.B) {
 
 	_, err := bun.conn.NewInsert().Model(m).Exec(ctx)
 	if err != nil {
-		helper.SetError(b, bun.Name(), "read", err.Error())
+		helper.SetError(b, bun.Name(), "Read", err.Error())
 	}
 
 	b.ReportAllocs()
@@ -113,7 +113,7 @@ func (bun *Bun) Read(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		err := bun.conn.NewSelect().Model(m).Scan(ctx)
 		if err != nil {
-			helper.SetError(b, bun.Name(), "read", err.Error())
+			helper.SetError(b, bun.Name(), "Read", err.Error())
 		}
 	}
 }
@@ -124,7 +124,7 @@ func (bun *Bun) ReadSlice(b *testing.B) {
 		m.Id = 0
 		_, err := bun.conn.NewInsert().Model(m).Exec(ctx)
 		if err != nil {
-			helper.SetError(b, bun.Name(), "read_slice", err.Error())
+			helper.SetError(b, bun.Name(), "ReadSlice", err.Error())
 		}
 	}
 
@@ -139,7 +139,7 @@ func (bun *Bun) ReadSlice(b *testing.B) {
 			Limit(100).
 			Scan(ctx)
 		if err != nil {
-			helper.SetError(b, bun.Name(), "read_slice", err.Error())
+			helper.SetError(b, bun.Name(), "ReadSlice", err.Error())
 		}
 	}
 }

@@ -54,7 +54,7 @@ func (beego *Beego) Insert(b *testing.B) {
 
 		_, err := beego.conn.Insert(m)
 		if err != nil {
-			helper.SetError(b, beego.Name(), "insert", fmt.Sprintf("beego: insert: %v", err))
+			helper.SetError(b, beego.Name(), "Insert", fmt.Sprintf("beego: insert: %v", err))
 		}
 	}
 }
@@ -71,7 +71,7 @@ func (beego *Beego) InsertMulti(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		_, err := beego.conn.InsertMulti(100, ms)
 		if err != nil {
-			helper.SetError(b, beego.Name(), "insert_multi", err.Error())
+			helper.SetError(b, beego.Name(), "InsertMulti", err.Error())
 		}
 	}
 }
@@ -81,7 +81,7 @@ func (beego *Beego) Update(b *testing.B) {
 
 	_, err := beego.conn.Insert(m)
 	if err != nil {
-		helper.SetError(b, beego.Name(), "update", err.Error())
+		helper.SetError(b, beego.Name(), "Update", err.Error())
 	}
 
 	b.ReportAllocs()
@@ -90,7 +90,7 @@ func (beego *Beego) Update(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		_, err := beego.conn.Update(m)
 		if err != nil {
-			helper.SetError(b, beego.Name(), "update", err.Error())
+			helper.SetError(b, beego.Name(), "Update", err.Error())
 		}
 	}
 }
@@ -100,7 +100,7 @@ func (beego *Beego) Read(b *testing.B) {
 
 	_, err := beego.conn.Insert(m)
 	if err != nil {
-		helper.SetError(b, beego.Name(), "read", err.Error())
+		helper.SetError(b, beego.Name(), "Read", err.Error())
 	}
 
 	b.ReportAllocs()
@@ -109,7 +109,7 @@ func (beego *Beego) Read(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		err := beego.conn.Read(m)
 		if err != nil {
-			helper.SetError(b, beego.Name(), "read", err.Error())
+			helper.SetError(b, beego.Name(), "Read", err.Error())
 		}
 	}
 }
@@ -120,7 +120,7 @@ func (beego *Beego) ReadSlice(b *testing.B) {
 		m.Id = 0
 		_, err := beego.conn.Insert(m)
 		if err != nil {
-			helper.SetError(b, beego.Name(), "read_slice", err.Error())
+			helper.SetError(b, beego.Name(), "ReadSlice", err.Error())
 		}
 	}
 
@@ -131,7 +131,7 @@ func (beego *Beego) ReadSlice(b *testing.B) {
 		var models []*Model
 		_, err := beego.conn.QueryTable("models").Filter("id__gt", 0).Limit(100).All(&models)
 		if err != nil {
-			helper.SetError(b, beego.Name(), "read_slice", err.Error())
+			helper.SetError(b, beego.Name(), "ReadSlice", err.Error())
 		}
 	}
 }

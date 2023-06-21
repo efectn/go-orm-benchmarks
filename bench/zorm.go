@@ -71,7 +71,7 @@ func (zorm *Zorm) Insert(b *testing.B) {
 		m.ID = 0
 		_, err := zormdb.Insert(zormCtx, m)
 		if err != nil {
-			helper.SetError(b, zorm.Name(), "insert", err.Error())
+			helper.SetError(b, zorm.Name(), "Insert", err.Error())
 		}
 	}
 }
@@ -92,7 +92,7 @@ func (zorm *Zorm) InsertMulti(b *testing.B) {
 		}
 		_, err := zormdb.InsertSlice(zormCtx, ms)
 		if err != nil {
-			helper.SetError(b, zorm.Name(), "insert_multi", err.Error())
+			helper.SetError(b, zorm.Name(), "InsertMulti", err.Error())
 		}
 	}
 }
@@ -102,7 +102,7 @@ func (zorm *Zorm) Update(b *testing.B) {
 
 	_, err := zormdb.Insert(zormCtx, m)
 	if err != nil {
-		helper.SetError(b, zorm.Name(), "update", err.Error())
+		helper.SetError(b, zorm.Name(), "Update", err.Error())
 	}
 
 	b.ReportAllocs()
@@ -111,7 +111,7 @@ func (zorm *Zorm) Update(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		_, err := zormdb.Update(zormCtx, m)
 		if err != nil {
-			helper.SetError(b, zorm.Name(), "update", err.Error())
+			helper.SetError(b, zorm.Name(), "Update", err.Error())
 		}
 	}
 }
@@ -121,7 +121,7 @@ func (zorm *Zorm) Read(b *testing.B) {
 
 	_, err := zormdb.Insert(zormCtx, m)
 	if err != nil {
-		helper.SetError(b, zorm.Name(), "read", err.Error())
+		helper.SetError(b, zorm.Name(), "Read", err.Error())
 	}
 
 	b.ReportAllocs()
@@ -130,7 +130,7 @@ func (zorm *Zorm) Read(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		_, err := zormdb.QueryRow(zormCtx, readFinder, m)
 		if err != nil {
-			helper.SetError(b, zorm.Name(), "read", err.Error())
+			helper.SetError(b, zorm.Name(), "Read", err.Error())
 		}
 	}
 }
@@ -141,7 +141,7 @@ func (zorm *Zorm) ReadSlice(b *testing.B) {
 		m.ID = 0
 		_, err := zormdb.Insert(zormCtx, m)
 		if err != nil {
-			helper.SetError(b, zorm.Name(), "read_slice", err.Error())
+			helper.SetError(b, zorm.Name(), "ReadSlice", err.Error())
 		}
 	}
 
@@ -152,7 +152,7 @@ func (zorm *Zorm) ReadSlice(b *testing.B) {
 		var models []Model7
 		err := zormdb.Query(zormCtx, readSliceFinder, &models, page)
 		if err != nil {
-			helper.SetError(b, zorm.Name(), "read_slice", err.Error())
+			helper.SetError(b, zorm.Name(), "ReadSlice", err.Error())
 		}
 	}
 }
