@@ -11,18 +11,13 @@ import (
 
 type Sqlc struct {
 	helper.ORMInterface
-	mu         sync.Mutex
-	conn       *db.Queries
-	db         *sql.DB
-	iterations int // Same as b.N, just to customize it
+	mu   sync.Mutex
+	conn *db.Queries
+	db   *sql.DB
 }
 
-func CreateSqlc(iterations int) helper.ORMInterface {
-	sqlc := &Sqlc{
-		iterations: iterations,
-	}
-
-	return sqlc
+func CreateSqlc() helper.ORMInterface {
+	return &Sqlc{}
 }
 
 func (sqlc *Sqlc) Name() string {

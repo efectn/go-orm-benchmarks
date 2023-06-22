@@ -21,17 +21,12 @@ const (
 
 type Sqlx struct {
 	helper.ORMInterface
-	mu         sync.Mutex
-	conn       *sqlxdb.DB
-	iterations int // Same as b.N, just to customize it
+	mu   sync.Mutex
+	conn *sqlxdb.DB
 }
 
-func CreateSqlx(iterations int) helper.ORMInterface {
-	sqlx := &Sqlx{
-		iterations: iterations,
-	}
-
-	return sqlx
+func CreateSqlx() helper.ORMInterface {
+	return &Sqlx{}
 }
 
 func (sqlx *Sqlx) Name() string {

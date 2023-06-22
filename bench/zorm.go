@@ -19,16 +19,11 @@ var (
 
 type Zorm struct {
 	helper.ORMInterface
-	mu         sync.Mutex
-	iterations int // Same as b.N, just to customize it
+	mu sync.Mutex
 }
 
-func CreateZorm(iterations int) helper.ORMInterface {
-	zorm := &Zorm{
-		iterations: iterations,
-	}
-
-	return zorm
+func CreateZorm() helper.ORMInterface {
+	return &Zorm{}
 }
 
 func (zorm *Zorm) Name() string {

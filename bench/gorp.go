@@ -13,17 +13,12 @@ import (
 
 type Gorp struct {
 	helper.ORMInterface
-	mu         sync.Mutex
-	conn       *gorpware.DbMap
-	iterations int // Same as b.N, just to customize it
+	mu   sync.Mutex
+	conn *gorpware.DbMap
 }
 
-func CreateGorp(iterations int) helper.ORMInterface {
-	gorp := &Gorp{
-		iterations: iterations,
-	}
-
-	return gorp
+func CreateGorp() helper.ORMInterface {
+	return &Gorp{}
 }
 
 func (gorp *Gorp) Name() string {

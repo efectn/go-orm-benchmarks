@@ -35,11 +35,11 @@ See [`go.mod`](go.mod) for their latest versions.
 # install
 go install github.com/efectn/go-orm-benchmarks@latest
 # all
-go-orm-benchmarks -multi=20 -orm=all
+go-orm-benchmarks -orm=all
 # portion
-go-orm-benchmarks -multi=20 -orm=gorm
-go-orm-benchmarks -multi=10 -orm=pg
-go-orm-benchmarks -multi=15 -orm=bun
+go-orm-benchmarks -orm=gorm
+go-orm-benchmarks -orm=pg
+go-orm-benchmarks -orm=bun
 # ... and so on...
 ```
 

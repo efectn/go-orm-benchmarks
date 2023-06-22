@@ -10,17 +10,12 @@ import (
 
 type Beego struct {
 	helper.ORMInterface
-	mu         sync.Mutex
-	conn       orm.Ormer
-	iterations int // Same as b.N, just to customize it
+	mu   sync.Mutex
+	conn orm.Ormer
 }
 
-func CreateBeego(iterations int) helper.ORMInterface {
-	beego := &Beego{
-		iterations: iterations,
-	}
-
-	return beego
+func CreateBeego() helper.ORMInterface {
+	return &Beego{}
 }
 
 func (beego *Beego) Name() string {

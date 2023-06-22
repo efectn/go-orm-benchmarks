@@ -10,17 +10,12 @@ import (
 
 type Upper struct {
 	helper.ORMInterface
-	mu         sync.Mutex
-	conn       db.Session
-	iterations int // Same as b.N, just to customize it
+	mu   sync.Mutex
+	conn db.Session
 }
 
-func CreateUpper(iterations int) helper.ORMInterface {
-	upper := &Upper{
-		iterations: iterations,
-	}
-
-	return upper
+func CreateUpper() helper.ORMInterface {
+	return &Upper{}
 }
 
 func (upper *Upper) Name() string {

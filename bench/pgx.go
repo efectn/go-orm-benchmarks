@@ -9,17 +9,12 @@ import (
 
 type Pgx struct {
 	helper.ORMInterface
-	mu         sync.Mutex
-	conn       *pgxdb.Conn
-	iterations int // Same as b.N, just to customize it
+	mu   sync.Mutex
+	conn *pgxdb.Conn
 }
 
-func CreatePgx(iterations int) helper.ORMInterface {
-	pgx := &Pgx{
-		iterations: iterations,
-	}
-
-	return pgx
+func CreatePgx() helper.ORMInterface {
+	return &Pgx{}
 }
 
 func (pgx *Pgx) Name() string {

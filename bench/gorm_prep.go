@@ -11,17 +11,12 @@ import (
 
 type GormPrep struct {
 	helper.ORMInterface
-	mu         sync.Mutex
-	conn       *gormdb.DB
-	iterations int // Same as b.N, just to customize it
+	mu   sync.Mutex
+	conn *gormdb.DB
 }
 
-func CreateGormPrep(iterations int) helper.ORMInterface {
-	gormPrep := &GormPrep{
-		iterations: iterations,
-	}
-
-	return gormPrep
+func CreateGormPrep() helper.ORMInterface {
+	return &GormPrep{}
 }
 
 func (gorm *GormPrep) Name() string {

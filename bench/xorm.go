@@ -9,17 +9,12 @@ import (
 
 type Xorm struct {
 	helper.ORMInterface
-	mu         sync.Mutex
-	conn       *xormdb.Session
-	iterations int // Same as b.N, just to customize it
+	mu   sync.Mutex
+	conn *xormdb.Session
 }
 
-func CreateXorm(iterations int) helper.ORMInterface {
-	xorm := &Xorm{
-		iterations: iterations,
-	}
-
-	return xorm
+func CreateXorm() helper.ORMInterface {
+	return &Xorm{}
 }
 
 func (xorm *Xorm) Name() string {

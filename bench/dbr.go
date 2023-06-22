@@ -13,17 +13,12 @@ var columns = []string{"name", "title", "fax", "web", "age", "right", "counter"}
 
 type Dbr struct {
 	helper.ORMInterface
-	mu         sync.Mutex
-	conn       *dbrware.Session
-	iterations int // Same as b.N, just to customize it
+	mu   sync.Mutex
+	conn *dbrware.Session
 }
 
-func CreateDbr(iterations int) helper.ORMInterface {
-	dbr := &Dbr{
-		iterations: iterations,
-	}
-
-	return dbr
+func CreateDbr() helper.ORMInterface {
+	return &Dbr{}
 }
 
 func (dbr *Dbr) Name() string {

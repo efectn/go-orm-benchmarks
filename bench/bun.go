@@ -13,17 +13,12 @@ import (
 
 type Bun struct {
 	helper.ORMInterface
-	mu         sync.Mutex
-	conn       *bundb.DB
-	iterations int // Same as b.N, just to customize it
+	mu   sync.Mutex
+	conn *bundb.DB
 }
 
-func CreateBun(iterations int) helper.ORMInterface {
-	bun := &Bun{
-		iterations: iterations,
-	}
-
-	return bun
+func CreateBun() helper.ORMInterface {
+	return &Bun{}
 }
 
 func (bun *Bun) Name() string {

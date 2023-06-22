@@ -11,17 +11,12 @@ import (
 
 type Gorm struct {
 	helper.ORMInterface
-	mu         sync.Mutex
-	conn       *gormdb.DB
-	iterations int // Same as b.N, just to customize it
+	mu   sync.Mutex
+	conn *gormdb.DB
 }
 
-func CreateGorm(iterations int) helper.ORMInterface {
-	gorm := &Gorm{
-		iterations: iterations,
-	}
-
-	return gorm
+func CreateGorm() helper.ORMInterface {
+	return &Gorm{}
 }
 
 func (gorm *Gorm) Name() string {

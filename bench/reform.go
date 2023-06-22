@@ -15,18 +15,13 @@ import (
 
 type Reform struct {
 	helper.ORMInterface
-	mu         sync.Mutex
-	conn       *reformware.DB
-	db         *sql.DB
-	iterations int // Same as b.N, just to customize it
+	mu   sync.Mutex
+	conn *reformware.DB
+	db   *sql.DB
 }
 
-func CreateReform(iterations int) helper.ORMInterface {
-	reform := &Reform{
-		iterations: iterations,
-	}
-
-	return reform
+func CreateReform() helper.ORMInterface {
+	return &Reform{}
 }
 
 func (reform *Reform) Name() string {
