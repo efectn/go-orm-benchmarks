@@ -13,18 +13,13 @@ import (
 
 type Rel struct {
 	helper.ORMInterface
-	mu         sync.Mutex
-	conn       relware.Repository
-	db         relware.Adapter
-	iterations int // Same as b.N, just to customize it
+	mu   sync.Mutex
+	conn relware.Repository
+	db   relware.Adapter
 }
 
-func CreateRel(iterations int) helper.ORMInterface {
-	rel := &Rel{
-		iterations: iterations,
-	}
-
-	return rel
+func CreateRel() helper.ORMInterface {
+	return &Rel{}
 }
 
 func (rel *Rel) Name() string {

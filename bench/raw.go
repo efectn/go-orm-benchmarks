@@ -19,17 +19,12 @@ const (
 
 type Raw struct {
 	helper.ORMInterface
-	mu         sync.Mutex
-	conn       *sql.DB
-	iterations int // Same as b.N, just to customize it
+	mu   sync.Mutex
+	conn *sql.DB
 }
 
-func CreateRaw(iterations int) helper.ORMInterface {
-	raw := &Raw{
-		iterations: iterations,
-	}
-
-	return raw
+func CreateRaw() helper.ORMInterface {
+	return &Raw{}
 }
 
 func (raw *Raw) Name() string {

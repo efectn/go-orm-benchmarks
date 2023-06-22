@@ -15,18 +15,13 @@ import (
 
 type Ent struct {
 	helper.ORMInterface
-	mu         sync.Mutex
-	conn       *entdb.Client
-	dbEnt      *sql.DB
-	iterations int // Same as b.N, just to customize it
+	mu    sync.Mutex
+	conn  *entdb.Client
+	dbEnt *sql.DB
 }
 
-func CreateEnt(iterations int) helper.ORMInterface {
-	ent := &Ent{
-		iterations: iterations,
-	}
-
-	return ent
+func CreateEnt() helper.ORMInterface {
+	return &Ent{}
 }
 
 func (ent *Ent) Name() string {
@@ -45,14 +40,6 @@ func (ent *Ent) Init() error {
 
 	// Assign to client
 	ent.conn = entdb.NewClient(entdb.Driver(drv))
-
-	/*if _, err := dbEnt.Exec("DROP TABLE IF EXISTS models"); err != nil {
-		return nil
-	}
-
-	if err := client.Schema.Create(ctx); err != nil {
-		return nil
-	}*/
 
 	return nil
 }

@@ -10,17 +10,12 @@ import (
 
 type PgxPool struct {
 	helper.ORMInterface
-	mu         sync.Mutex
-	conn       *pgxpool.Pool
-	iterations int // Same as b.N, just to customize it
+	mu   sync.Mutex
+	conn *pgxpool.Pool
 }
 
-func CreatePgxPool(iterations int) helper.ORMInterface {
-	pgx := &PgxPool{
-		iterations: iterations,
-	}
-
-	return pgx
+func CreatePgxPool() helper.ORMInterface {
+	return &PgxPool{}
 }
 
 func (pgx *PgxPool) Name() string {

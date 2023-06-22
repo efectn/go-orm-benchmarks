@@ -11,17 +11,12 @@ import (
 
 type Pop struct {
 	helper.ORMInterface
-	mu         sync.Mutex
-	conn       *popware.Connection
-	iterations int // Same as b.N, just to customize it
+	mu   sync.Mutex
+	conn *popware.Connection
 }
 
-func CreatePop(iterations int) helper.ORMInterface {
-	pop := &Pop{
-		iterations: iterations,
-	}
-
-	return pop
+func CreatePop() helper.ORMInterface {
+	return &Pop{}
 }
 
 func (pop *Pop) Name() string {

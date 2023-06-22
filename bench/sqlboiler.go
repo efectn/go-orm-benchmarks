@@ -14,17 +14,12 @@ import (
 
 type Sqlboiler struct {
 	helper.ORMInterface
-	mu         sync.Mutex
-	conn       *sql.DB
-	iterations int // Same as b.N, just to customize it
+	mu   sync.Mutex
+	conn *sql.DB
 }
 
-func CreateSqlboiler(iterations int) helper.ORMInterface {
-	sqlboiler := &Sqlboiler{
-		iterations: iterations,
-	}
-
-	return sqlboiler
+func CreateSqlboiler() helper.ORMInterface {
+	return &Sqlboiler{}
 }
 
 func (sqlboiler *Sqlboiler) Name() string {

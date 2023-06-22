@@ -20,8 +20,6 @@ import (
 // VERSION constant
 const VERSION = "v1.0.2"
 
-const benchmarkMultipier = 200
-
 var defaultBenchmarkNames = []string{
 	"beego", "bun", "dbr", "ent",
 	"godb", "gorm", "gorm_prep", "gorp",
@@ -63,7 +61,6 @@ func main() {
 
 	flag.StringVar(&helper.OrmSource, "source", "host=localhost user=postgres password=postgres dbname=test sslmode=disable", "postgres dsn source")
 	flag.Var(&orms, "orm", "orm name: all, "+strings.Join(defaultBenchmarkNames, ", "))
-	flag.IntVar(&helper.OrmMulti, "multi", 1, "base query nums x multi")
 	flag.IntVar(&helper.OrmMaxIdle, "max_idle", 200, "max idle conns")
 	flag.IntVar(&helper.OrmMaxConn, "max_conn", 200, "max open conns")
 	flag.BoolVar(&helper.DebugMode, "debug", false, "Enable debug mode (also prints not-sorted results of ORMs)")
@@ -104,27 +101,27 @@ func main() {
 func runBenchmarks(orms ListOpts) {
 	// Run benchmarks
 	benchmarks := map[string]helper.ORMInterface{
-		"beego":     bench.CreateBeego(benchmarkMultipier * helper.OrmMulti),
-		"bun":       bench.CreateBun(benchmarkMultipier * helper.OrmMulti),
-		"dbr":       bench.CreateDbr(benchmarkMultipier * helper.OrmMulti),
-		"ent":       bench.CreateEnt(benchmarkMultipier * helper.OrmMulti),
-		"godb":      bench.CreateGodb(benchmarkMultipier * helper.OrmMulti),
-		"gorm":      bench.CreateGorm(benchmarkMultipier * helper.OrmMulti),
-		"gorm_prep": bench.CreateGormPrep(benchmarkMultipier * helper.OrmMulti),
-		"gorp":      bench.CreateGorp(benchmarkMultipier * helper.OrmMulti),
-		"pg":        bench.CreatePg(benchmarkMultipier * helper.OrmMulti),
-		"pgx":       bench.CreatePgx(benchmarkMultipier * helper.OrmMulti),
-		"pgx_pool":  bench.CreatePgxPool(benchmarkMultipier * helper.OrmMulti),
-		"pop":       bench.CreatePop(benchmarkMultipier * helper.OrmMulti),
-		"raw":       bench.CreateRaw(benchmarkMultipier * helper.OrmMulti),
-		"reform":    bench.CreateReform(benchmarkMultipier * helper.OrmMulti),
-		"rel":       bench.CreateRel(benchmarkMultipier * helper.OrmMulti),
-		"sqlboiler": bench.CreateSqlboiler(benchmarkMultipier * helper.OrmMulti),
-		"sqlc":      bench.CreateSqlc(benchmarkMultipier * helper.OrmMulti),
-		"sqlx":      bench.CreateSqlx(benchmarkMultipier * helper.OrmMulti),
-		"upper":     bench.CreateUpper(benchmarkMultipier * helper.OrmMulti),
-		"xorm":      bench.CreateXorm(benchmarkMultipier * helper.OrmMulti),
-		"zorm":      bench.CreateZorm(benchmarkMultipier * helper.OrmMulti),
+		"beego":     bench.CreateBeego(),
+		"bun":       bench.CreateBun(),
+		"dbr":       bench.CreateDbr(),
+		"ent":       bench.CreateEnt(),
+		"godb":      bench.CreateGodb(),
+		"gorm":      bench.CreateGorm(),
+		"gorm_prep": bench.CreateGormPrep(),
+		"gorp":      bench.CreateGorp(),
+		"pg":        bench.CreatePg(),
+		"pgx":       bench.CreatePgx(),
+		"pgx_pool":  bench.CreatePgxPool(),
+		"pop":       bench.CreatePop(),
+		"raw":       bench.CreateRaw(),
+		"reform":    bench.CreateReform(),
+		"rel":       bench.CreateRel(),
+		"sqlboiler": bench.CreateSqlboiler(),
+		"sqlc":      bench.CreateSqlc(),
+		"sqlx":      bench.CreateSqlx(),
+		"upper":     bench.CreateUpper(),
+		"xorm":      bench.CreateXorm(),
+		"zorm":      bench.CreateZorm(),
 	}
 
 	table := new(tabwriter.Writer)
@@ -150,7 +147,7 @@ func runBenchmarks(orms ListOpts) {
 			_, _ = fmt.Fprintf(table, "%s Benchmark Results:\n", n)
 			for _, result := range res.Results {
 				if result.ErrorMsg == "" {
-					_, _ = fmt.Fprintf(table, "%s:\t%s\t%d ns/op\t%d B/op\t%d allocs/op\n", result.Method, result.Time, result.NsPerOp, result.MemBytes, result.MemAllocs)
+					_, _ = fmt.Fprintf(table, "%s:\t%d\t%d ns/op\t%d B/op\t%d allocs/op\n", result.Method, result.N, result.NsPerOp, result.MemBytes, result.MemAllocs)
 				} else {
 					_, _ = fmt.Fprintf(table, "%s:\t%s\n", result.Method, result.ErrorMsg)
 				}
@@ -173,10 +170,10 @@ func runBenchmarks(orms ListOpts) {
 
 	i = 1
 	for method, report := range reports {
-		_, _ = fmt.Fprintf(table, "%s - %d Times\n", method, benchmarkMultipier*helper.OrmMulti)
+		_, _ = fmt.Fprintf(table, "%s\n", method)
 		for _, result := range report {
 			if result.ErrorMsg == "" {
-				_, _ = fmt.Fprintf(table, "%s:\t%s\t%d ns/op\t%d B/op\t%d allocs/op\n", result.Name, result.Time, result.NsPerOp, result.MemBytes, result.MemAllocs)
+				_, _ = fmt.Fprintf(table, "%s:\t%d\t%d ns/op\t%d B/op\t%d allocs/op\n", result.Name, result.N, result.NsPerOp, result.MemBytes, result.MemAllocs)
 			} else {
 				_, _ = fmt.Fprintf(table, "%s:\t%s\n", result.Name, result.ErrorMsg)
 			}

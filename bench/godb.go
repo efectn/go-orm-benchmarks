@@ -11,17 +11,12 @@ import (
 
 type Godb struct {
 	helper.ORMInterface
-	mu         sync.Mutex
-	conn       *godbware.DB
-	iterations int // Same as b.N, just to customize it
+	mu   sync.Mutex
+	conn *godbware.DB
 }
 
-func CreateGodb(iterations int) helper.ORMInterface {
-	godb := &Godb{
-		iterations: iterations,
-	}
-
-	return godb
+func CreateGodb() helper.ORMInterface {
+	return &Godb{}
 }
 
 func (godb *Godb) Name() string {
