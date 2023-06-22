@@ -4,13 +4,11 @@ import (
 	"fmt"
 	"github.com/astaxie/beego/orm"
 	"github.com/efectn/go-orm-benchmarks/helper"
-	"sync"
 	"testing"
 )
 
 type Beego struct {
 	helper.ORMInterface
-	mu   sync.Mutex
 	conn orm.Ormer
 }
 

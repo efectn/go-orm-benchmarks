@@ -4,7 +4,6 @@ import (
 	"github.com/efectn/go-orm-benchmarks/helper"
 	sqlxdb "github.com/jmoiron/sqlx"
 	_ "github.com/lib/pq"
-	"sync"
 	"testing"
 )
 
@@ -21,7 +20,6 @@ const (
 
 type Sqlx struct {
 	helper.ORMInterface
-	mu   sync.Mutex
 	conn *sqlxdb.DB
 }
 

@@ -4,13 +4,11 @@ import (
 	"github.com/efectn/go-orm-benchmarks/helper"
 	pgxdb "github.com/jackc/pgx/v4"
 	"github.com/jackc/pgx/v4/pgxpool"
-	"sync"
 	"testing"
 )
 
 type PgxPool struct {
 	helper.ORMInterface
-	mu   sync.Mutex
 	conn *pgxpool.Pool
 }
 

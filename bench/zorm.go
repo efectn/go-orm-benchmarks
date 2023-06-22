@@ -3,7 +3,6 @@ package bench
 import (
 	"context"
 	"github.com/efectn/go-orm-benchmarks/helper"
-	"sync"
 	"testing"
 
 	zormdb "gitee.com/chunanyong/zorm"
@@ -19,7 +18,6 @@ var (
 
 type Zorm struct {
 	helper.ORMInterface
-	mu sync.Mutex
 }
 
 func CreateZorm() helper.ORMInterface {

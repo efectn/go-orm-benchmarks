@@ -5,13 +5,11 @@ import (
 	_ "github.com/jackc/pgx/v4/stdlib"
 	godbware "github.com/samonzeweb/godb"
 	"github.com/samonzeweb/godb/adapters/postgresql"
-	"sync"
 	"testing"
 )
 
 type Godb struct {
 	helper.ORMInterface
-	mu   sync.Mutex
 	conn *godbware.DB
 }
 

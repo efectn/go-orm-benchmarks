@@ -4,13 +4,11 @@ import (
 	"github.com/efectn/go-orm-benchmarks/helper"
 	db "github.com/upper/db/v4"
 	"github.com/upper/db/v4/adapter/postgresql"
-	"sync"
 	"testing"
 )
 
 type Upper struct {
 	helper.ORMInterface
-	mu   sync.Mutex
 	conn db.Session
 }
 

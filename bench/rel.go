@@ -3,7 +3,6 @@ package bench
 import (
 	"context"
 	"github.com/efectn/go-orm-benchmarks/helper"
-	"sync"
 	"testing"
 
 	"github.com/go-rel/postgres"
@@ -13,7 +12,6 @@ import (
 
 type Rel struct {
 	helper.ORMInterface
-	mu   sync.Mutex
 	conn relware.Repository
 	db   relware.Adapter
 }

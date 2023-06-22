@@ -3,7 +3,6 @@ package bench
 import (
 	"database/sql"
 	"github.com/efectn/go-orm-benchmarks/helper"
-	"sync"
 	"testing"
 
 	bundb "github.com/uptrace/bun"
@@ -13,7 +12,6 @@ import (
 
 type Bun struct {
 	helper.ORMInterface
-	mu   sync.Mutex
 	conn *bundb.DB
 }
 

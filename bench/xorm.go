@@ -2,14 +2,12 @@ package bench
 
 import (
 	"github.com/efectn/go-orm-benchmarks/helper"
-	"sync"
 	"testing"
 	xormdb "xorm.io/xorm"
 )
 
 type Xorm struct {
 	helper.ORMInterface
-	mu   sync.Mutex
 	conn *xormdb.Session
 }
 

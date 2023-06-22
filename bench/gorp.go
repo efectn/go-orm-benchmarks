@@ -3,7 +3,6 @@ package bench
 import (
 	"database/sql"
 	"github.com/efectn/go-orm-benchmarks/helper"
-	"sync"
 	"testing"
 
 	_ "github.com/jackc/pgx/v4/stdlib"
@@ -13,7 +12,6 @@ import (
 
 type Gorp struct {
 	helper.ORMInterface
-	mu   sync.Mutex
 	conn *gorpware.DbMap
 }
 
