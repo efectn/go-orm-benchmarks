@@ -3,7 +3,6 @@ package bench
 import (
 	"database/sql"
 	"github.com/efectn/go-orm-benchmarks/helper"
-	"sync"
 	"testing"
 
 	"entgo.io/ent/dialect"
@@ -15,7 +14,6 @@ import (
 
 type Ent struct {
 	helper.ORMInterface
-	mu    sync.Mutex
 	conn  *entdb.Client
 	dbEnt *sql.DB
 }
@@ -102,7 +100,7 @@ func (ent *Ent) InsertMulti(b *testing.B) {
 func (ent *Ent) Update(b *testing.B) {
 	m := NewModelAlt()
 
-	_, err := ent.conn.Model.Create().
+	created, err := ent.conn.Model.Create().
 		SetName(m.Name).
 		SetTitle(m.Title).
 		SetFax(m.Fax).
@@ -114,6 +112,7 @@ func (ent *Ent) Update(b *testing.B) {
 	if err != nil {
 		helper.SetError(b, ent.Name(), "Update", err.Error())
 	}
+	m.Id = created.ID
 
 	b.ReportAllocs()
 	b.ResetTimer()
@@ -138,7 +137,7 @@ func (ent *Ent) Update(b *testing.B) {
 func (ent *Ent) Read(b *testing.B) {
 	m := NewModelAlt()
 
-	_, err := ent.conn.Model.Create().
+	created, err := ent.conn.Model.Create().
 		SetName(m.Name).
 		SetTitle(m.Title).
 		SetFax(m.Fax).
@@ -150,12 +149,13 @@ func (ent *Ent) Read(b *testing.B) {
 	if err != nil {
 		helper.SetError(b, ent.Name(), "Read", err.Error())
 	}
+	m.Id = created.ID
 
 	b.ReportAllocs()
 	b.ResetTimer()
 
 	for i := 0; i < b.N; i++ {
-		_, err := ent.conn.Model.Query().Where(model.IDEQ(1)).First(ctx)
+		_, err := ent.conn.Model.Query().Where(model.IDEQ(m.Id)).First(ctx)
 		if err != nil {
 			helper.SetError(b, ent.Name(), "Read", err.Error())
 		}

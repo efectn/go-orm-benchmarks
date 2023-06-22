@@ -2,7 +2,6 @@ package bench
 
 import (
 	"github.com/efectn/go-orm-benchmarks/helper"
-	"sync"
 	"testing"
 
 	dbrware "github.com/gocraft/dbr/v2"
@@ -13,7 +12,6 @@ var columns = []string{"name", "title", "fax", "web", "age", "right", "counter"}
 
 type Dbr struct {
 	helper.ORMInterface
-	mu   sync.Mutex
 	conn *dbrware.Session
 }
 

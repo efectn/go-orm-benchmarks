@@ -3,7 +3,6 @@ package bench
 import (
 	"database/sql"
 	"github.com/efectn/go-orm-benchmarks/helper"
-	"sync"
 	"testing"
 
 	models "github.com/efectn/go-orm-benchmarks/bench/sqlboiler"
@@ -14,7 +13,6 @@ import (
 
 type Sqlboiler struct {
 	helper.ORMInterface
-	mu   sync.Mutex
 	conn *sql.DB
 }
 

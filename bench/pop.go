@@ -2,7 +2,6 @@ package bench
 
 import (
 	"github.com/efectn/go-orm-benchmarks/helper"
-	"sync"
 	"testing"
 
 	popware "github.com/gobuffalo/pop/v6"
@@ -11,7 +10,6 @@ import (
 
 type Pop struct {
 	helper.ORMInterface
-	mu   sync.Mutex
 	conn *popware.Connection
 }
 

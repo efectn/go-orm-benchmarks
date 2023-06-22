@@ -3,7 +3,6 @@ package bench
 import (
 	"database/sql"
 	"github.com/efectn/go-orm-benchmarks/helper"
-	"sync"
 	"testing"
 
 	r "github.com/efectn/go-orm-benchmarks/bench/reform"
@@ -15,7 +14,6 @@ import (
 
 type Reform struct {
 	helper.ORMInterface
-	mu   sync.Mutex
 	conn *reformware.DB
 	db   *sql.DB
 }

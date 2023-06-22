@@ -3,13 +3,11 @@ package bench
 import (
 	"github.com/efectn/go-orm-benchmarks/helper"
 	pgdb "github.com/go-pg/pg/v10"
-	"sync"
 	"testing"
 )
 
 type Pg struct {
 	helper.ORMInterface
-	mu   sync.Mutex
 	conn *pgdb.DB
 }
 

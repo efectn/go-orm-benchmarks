@@ -5,13 +5,11 @@ import (
 	"gorm.io/driver/postgres"
 	gormdb "gorm.io/gorm"
 	"gorm.io/gorm/logger"
-	"sync"
 	"testing"
 )
 
 type Gorm struct {
 	helper.ORMInterface
-	mu   sync.Mutex
 	conn *gormdb.DB
 }
 

@@ -3,7 +3,6 @@ package bench
 import (
 	"database/sql"
 	"github.com/efectn/go-orm-benchmarks/helper"
-	"sync"
 	"testing"
 
 	"github.com/efectn/go-orm-benchmarks/bench/sqlc/db"
@@ -11,7 +10,6 @@ import (
 
 type Sqlc struct {
 	helper.ORMInterface
-	mu   sync.Mutex
 	conn *db.Queries
 	db   *sql.DB
 }

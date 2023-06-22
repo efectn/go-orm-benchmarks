@@ -4,7 +4,6 @@ import (
 	"database/sql"
 	"github.com/efectn/go-orm-benchmarks/helper"
 	"strconv"
-	"sync"
 	"testing"
 )
 
@@ -19,7 +18,6 @@ const (
 
 type Raw struct {
 	helper.ORMInterface
-	mu   sync.Mutex
 	conn *sql.DB
 }
 

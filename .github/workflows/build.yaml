@@ -21,4 +21,4 @@ jobs:
     - name: Build Benchmarker
       run: go build main.go
     - name: Run Benchmarker
-      run: ./main -source="host=localhost user=postgres password=postgres dbname=test sslmode=disable" -orm=all -multi=1 -debug=false
+      run: ./main -source="host=localhost user=postgres password=postgres dbname=test sslmode=disable" -orm=all -debug=false
