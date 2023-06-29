@@ -25,7 +25,7 @@ require (
 	gopkg.in/gorp.v1 v1.7.2
 	gopkg.in/reform.v1 v1.5.1
 	gorm.io/driver/postgres v1.5.2
-	gorm.io/gorm v1.25.1
+	gorm.io/gorm v1.25.2
 	xorm.io/xorm v1.3.2
 )
 
