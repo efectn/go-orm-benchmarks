@@ -21,7 +21,7 @@ require (
 	github.com/uptrace/bun/dialect/pgdialect v1.1.14
 	github.com/uptrace/bun/driver/pgdriver v1.1.14
 	github.com/volatiletech/sqlboiler/v4 v4.14.2
-	github.com/volatiletech/strmangle v0.0.4
+	github.com/volatiletech/strmangle v0.0.5
 	gopkg.in/gorp.v1 v1.7.2
 	gopkg.in/reform.v1 v1.5.1
 	gorm.io/driver/postgres v1.5.2
