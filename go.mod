@@ -7,7 +7,7 @@ require (
 	gitee.com/chunanyong/zorm v1.6.9
 	github.com/astaxie/beego v1.12.3
 	github.com/friendsofgo/errors v0.9.2
-	github.com/go-pg/pg/v10 v10.11.0
+	github.com/go-pg/pg/v10 v10.11.1
 	github.com/go-rel/postgres v0.8.0
 	github.com/go-rel/rel v0.39.0
 	github.com/gobuffalo/pop/v6 v6.1.1
