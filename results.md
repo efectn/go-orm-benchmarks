@@ -4,123 +4,123 @@
 ```
 Reports:
 
-InsertMulti
-pgx_pool:       438     2971808 ns/op   113168 B/op     44 allocs/op
-raw:            344     3032535 ns/op   184243 B/op     933 allocs/op
-beego:          414     3109230 ns/op   177810 B/op     2745 allocs/op
-gorm_prep:      393     3115722 ns/op   251113 B/op     1890 allocs/op
-reform:         394     3149396 ns/op   459052 B/op     2746 allocs/op
-ent:            349     3380779 ns/op   386646 B/op     4600 allocs/op
-pg:             349     3508386 ns/op   6539 B/op       112 allocs/op
-gen:            338     3624859 ns/op   304809 B/op     5359 allocs/op
-sqlx:           343     3631249 ns/op   171548 B/op     1551 allocs/op
-bun:            370     3664276 ns/op   42671 B/op      219 allocs/op
-rel:            312     3732568 ns/op   306901 B/op     3265 allocs/op
-upper:          282     3883268 ns/op   325569 B/op     4207 allocs/op
-zorm:           308     3951400 ns/op   199929 B/op     2780 allocs/op
-gorm:           238     4384769 ns/op   291501 B/op     5231 allocs/op
-xorm:           224     4488046 ns/op   248461 B/op     5415 allocs/op
-godb:           214     4706725 ns/op   254143 B/op     5894 allocs/op
-pgx:            358     6817979 ns/op   113130 B/op     43 allocs/op
-pop:            bulk-insert is not supported
-sqlboiler:      bulk-insert is not supported
-sqlc:           bulk-insert is not supported
-gorp:           bulk-insert is not supported
-dbr:            bulk-insert is not supported
-
 Update
-sqlc:           13990   84128 ns/op     877 B/op        14 allocs/op
-raw:            14208   84819 ns/op     749 B/op        13 allocs/op
-sqlx:           5720    178812 ns/op    872 B/op        20 allocs/op
-reform:         745     1637956 ns/op   1776 B/op       51 allocs/op
-sqlboiler:      732     1682801 ns/op   905 B/op        17 allocs/op
-dbr:            758     1688043 ns/op   2651 B/op       57 allocs/op
-beego:          698     1695577 ns/op   1752 B/op       47 allocs/op
-pg:             672     1717302 ns/op   768 B/op        9 allocs/op
-gorp:           672     1757154 ns/op   1212 B/op       32 allocs/op
-gen:            668     1759213 ns/op   13472 B/op      166 allocs/op
-gorm_prep:      732     1771883 ns/op   5008 B/op       56 allocs/op
-pop:            685     1775140 ns/op   6045 B/op       186 allocs/op
-pgx_pool:       728     1779697 ns/op   290 B/op        10 allocs/op
-zorm:           690     1790709 ns/op   3024 B/op       59 allocs/op
-ent:            735     1822547 ns/op   4681 B/op       97 allocs/op
-bun:            720     1861019 ns/op   4731 B/op       5 allocs/op
-rel:            656     1869423 ns/op   3048 B/op       45 allocs/op
-pgx:            588     2102554 ns/op   267 B/op        10 allocs/op
-gorm:           565     2163181 ns/op   6752 B/op       99 allocs/op
-upper:          500     2296819 ns/op   16821 B/op      396 allocs/op
-xorm:           432     2320718 ns/op   3944 B/op       132 allocs/op
-godb:           544     2332299 ns/op   5112 B/op       154 allocs/op
+sqlc:		8894	125174 ns/op	877 B/op	14 allocs/op
+raw:		8701	127989 ns/op	750 B/op	13 allocs/op
+pgx:		4094	289343 ns/op	270 B/op	10 allocs/op
+pgx_pool:	4148	302471 ns/op	285 B/op	10 allocs/op
+sqlx:		4053	303460 ns/op	872 B/op	20 allocs/op
+gorp:		3681	305951 ns/op	1204 B/op	32 allocs/op
+sqlboiler:	4064	318474 ns/op	902 B/op	17 allocs/op
+beego:		3627	324575 ns/op	1752 B/op	47 allocs/op
+gorm_prep:	3720	331909 ns/op	5008 B/op	56 allocs/op
+ent:		3856	332479 ns/op	4677 B/op	97 allocs/op
+reform:		3852	333816 ns/op	1773 B/op	51 allocs/op
+pop:		3369	347575 ns/op	6047 B/op	186 allocs/op
+pg:		3432	352951 ns/op	768 B/op	9 allocs/op
+dbr:		3535	354966 ns/op	2651 B/op	57 allocs/op
+bun:		3676	374690 ns/op	4729 B/op	5 allocs/op
+gorm:		2924	389754 ns/op	6752 B/op	99 allocs/op
+gen:		2696	447763 ns/op	13472 B/op	166 allocs/op
+xorm:		2524	488879 ns/op	3944 B/op	132 allocs/op
+rel:		2358	500243 ns/op	3048 B/op	45 allocs/op
+zorm:		2416	507488 ns/op	3024 B/op	59 allocs/op
+godb:		2373	514429 ns/op	5112 B/op	154 allocs/op
+upper:		1027	1181716 ns/op	16664 B/op	390 allocs/op
 
 Read
-pgx:            14715   82206 ns/op     893 B/op        8 allocs/op
-pgx_pool:       14556   83208 ns/op     1079 B/op       9 allocs/op
-raw:            13690   86875 ns/op     2061 B/op       50 allocs/op
-sqlc:           13342   87095 ns/op     2077 B/op       51 allocs/op
-reform:         13088   91578 ns/op     3200 B/op       86 allocs/op
-pop:            12604   93116 ns/op     3246 B/op       67 allocs/op
-ent:            11398   99883 ns/op     5605 B/op       144 allocs/op
-gorp:           9962    100944 ns/op    3877 B/op       194 allocs/op
-beego:          13562   104061 ns/op    2098 B/op       76 allocs/op
-pg:             10000   106387 ns/op    977 B/op        20 allocs/op
-sqlboiler:      9590    111210 ns/op    957 B/op        14 allocs/op
-bun:            10000   111689 ns/op    5824 B/op       39 allocs/op
-dbr:            9127    112336 ns/op    2184 B/op       37 allocs/op
-rel:            9196    116003 ns/op    2304 B/op       47 allocs/op
-zorm:           9786    122160 ns/op    3016 B/op       64 allocs/op
-gorm_prep:      8834    126717 ns/op    4411 B/op       87 allocs/op
-gorm:           7953    150596 ns/op    4781 B/op       98 allocs/op
-gen:            6963    160247 ns/op    10413 B/op      154 allocs/op
-sqlx:           5980    182850 ns/op    1976 B/op       43 allocs/op
-godb:           5841    190702 ns/op    4067 B/op       102 allocs/op
-xorm:           5500    193652 ns/op    4651 B/op       127 allocs/op
-upper:          5295    227699 ns/op    5106 B/op       112 allocs/op
+pgx:		8895	124135 ns/op	893 B/op	8 allocs/op
+pgx_pool:	9255	125336 ns/op	1078 B/op	9 allocs/op
+sqlc:		8650	142122 ns/op	2077 B/op	51 allocs/op
+raw:		8420	142959 ns/op	2061 B/op	50 allocs/op
+beego:		8223	148386 ns/op	2096 B/op	76 allocs/op
+reform:		7891	152916 ns/op	3198 B/op	86 allocs/op
+pop:		7957	161074 ns/op	3152 B/op	67 allocs/op
+gorp:		8982	163616 ns/op	3878 B/op	194 allocs/op
+ent:		7458	167530 ns/op	5605 B/op	144 allocs/op
+gorm_prep:	6968	168634 ns/op	4403 B/op	87 allocs/op
+sqlboiler:	8386	171179 ns/op	944 B/op	14 allocs/op
+pg:		6914	174638 ns/op	872 B/op	20 allocs/op
+bun:		6754	181052 ns/op	5810 B/op	39 allocs/op
+dbr:		6892	181173 ns/op	2184 B/op	37 allocs/op
+rel:		6735	184230 ns/op	2304 B/op	47 allocs/op
+zorm:		6294	194217 ns/op	3016 B/op	64 allocs/op
+gorm:		6402	225945 ns/op	4771 B/op	98 allocs/op
+gen:		5041	250016 ns/op	10390 B/op	154 allocs/op
+sqlx:		4057	303659 ns/op	1976 B/op	43 allocs/op
+godb:		3759	315525 ns/op	4064 B/op	102 allocs/op
+upper:		3736	328131 ns/op	5055 B/op	110 allocs/op
+xorm:		3777	341177 ns/op	4648 B/op	127 allocs/op
 
 ReadSlice
-reform:         13243   93004 ns/op     4512 B/op       112 allocs/op
-pgx:            7438    148692 ns/op    42949 B/op      504 allocs/op
-pgx_pool:       6883    149681 ns/op    43007 B/op      504 allocs/op
-raw:            6092    191391 ns/op    38341 B/op      1038 allocs/op
-sqlc:           5407    217986 ns/op    62661 B/op      1150 allocs/op
-upper:          4860    235242 ns/op    4843 B/op       92 allocs/op
-pg:             5050    240542 ns/op    23520 B/op      629 allocs/op
-sqlx:           4620    261532 ns/op    37480 B/op      1225 allocs/op
-gorp:           4444    264584 ns/op    57404 B/op      1494 allocs/op
-pop:            3909    271675 ns/op    69408 B/op      1307 allocs/op
-ent:            3584    285559 ns/op    77190 B/op      2035 allocs/op
-dbr:            3541    292902 ns/op    30816 B/op      1254 allocs/op
-bun:            3669    324084 ns/op    34081 B/op      1124 allocs/op
-sqlboiler:      3082    340183 ns/op    67173 B/op      2260 allocs/op
-gorm_prep:      3258    340854 ns/op    43235 B/op      2081 allocs/op
-beego:          3136    378430 ns/op    55225 B/op      3078 allocs/op
-gorm:           2839    400370 ns/op    44398 B/op      2191 allocs/op
-rel:            2446    470933 ns/op    100641 B/op     2253 allocs/op
-zorm:           2532    470986 ns/op    161618 B/op     2949 allocs/op
-godb:           2271    479831 ns/op    75260 B/op      3084 allocs/op
-gen:            2096    503572 ns/op    50047 B/op      2247 allocs/op
-xorm:           2091    554886 ns/op    119434 B/op     4401 allocs/op
+reform:		8152	153205 ns/op	4012 B/op	100 allocs/op
+pgx_pool:	4412	282772 ns/op	43006 B/op	504 allocs/op
+pgx:		3877	287635 ns/op	42949 B/op	504 allocs/op
+upper:		3387	336150 ns/op	4790 B/op	90 allocs/op
+raw:		3109	356571 ns/op	38341 B/op	1038 allocs/op
+sqlc:		3106	381645 ns/op	62661 B/op	1150 allocs/op
+pg:		2985	388400 ns/op	22635 B/op	629 allocs/op
+gorp:		2560	441702 ns/op	57373 B/op	1494 allocs/op
+ent:		2718	450938 ns/op	77190 B/op	2035 allocs/op
+sqlx:		2622	451258 ns/op	37480 B/op	1225 allocs/op
+pop:		2695	481166 ns/op	68380 B/op	1306 allocs/op
+dbr:		2538	482435 ns/op	30816 B/op	1254 allocs/op
+bun:		2390	492520 ns/op	34036 B/op	1124 allocs/op
+beego:		2276	528558 ns/op	55198 B/op	3078 allocs/op
+sqlboiler:	2205	555616 ns/op	66384 B/op	2259 allocs/op
+gorm_prep:	1993	562963 ns/op	43149 B/op	2081 allocs/op
+gorm:		1921	630590 ns/op	44301 B/op	2191 allocs/op
+gen:		1664	676046 ns/op	50072 B/op	2248 allocs/op
+zorm:		1498	746941 ns/op	161616 B/op	2949 allocs/op
+rel:		1446	754700 ns/op	100640 B/op	2253 allocs/op
+godb:		1570	780970 ns/op	75218 B/op	3084 allocs/op
+xorm:		1281	842005 ns/op	119372 B/op	4401 allocs/op
 
 Insert
-reform:         723     1667341 ns/op   1781 B/op       51 allocs/op
-ent:            603     1669617 ns/op   4133 B/op       97 allocs/op
-sqlboiler:      711     1690820 ns/op   1569 B/op       34 allocs/op
-raw:            753     1691616 ns/op   704 B/op        13 allocs/op
-bun:            691     1720228 ns/op   5005 B/op       13 allocs/op
-gorm_prep:      648     1730891 ns/op   5161 B/op       65 allocs/op
-dbr:            717     1756766 ns/op   2688 B/op       65 allocs/op
-gorp:           625     1766369 ns/op   1772 B/op       41 allocs/op
-beego:          720     1767656 ns/op   2385 B/op       57 allocs/op
-zorm:           672     1790357 ns/op   3780 B/op       77 allocs/op
-pgx_pool:       691     1795782 ns/op   290 B/op        10 allocs/op
-sqlx:           614     1807225 ns/op   856 B/op        19 allocs/op
-pg:             652     1829659 ns/op   2520 B/op       10 allocs/op
-rel:            687     1862237 ns/op   2604 B/op       45 allocs/op
-gen:            643     1884134 ns/op   10123 B/op      135 allocs/op
-upper:          655     1957702 ns/op   5939 B/op       127 allocs/op
-pop:            622     2034033 ns/op   9553 B/op       238 allocs/op
-xorm:           547     2289864 ns/op   3323 B/op       90 allocs/op
-gorm:           570     2337354 ns/op   7161 B/op       105 allocs/op
-godb:           564     2356383 ns/op   4507 B/op       115 allocs/op
-sqlc:           552     2509708 ns/op   2760 B/op       61 allocs/op
-pgx:            626     2637059 ns/op   266 B/op        10 allocs/op
+pgx:		4239	291151 ns/op	272 B/op	10 allocs/op
+raw:		3697	296976 ns/op	703 B/op	13 allocs/op
+pgx_pool:	3486	297954 ns/op	288 B/op	10 allocs/op
+gorp:		3492	311448 ns/op	1766 B/op	41 allocs/op
+beego:		3663	311723 ns/op	2384 B/op	57 allocs/op
+sqlc:		3786	316017 ns/op	2771 B/op	62 allocs/op
+ent:		3958	316899 ns/op	4125 B/op	97 allocs/op
+sqlboiler:	4110	318855 ns/op	1559 B/op	34 allocs/op
+reform:		4126	322149 ns/op	1774 B/op	51 allocs/op
+dbr:		3823	338669 ns/op	2688 B/op	65 allocs/op
+gorm_prep:	3548	340538 ns/op	5159 B/op	65 allocs/op
+pg:		3354	340722 ns/op	1128 B/op	10 allocs/op
+bun:		3400	378758 ns/op	4994 B/op	13 allocs/op
+gorm:		3124	381045 ns/op	7159 B/op	105 allocs/op
+gen:		3080	412231 ns/op	10120 B/op	135 allocs/op
+sqlx:		2646	439877 ns/op	856 B/op	19 allocs/op
+xorm:		2539	470676 ns/op	3319 B/op	89 allocs/op
+rel:		2384	497044 ns/op	2606 B/op	45 allocs/op
+zorm:		2451	505682 ns/op	3783 B/op	77 allocs/op
+godb:		2467	510017 ns/op	4504 B/op	115 allocs/op
+upper:		2329	538232 ns/op	5879 B/op	125 allocs/op
+pop:		1618	692142 ns/op	9555 B/op	238 allocs/op
+
+InsertMulti
+pgx:		1170	1099711 ns/op	112933 B/op	43 allocs/op
+pgx_pool:	1134	1140986 ns/op	112937 B/op	43 allocs/op
+raw:		1052	1267492 ns/op	183852 B/op	930 allocs/op
+beego:		987	1341908 ns/op	177653 B/op	2745 allocs/op
+gorm_prep:	804	1495817 ns/op	250990 B/op	1890 allocs/op
+reform:		825	1496949 ns/op	458747 B/op	2745 allocs/op
+pg:		768	1675093 ns/op	4776 B/op	112 allocs/op
+ent:		723	1744214 ns/op	386569 B/op	4598 allocs/op
+bun:		703	1806408 ns/op	42501 B/op	219 allocs/op
+sqlx:		596	2015964 ns/op	169981 B/op	1551 allocs/op
+gen:		604	2057610 ns/op	304667 B/op	5359 allocs/op
+gorm:		607	2066170 ns/op	291347 B/op	5231 allocs/op
+zorm:		526	2247303 ns/op	199928 B/op	2780 allocs/op
+xorm:		530	2351565 ns/op	248053 B/op	5414 allocs/op
+rel:		534	2433482 ns/op	306897 B/op	3265 allocs/op
+upper:		480	2563274 ns/op	322888 B/op	4204 allocs/op
+godb:		492	2571139 ns/op	254006 B/op	5894 allocs/op
+pop:		bulk-insert is not supported
+sqlboiler:	bulk-insert is not supported
+sqlc:		bulk-insert is not supported
+dbr:		bulk-insert is not supported
+gorp:		bulk-insert is not supported
 ```
