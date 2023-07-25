@@ -3,7 +3,6 @@ package main
 import (
 	"flag"
 	"fmt"
-	"github.com/efectn/go-orm-benchmarks/helper"
 	"math/rand"
 	"os"
 	"runtime"
@@ -11,6 +10,8 @@ import (
 	"strings"
 	"text/tabwriter"
 	"time"
+
+	"github.com/efectn/go-orm-benchmarks/helper"
 
 	"github.com/efectn/go-orm-benchmarks/bench"
 
@@ -26,7 +27,7 @@ var defaultBenchmarkNames = []string{
 	"pg", "pgx", "pgx_pool", "pop",
 	"raw", "reform", "rel", "sqlboiler",
 	"sqlc", "sqlx", "upper", "xorm",
-	"zorm",
+	"zorm", "gen",
 }
 
 type ListOpts []string
@@ -122,6 +123,7 @@ func runBenchmarks(orms ListOpts) {
 		"upper":     bench.CreateUpper(),
 		"xorm":      bench.CreateXorm(),
 		"zorm":      bench.CreateZorm(),
+		"gen":       bench.CreateGen(),
 	}
 
 	table := new(tabwriter.Writer)

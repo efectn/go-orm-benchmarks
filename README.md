@@ -26,6 +26,7 @@ All package run in no-cache mode.
 - [sqlx](https://github.com/jmoiron/sqlx)
 - [pgx](https://github.com/jackc/pgx)
 - [zorm](https://gitee.com/chunanyong/zorm)
+- [gen](https://gorm.io/gen/index.html)
 
 See [`go.mod`](go.mod) for their latest versions.
 
