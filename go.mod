@@ -8,7 +8,7 @@ require (
 	github.com/astaxie/beego v1.12.3
 	github.com/friendsofgo/errors v0.9.2
 	github.com/go-pg/pg/v10 v10.11.1
-	github.com/go-rel/postgres v0.8.0
+	github.com/go-rel/postgres v0.9.0
 	github.com/go-rel/rel v0.39.0
 	github.com/gobuffalo/pop/v6 v6.1.1
 	github.com/gocraft/dbr/v2 v2.7.5
@@ -41,7 +41,7 @@ require (
 	github.com/fatih/structs v1.1.0 // indirect
 	github.com/go-openapi/inflect v0.19.0 // indirect
 	github.com/go-pg/zerochecker v0.2.0 // indirect
-	github.com/go-rel/sql v0.13.1 // indirect
+	github.com/go-rel/sql v0.14.0 // indirect
 	github.com/go-sql-driver/mysql v1.7.1 // indirect
 	github.com/gobuffalo/envy v1.10.2 // indirect
 	github.com/gobuffalo/fizz v1.14.4 // indirect
