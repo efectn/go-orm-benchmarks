@@ -27,7 +27,7 @@ require (
 	gorm.io/driver/postgres v1.5.2
 	gorm.io/gen v0.3.23
 	gorm.io/gorm v1.25.2
-	gorm.io/plugin/dbresolver v1.4.1
+	gorm.io/plugin/dbresolver v1.4.6
 	xorm.io/xorm v1.3.2
 )
 
