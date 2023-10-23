@@ -32,7 +32,7 @@ require (
 )
 
 require (
-	ariga.io/atlas v0.12.0 // indirect
+	ariga.io/atlas v0.14.2 // indirect
 	github.com/Masterminds/semver/v3 v3.2.1 // indirect
 	github.com/agext/levenshtein v1.2.3 // indirect
 	github.com/apparentlymart/go-textseg/v13 v13.0.0 // indirect
@@ -90,6 +90,7 @@ require (
 	github.com/sourcegraph/annotate v0.0.0-20160123013949-f4cad6c6324d // indirect
 	github.com/sourcegraph/syntaxhighlight v0.0.0-20170531221838-bd320f5d308e // indirect
 	github.com/spf13/cast v1.5.1 // indirect
+	github.com/swiftcarrot/queryx v0.2.8 // indirect
 	github.com/syndtr/goleveldb v1.0.0 // indirect
 	github.com/tmthrgd/go-hex v0.0.0-20190904060850-447a3041c3bc // indirect
 	github.com/vmihailenco/bufpool v0.1.11 // indirect
