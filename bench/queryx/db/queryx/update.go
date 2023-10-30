@@ -49,7 +49,7 @@ func (s *UpdateStatement) ToSQL() (string, []interface{}) {
 
 	sets := []string{}
 	for _, col := range s.columns {
-		sets = append(sets, fmt.Sprintf("\"%s\" = ?", col))
+		sets = append(sets, fmt.Sprintf("%s = ?", col))
 	}
 
 	sql = fmt.Sprintf("%s %s", sql, strings.Join(sets, ", "))
@@ -62,6 +62,6 @@ func (s *UpdateStatement) ToSQL() (string, []interface{}) {
 	if s.returning != "" {
 		sql = fmt.Sprintf("%s RETURNING %s", sql, s.returning)
 	}
-	fmt.Println(sql)
+
 	return sql, args
 }
