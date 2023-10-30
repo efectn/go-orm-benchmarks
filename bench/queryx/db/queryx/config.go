@@ -12,7 +12,7 @@ func NewConfig(env string) *Config {
 	switch env {
 	case "development":
 		return &Config{
-			URL: fixURL("postgresql://postgres:postgres@localhost:5432/queryx_test?sslmode=disable"),
+			URL: fixURL("postgresql://postgres:postgres@localhost:5432/test?sslmode=disable"),
 		}
 	case "test":
 		return &Config{
