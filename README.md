@@ -27,6 +27,7 @@ All package run in no-cache mode.
 - [pgx](https://github.com/jackc/pgx)
 - [zorm](https://gitee.com/chunanyong/zorm)
 - [gen](https://gorm.io/gen/index.html)
+- [jet](https://github.com/go-jet/jet)
 
 See [`go.mod`](go.mod) for their latest versions.
 

@@ -3,6 +3,7 @@ package bench
 import (
 	"context"
 	"gitee.com/chunanyong/zorm"
+	jetmodel "github.com/efectn/go-orm-benchmarks/bench/jet/test/public/model"
 	r "github.com/efectn/go-orm-benchmarks/bench/reform"
 	models "github.com/efectn/go-orm-benchmarks/bench/sqlboiler"
 )
@@ -217,6 +218,19 @@ func NewModel7() *Model7 {
 
 func NewReformModel() *r.ReformModels {
 	m := new(r.ReformModels)
+	m.Name = "Orm Benchmark"
+	m.Title = "Just a Benchmark for fun"
+	m.Fax = "99909990"
+	m.Web = "http://blog.milkpod29.me"
+	m.Age = 100
+	m.Right = true
+	m.Counter = 1000
+
+	return m
+}
+
+func NewModelJet() *jetmodel.Models {
+	m := new(jetmodel.Models)
 	m.Name = "Orm Benchmark"
 	m.Title = "Just a Benchmark for fun"
 	m.Fax = "99909990"
