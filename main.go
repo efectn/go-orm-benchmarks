@@ -27,7 +27,7 @@ var defaultBenchmarkNames = []string{
 	"pg", "pgx", "pgx_pool", "pop",
 	"raw", "reform", "rel", "sqlboiler",
 	"sqlc", "sqlx", "upper", "xorm",
-	"zorm", "gen", "jet",
+	"zorm", "gen", "jet", "sq",
 }
 
 type ListOpts []string
@@ -125,6 +125,7 @@ func runBenchmarks(orms ListOpts) {
 		"zorm":      bench.CreateZorm(),
 		"gen":       bench.CreateGen(),
 		"jet":       bench.CreateJet(),
+		"sq":        bench.CreateSq(),
 	}
 
 	table := new(tabwriter.Writer)
