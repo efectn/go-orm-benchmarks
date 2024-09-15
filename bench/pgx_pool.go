@@ -1,10 +1,11 @@
 package bench
 
 import (
-	"github.com/efectn/go-orm-benchmarks/helper"
-	pgxdb "github.com/jackc/pgx/v4"
-	"github.com/jackc/pgx/v4/pgxpool"
 	"testing"
+
+	"github.com/efectn/go-orm-benchmarks/helper"
+	pgxdb "github.com/jackc/pgx/v5"
+	"github.com/jackc/pgx/v5/pgxpool"
 )
 
 type PgxPool struct {
@@ -22,7 +23,7 @@ func (pgx *PgxPool) Name() string {
 
 func (pgx *PgxPool) Init() error {
 	var err error
-	pgx.conn, err = pgxpool.Connect(ctx, helper.OrmSource)
+	pgx.conn, err = pgxpool.New(ctx, helper.OrmSource)
 	if err != nil {
 		return err
 	}
