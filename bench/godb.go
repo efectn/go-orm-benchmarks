@@ -1,11 +1,12 @@
 package bench
 
 import (
+	"testing"
+
 	"github.com/efectn/go-orm-benchmarks/helper"
-	_ "github.com/jackc/pgx/v4/stdlib"
+	_ "github.com/jackc/pgx/v5/stdlib"
 	godbware "github.com/samonzeweb/godb"
 	"github.com/samonzeweb/godb/adapters/postgresql"
-	"testing"
 )
 
 type Godb struct {

@@ -2,11 +2,12 @@ package bench
 
 import (
 	"database/sql"
-	"github.com/efectn/go-orm-benchmarks/helper"
 	"testing"
 
+	"github.com/efectn/go-orm-benchmarks/helper"
+
 	models "github.com/efectn/go-orm-benchmarks/bench/sqlboiler"
-	_ "github.com/jackc/pgx/v4/stdlib"
+	_ "github.com/jackc/pgx/v5/stdlib"
 	"github.com/volatiletech/sqlboiler/v4/boil"
 	"github.com/volatiletech/sqlboiler/v4/queries/qm"
 )

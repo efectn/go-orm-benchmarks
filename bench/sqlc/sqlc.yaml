@@ -1,10 +1,13 @@
-version: "1"
-packages:
-  - name: "db"
-    path: "db"
-    queries: "./queries.sql"
-    schema: "./schema.sql"
-    engine: "postgresql"
+version: "2"
+sql:
+  - engine: "postgresql"
+    queries: "queries.sql"
+    schema: "schema.sql"
+    gen:
+      go:
+        package: "db"
+        sql_package: "pgx/v5"
+        out: "db"
     # emit_prepared_queries: true
     # emit_interface: false
     # emit_exact_table_names: false

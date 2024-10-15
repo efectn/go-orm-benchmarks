@@ -1,17 +1,18 @@
 package bench
 
 import (
-	"database/sql"
-	"github.com/efectn/go-orm-benchmarks/helper"
 	"testing"
 
+	"github.com/efectn/go-orm-benchmarks/helper"
+
 	"github.com/efectn/go-orm-benchmarks/bench/sqlc/db"
+	"github.com/jackc/pgx/v5"
 )
 
 type Sqlc struct {
 	helper.ORMInterface
 	conn *db.Queries
-	db   *sql.DB
+	db   *pgx.Conn
 }
 
 func CreateSqlc() helper.ORMInterface {
@@ -24,7 +25,7 @@ func (sqlc *Sqlc) Name() string {
 
 func (sqlc *Sqlc) Init() error {
 	var err error
-	sqlc.db, err = sql.Open("pgx", helper.OrmSource)
+	sqlc.db, err = pgx.Connect(ctx, helper.OrmSource)
 	if err != nil {
 		return err
 	}
@@ -35,18 +36,39 @@ func (sqlc *Sqlc) Init() error {
 }
 
 func (sqlc *Sqlc) Close() error {
-	return sqlc.db.Close()
+	return sqlc.db.Close(ctx)
 }
 
 func (sqlc *Sqlc) Insert(b *testing.B) {
 	m := NewModel()
+
+	args := db.CreateModelParams{
+		Name:    m.Name,
+		Title:   m.Title,
+		Fax:     m.Fax,
+		Web:     m.Web,
+		Age:     int32(m.Age),
+		Right:   m.Right,
+		Counter: m.Counter,
+	}
 
 	b.ReportAllocs()
 	b.ResetTimer()
 
 	for i := 0; i < b.N; i++ {
 		m.Id = 0
-		_, err := sqlc.conn.CreateModel(ctx, db.CreateModelParams{
+		err := sqlc.conn.CreateModel(ctx, args)
+		if err != nil {
+			helper.SetError(b, sqlc.Name(), "Insert", err.Error())
+		}
+	}
+}
+
+func (sqlc *Sqlc) InsertMulti(b *testing.B) {
+	ms := make([]db.InsertMultiParams, 0, 100)
+	m := NewModel()
+	for i := 0; i < 100; i++ {
+		ms = append(ms, db.InsertMultiParams{
 			Name:    m.Name,
 			Title:   m.Title,
 			Fax:     m.Fax,
@@ -55,20 +77,22 @@ func (sqlc *Sqlc) Insert(b *testing.B) {
 			Right:   m.Right,
 			Counter: m.Counter,
 		})
+	}
+
+	b.ReportAllocs()
+	b.ResetTimer()
+
+	for i := 0; i < b.N; i++ {
+		_, err := sqlc.conn.InsertMulti(ctx, ms)
 		if err != nil {
-			helper.SetError(b, sqlc.Name(), "Insert", err.Error())
+			helper.SetError(b, sqlc.Name(), "InsertMulti", err.Error())
 		}
 	}
 }
 
-func (sqlc *Sqlc) InsertMulti(b *testing.B) {
-	helper.SetError(b, sqlc.Name(), "InsertMulti", "bulk-insert is not supported")
-}
-
 func (sqlc *Sqlc) Update(b *testing.B) {
 	m := NewModel()
-
-	_, err := sqlc.conn.CreateModel(ctx, db.CreateModelParams{
+	err := sqlc.conn.CreateModel(ctx, db.CreateModelParams{
 		Name:    m.Name,
 		Title:   m.Title,
 		Fax:     m.Fax,
@@ -81,20 +105,21 @@ func (sqlc *Sqlc) Update(b *testing.B) {
 		helper.SetError(b, sqlc.Name(), "Update", err.Error())
 	}
 
+	args := db.UpdateModelParams{
+		Name:    m.Name,
+		Title:   m.Title,
+		Fax:     m.Fax,
+		Web:     m.Web,
+		Age:     int32(m.Age),
+		Right:   m.Right,
+		Counter: m.Counter,
+		ID:      int32(m.Id),
+	}
 	b.ReportAllocs()
 	b.ResetTimer()
 
 	for i := 0; i < b.N; i++ {
-		err := sqlc.conn.UpdateModel(ctx, db.UpdateModelParams{
-			Name:    m.Name,
-			Title:   m.Title,
-			Fax:     m.Fax,
-			Web:     m.Web,
-			Age:     int32(m.Age),
-			Right:   m.Right,
-			Counter: m.Counter,
-			ID:      int32(m.Id),
-		})
+		err := sqlc.conn.UpdateModel(ctx, args)
 		if err != nil {
 			helper.SetError(b, sqlc.Name(), "Update", err.Error())
 		}
@@ -104,7 +129,7 @@ func (sqlc *Sqlc) Update(b *testing.B) {
 func (sqlc *Sqlc) Read(b *testing.B) {
 	m := NewModel()
 
-	output, err := sqlc.conn.CreateModel(ctx, db.CreateModelParams{
+	err := sqlc.conn.CreateModel(ctx, db.CreateModelParams{
 		Name:    m.Name,
 		Title:   m.Title,
 		Fax:     m.Fax,
@@ -113,7 +138,7 @@ func (sqlc *Sqlc) Read(b *testing.B) {
 		Right:   m.Right,
 		Counter: m.Counter,
 	})
-	m.Id = int(output.ID)
+	m.Id = 1
 	if err != nil {
 		helper.SetError(b, sqlc.Name(), "Read", err.Error())
 	}
@@ -135,7 +160,7 @@ func (sqlc *Sqlc) ReadSlice(b *testing.B) {
 	for i := 0; i < 100; i++ {
 		m.Id = 0
 
-		_, err := sqlc.conn.CreateModel(ctx, db.CreateModelParams{
+		err := sqlc.conn.CreateModel(ctx, db.CreateModelParams{
 			Name:    m.Name,
 			Title:   m.Title,
 			Fax:     m.Fax,
@@ -153,10 +178,7 @@ func (sqlc *Sqlc) ReadSlice(b *testing.B) {
 	b.ResetTimer()
 
 	for i := 0; i < b.N; i++ {
-		_, err := sqlc.conn.ListModels(ctx, db.ListModelsParams{
-			ID:    0,
-			Limit: 100,
-		})
+		_, err := sqlc.conn.ListModels(ctx)
 		if err != nil {
 			helper.SetError(b, sqlc.Name(), "ReadSlice", err.Error())
 		}

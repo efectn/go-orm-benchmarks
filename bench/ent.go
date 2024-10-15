@@ -2,14 +2,15 @@ package bench
 
 import (
 	"database/sql"
-	"github.com/efectn/go-orm-benchmarks/helper"
 	"testing"
+
+	"github.com/efectn/go-orm-benchmarks/helper"
 
 	"entgo.io/ent/dialect"
 	entsql "entgo.io/ent/dialect/sql"
 	entdb "github.com/efectn/go-orm-benchmarks/bench/ent"
 	"github.com/efectn/go-orm-benchmarks/bench/ent/model"
-	_ "github.com/jackc/pgx/v4/stdlib"
+	_ "github.com/jackc/pgx/v5/stdlib"
 )
 
 type Ent struct {
