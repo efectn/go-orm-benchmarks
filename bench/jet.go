@@ -2,6 +2,7 @@ package bench
 
 import (
 	"database/sql"
+
 	"github.com/efectn/go-orm-benchmarks/helper"
 
 	"github.com/efectn/go-orm-benchmarks/bench/jet/test/public/model"
@@ -62,9 +63,7 @@ func (jet *Jet) InsertMulti(b *testing.B) {
 	b.ResetTimer()
 
 	bulk := make([]*model.Models, len(ms))
-	for i, m := range ms {
-		bulk[i] = m
-	}
+	copy(bulk, ms)
 
 	for i := 0; i < b.N; i++ {
 		_, err := Models.INSERT(Models.MutableColumns).MODELS(ms).Exec(jet.conn)

@@ -22,11 +22,11 @@ import (
 const VERSION = "v1.0.2"
 
 var defaultBenchmarkNames = []string{
-	"beego", "bun", "dbr", "ent",
+	"beego", "bob", "bun", "dbr", "ent",
 	"godb", "gorm", "gorm_prep", "gorp",
 	"pg", "pgx", "pgx_pool", "pop",
 	"raw", "reform", "rel", "sqlboiler",
-	"sqlc", "sqlx", "upper", "xorm",
+	"sqlc", "sqlr", "sqlrgen", "sqlx", "upper", "xorm",
 	"zorm", "gen", "jet", "sq",
 }
 
@@ -103,6 +103,7 @@ func runBenchmarks(orms ListOpts) {
 	// Run benchmarks
 	benchmarks := map[string]helper.ORMInterface{
 		"beego":     bench.CreateBeego(),
+		"bob":       bench.CreateBob(),
 		"bun":       bench.CreateBun(),
 		"dbr":       bench.CreateDbr(),
 		"ent":       bench.CreateEnt(),
@@ -119,6 +120,8 @@ func runBenchmarks(orms ListOpts) {
 		"rel":       bench.CreateRel(),
 		"sqlboiler": bench.CreateSqlboiler(),
 		"sqlc":      bench.CreateSqlc(),
+		"sqlr":      bench.CreateSqlr(),
+		"sqlrgen":   bench.CreateSqlrgen(),
 		"sqlx":      bench.CreateSqlx(),
 		"upper":     bench.CreateUpper(),
 		"xorm":      bench.CreateXorm(),

@@ -8,8 +8,8 @@ import (
 
 	models "github.com/efectn/go-orm-benchmarks/bench/sqlboiler"
 	_ "github.com/jackc/pgx/v5/stdlib"
-	"github.com/volatiletech/sqlboiler/v4/boil"
-	"github.com/volatiletech/sqlboiler/v4/queries/qm"
+	"github.com/aarondl/sqlboiler/v4/boil"
+	"github.com/aarondl/sqlboiler/v4/queries/qm"
 )
 
 type Sqlboiler struct {

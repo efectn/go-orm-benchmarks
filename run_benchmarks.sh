@@ -11,7 +11,7 @@ docker-compose build --build-arg &>/dev/null
 docker-compose up --exit-code-from benchmarker
 
 # Apply output to template
-logs=$(docker logs go-orm-benchmarks-benchmarker-1 --tail 114)
+logs=$(docker logs go-orm-benchmarks-benchmarker-1)
 escaped=$(echo "${logs}" | sed '$!s@$@\\@g')
 
 proto=$(sed "s|@(benchmark-results)|${escaped}|g" <<< $proto)
