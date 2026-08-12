@@ -38,33 +38,24 @@ func (godb *Godb) Close() error {
 
 func (godb *Godb) Insert(b *testing.B) {
 	m := NewModel2()
-
-	b.ReportAllocs()
-	b.ResetTimer()
-
-	for i := 0; i < b.N; i++ {
-		err := godb.conn.Insert(m).Do()
-		if err != nil {
-			helper.SetError(b, godb.Name(), "Insert", err.Error())
-		}
-	}
+	helper.BenchExec(b, godb.Name(), "Insert", func() error {
+		m.ID = 0
+		return godb.conn.Insert(m).Do()
+	})
 }
 
 func (godb *Godb) InsertMulti(b *testing.B) {
-	ms := make([]*Model2, 0, 100)
-	for i := 0; i < 100; i++ {
+	ms := make([]*Model2, 0, helper.BatchSize)
+	for i := 0; i < helper.BatchSize; i++ {
 		ms = append(ms, NewModel2())
 	}
 
-	b.ReportAllocs()
-	b.ResetTimer()
-
-	for i := 0; i < b.N; i++ {
-		err := godb.conn.BulkInsert(&ms).Do()
-		if err != nil {
-			helper.SetError(b, godb.Name(), "InsertMulti", err.Error())
+	helper.BenchExec(b, godb.Name(), "InsertMulti", func() error {
+		for _, m := range ms {
+			m.ID = 0
 		}
-	}
+		return godb.conn.BulkInsert(&ms).Do()
+	})
 }
 
 func (godb *Godb) Update(b *testing.B) {
@@ -73,17 +64,13 @@ func (godb *Godb) Update(b *testing.B) {
 	err := godb.conn.Insert(m).Do()
 	if err != nil {
 		helper.SetError(b, godb.Name(), "Update", err.Error())
+		return
 	}
+	m.Counter = helper.UpdatedCounter
 
-	b.ReportAllocs()
-	b.ResetTimer()
-
-	for i := 0; i < b.N; i++ {
-		err := godb.conn.Update(m).Do()
-		if err != nil {
-			helper.SetError(b, godb.Name(), "Update", err.Error())
-		}
-	}
+	helper.BenchExec(b, godb.Name(), "Update", func() error {
+		return godb.conn.Update(m).Do()
+	})
 }
 
 func (godb *Godb) Read(b *testing.B) {
@@ -92,36 +79,31 @@ func (godb *Godb) Read(b *testing.B) {
 	err := godb.conn.Insert(m).Do()
 	if err != nil {
 		helper.SetError(b, godb.Name(), "Read", err.Error())
+		return
 	}
 
-	b.ReportAllocs()
-	b.ResetTimer()
-
-	for i := 0; i < b.N; i++ {
-		err := godb.conn.Select(m).Do()
-		if err != nil {
-			helper.SetError(b, godb.Name(), "Read", err.Error())
+	helper.BenchRows(b, godb.Name(), "Read", 1, func() (int, error) {
+		if err := godb.conn.Select(m).Where("id = ?", m.ID).Do(); err != nil {
+			return 0, err
 		}
-	}
+		return 1, nil
+	})
 }
 
 func (godb *Godb) ReadSlice(b *testing.B) {
 	m := NewModel2()
-	for i := 0; i < 100; i++ {
+	for i := 0; i < helper.BatchSize; i++ {
+		m.ID = 0
 		err := godb.conn.Insert(m).Do()
 		if err != nil {
 			helper.SetError(b, godb.Name(), "ReadSlice", err.Error())
+			return
 		}
 	}
 
-	b.ReportAllocs()
-	b.ResetTimer()
-
-	for i := 0; i < b.N; i++ {
+	helper.BenchRows(b, godb.Name(), "ReadSlice", helper.BatchSize, func() (int, error) {
 		var ms []*Model2
-		err := godb.conn.Select(&ms).Where("id > 0").Limit(100).Do()
-		if err != nil {
-			helper.SetError(b, godb.Name(), "ReadSlice", err.Error())
-		}
-	}
+		err := godb.conn.Select(&ms).Where("id > 0").Limit(helper.BatchSize).Do()
+		return len(ms), err
+	})
 }

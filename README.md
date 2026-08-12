@@ -2,13 +2,14 @@
 
 [![Go Reference](https://pkg.go.dev/badge/github.com/efectn/go-orm-benchmarks.svg)](https://pkg.go.dev/github.com/efectn/go-orm-benchmarks)
 
-Advanced benchmarks for +10 Go ORMs. Originally forked from [orm-benchmark](https://github.com/frederikhors/orm-benchmark).
+Advanced benchmarks for Go ORMs and database libraries. Originally forked from [orm-benchmark](https://github.com/frederikhors/orm-benchmark).
 
 ### ORMs
 
 All package run in no-cache mode.
 
 - [beego/orm](https://github.com/astaxie/beego/tree/master/orm)
+- [bob](https://github.com/stephenafamo/bob)
 - [bun](https://github.com/uptrace/bun)
 - [gorm 2](https://github.com/go-gorm/gorm)
 - [pg](https://github.com/go-pg/pg)
@@ -22,7 +23,9 @@ All package run in no-cache mode.
 - [pop](https://github.com/gobuffalo/pop)
 - [rel](https://github.com/go-rel/rel)
 - [reform](https://github.com/go-reform/reform)
-- [sqlboiler](https://github.com/volatiletech/sqlboiler)
+- [sqlboiler](https://github.com/aarondl/sqlboiler)
+- [sqlr](https://github.com/gandaldf/sqlr)
+- [sqlrgen](https://github.com/gandaldf/sqlr/tree/main/cmd/sqlrgen)
 - [sqlx](https://github.com/jmoiron/sqlx)
 - [pgx](https://github.com/jackc/pgx)
 - [zorm](https://gitee.com/chunanyong/zorm)
@@ -47,6 +50,23 @@ go-orm-benchmarks -orm=bun
 ```
 
 **_Note: Also, you can run `./run_benchmarks.sh` and you can get output like results.md format._**
+
+### Benchmark contract
+
+The tables are created once and truncated before every calibration run. Each
+iteration performs one logical operation; bulk operations process exactly 100
+rows. Setup and validation are excluded from the measured interval. Reads must
+materialize exactly one or 100 rows, while persisted row counts and counter
+sentinels are checked centrally after each run. Central validation treats
+primary-key values as opaque and never asserts a specific ID; adapters use the
+key returned by their native setup path.
+
+Insert benchmarks do not explicitly request a returned row unless the library's
+normal insert API intrinsically returns or populates a key. Update benchmarks do
+not reload the updated row. For bulk inserts, each adapter uses its idiomatic
+bulk API: `pgx`, `pgx_pool`, and `sqlc` intentionally use PostgreSQL `COPY`,
+while adapters whose bulk API emits `INSERT ... VALUES` retain that strategy.
+This difference is considered part of the library abstraction being measured.
 
 ### Results
 Look at [`results.md`](results.md) to see detailed benchmark results.

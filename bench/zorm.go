@@ -2,18 +2,17 @@ package bench
 
 import (
 	"context"
-	"github.com/efectn/go-orm-benchmarks/helper"
 	"testing"
 
 	zormdb "gitee.com/chunanyong/zorm"
+	"github.com/efectn/go-orm-benchmarks/helper"
 	_ "github.com/lib/pq"
 )
 
 var (
 	zormCtx         = context.Background()
-	readFinder      = zormdb.NewFinder().Append("SELECT * FROM models WHERE id = 1")
 	readSliceFinder = zormdb.NewFinder().Append("SELECT * FROM models WHERE id > 0")
-	page            = &zormdb.Page{PageNo: 1, PageSize: 100}
+	page            = &zormdb.Page{PageNo: 1, PageSize: helper.BatchSize}
 )
 
 type Zorm struct {
@@ -29,7 +28,6 @@ func (zorm *Zorm) Name() string {
 }
 
 func (zorm *Zorm) Init() error {
-	readFinder.InjectionCheck = false
 	readSliceFinder.InjectionCheck = false
 	readSliceFinder.SelectTotalCount = false
 
@@ -56,38 +54,26 @@ func (zorm *Zorm) Close() error {
 
 func (zorm *Zorm) Insert(b *testing.B) {
 	m := NewModel7()
-
-	b.ReportAllocs()
-	b.ResetTimer()
-
-	for i := 0; i < b.N; i++ {
+	helper.BenchExec(b, zorm.Name(), "Insert", func() error {
 		m.ID = 0
 		_, err := zormdb.Insert(zormCtx, m)
-		if err != nil {
-			helper.SetError(b, zorm.Name(), "Insert", err.Error())
-		}
-	}
+		return err
+	})
 }
 
 func (zorm *Zorm) InsertMulti(b *testing.B) {
-	ms := make([]zormdb.IEntityStruct, 0, 100)
-	for i := 0; i < 100; i++ {
+	ms := make([]zormdb.IEntityStruct, 0, helper.BatchSize)
+	for i := 0; i < helper.BatchSize; i++ {
 		ms = append(ms, NewModel7())
 	}
 
-	b.ReportAllocs()
-	b.ResetTimer()
-
-	for i := 0; i < b.N; i++ {
+	helper.BenchExec(b, zorm.Name(), "InsertMulti", func() error {
 		for _, m := range ms {
-			m7, _ := m.(*Model7)
-			m7.ID = 0
+			m.(*Model7).ID = 0
 		}
 		_, err := zormdb.InsertSlice(zormCtx, ms)
-		if err != nil {
-			helper.SetError(b, zorm.Name(), "InsertMulti", err.Error())
-		}
-	}
+		return err
+	})
 }
 
 func (zorm *Zorm) Update(b *testing.B) {
@@ -96,17 +82,14 @@ func (zorm *Zorm) Update(b *testing.B) {
 	_, err := zormdb.Insert(zormCtx, m)
 	if err != nil {
 		helper.SetError(b, zorm.Name(), "Update", err.Error())
+		return
 	}
+	m.Counter = helper.UpdatedCounter
 
-	b.ReportAllocs()
-	b.ResetTimer()
-
-	for i := 0; i < b.N; i++ {
+	helper.BenchExec(b, zorm.Name(), "Update", func() error {
 		_, err := zormdb.Update(zormCtx, m)
-		if err != nil {
-			helper.SetError(b, zorm.Name(), "Update", err.Error())
-		}
-	}
+		return err
+	})
 }
 
 func (zorm *Zorm) Read(b *testing.B) {
@@ -115,37 +98,41 @@ func (zorm *Zorm) Read(b *testing.B) {
 	_, err := zormdb.Insert(zormCtx, m)
 	if err != nil {
 		helper.SetError(b, zorm.Name(), "Read", err.Error())
+		return
 	}
+	readFinder := zormdb.NewFinder().Append("SELECT * FROM models WHERE id = ?", m.ID)
+	readFinder.InjectionCheck = false
 
-	b.ReportAllocs()
-	b.ResetTimer()
-
-	for i := 0; i < b.N; i++ {
-		_, err := zormdb.QueryRow(zormCtx, readFinder, m)
+	helper.BenchRows(b, zorm.Name(), "Read", 1, func() (int, error) {
+		var result Model7
+		found, err := zormdb.QueryRow(zormCtx, readFinder, &result)
 		if err != nil {
-			helper.SetError(b, zorm.Name(), "Read", err.Error())
+			return 0, err
 		}
-	}
+		if !found {
+			return 0, nil
+		}
+		return 1, nil
+	})
 }
 
 func (zorm *Zorm) ReadSlice(b *testing.B) {
 	m := NewModel7()
-	for i := 0; i < 100; i++ {
+	for i := 0; i < helper.BatchSize; i++ {
 		m.ID = 0
 		_, err := zormdb.Insert(zormCtx, m)
 		if err != nil {
 			helper.SetError(b, zorm.Name(), "ReadSlice", err.Error())
+			return
 		}
 	}
 
-	b.ReportAllocs()
-	b.ResetTimer()
-
-	for i := 0; i < b.N; i++ {
+	helper.BenchRows(b, zorm.Name(), "ReadSlice", helper.BatchSize, func() (int, error) {
 		var models []Model7
 		err := zormdb.Query(zormCtx, readSliceFinder, &models, page)
 		if err != nil {
-			helper.SetError(b, zorm.Name(), "ReadSlice", err.Error())
+			return 0, err
 		}
-	}
+		return len(models), nil
+	})
 }

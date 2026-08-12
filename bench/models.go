@@ -2,10 +2,12 @@ package bench
 
 import (
 	"context"
+
 	"gitee.com/chunanyong/zorm"
 	jetmodel "github.com/efectn/go-orm-benchmarks/bench/jet/test/public/model"
 	r "github.com/efectn/go-orm-benchmarks/bench/reform"
 	models "github.com/efectn/go-orm-benchmarks/bench/sqlboiler"
+	"github.com/efectn/go-orm-benchmarks/helper"
 )
 
 var ctx = context.Background()
@@ -38,7 +40,7 @@ func NewModel() *Model {
 	m.Web = "http://blog.milkpod29.me"
 	m.Age = 100
 	m.Right = true
-	m.Counter = 1000
+	m.Counter = helper.InitialCounter
 
 	return m
 }
@@ -51,7 +53,7 @@ func NewModelAlt() Model {
 	m.Web = "http://blog.milkpod29.me"
 	m.Age = 100
 	m.Right = true
-	m.Counter = 1000
+	m.Counter = helper.InitialCounter
 
 	return m
 }
@@ -80,7 +82,7 @@ func NewModel2() *Model2 {
 	m.Web = "http://blog.milkpod29.me"
 	m.Age = 100
 	m.Right = true
-	m.Counter = 1000
+	m.Counter = helper.InitialCounter
 
 	return m
 }
@@ -113,7 +115,7 @@ func NewModel3() *Model3 {
 	m.Web = "http://blog.milkpod29.me"
 	m.Age = 100
 	m.Right = true
-	m.Counter = 1000
+	m.Counter = helper.InitialCounter
 
 	return m
 }
@@ -138,7 +140,7 @@ func NewModel4() *Model4 {
 	m.Web = "http://blog.milkpod29.me"
 	m.Age = 100
 	m.Right = true
-	m.Counter = 1000
+	m.Counter = helper.InitialCounter
 
 	return m
 }
@@ -163,7 +165,7 @@ func NewModel5() *Model5 {
 	m.Web = "http://blog.milkpod29.me"
 	m.Age = 100
 	m.Right = true
-	m.Counter = 1000
+	m.Counter = helper.InitialCounter
 
 	return m
 }
@@ -177,7 +179,7 @@ func NewModel6() *models.Model {
 	m.Web = "http://blog.milkpod29.me"
 	m.Age = 100
 	m.Right = true
-	m.Counter = 1000
+	m.Counter = helper.InitialCounter
 
 	return m
 }
@@ -211,7 +213,7 @@ func NewModel7() *Model7 {
 	m.Web = "http://blog.milkpod29.me"
 	m.Age = 100
 	m.Right = true
-	m.Counter = 1000
+	m.Counter = helper.InitialCounter
 
 	return m
 }
@@ -224,7 +226,7 @@ func NewReformModel() *r.ReformModels {
 	m.Web = "http://blog.milkpod29.me"
 	m.Age = 100
 	m.Right = true
-	m.Counter = 1000
+	m.Counter = helper.InitialCounter
 
 	return m
 }
@@ -237,7 +239,7 @@ func NewModelJet() *jetmodel.Models {
 	m.Web = "http://blog.milkpod29.me"
 	m.Age = 100
 	m.Right = true
-	m.Counter = 1000
+	m.Counter = helper.InitialCounter
 
 	return m
 }

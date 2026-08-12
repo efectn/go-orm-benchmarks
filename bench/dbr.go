@@ -31,11 +31,6 @@ func (dbr *Dbr) Init() error {
 	}
 
 	dbr.conn = conn.NewSession(nil)
-	_, err = dbr.conn.Begin()
-	if err != nil {
-		return err
-	}
-
 	return nil
 }
 
@@ -45,16 +40,10 @@ func (dbr *Dbr) Close() error {
 
 func (dbr *Dbr) Insert(b *testing.B) {
 	m := NewModel2()
-
-	b.ReportAllocs()
-	b.ResetTimer()
-
-	for i := 0; i < b.N; i++ {
+	helper.BenchExec(b, dbr.Name(), "Insert", func() error {
 		_, err := dbr.conn.InsertInto("models").Columns(columns...).Record(m).Exec()
-		if err != nil {
-			helper.SetError(b, dbr.Name(), "Insert", err.Error())
-		}
-	}
+		return err
+	})
 }
 
 func (dbr *Dbr) InsertMulti(b *testing.B) {
@@ -64,15 +53,14 @@ func (dbr *Dbr) InsertMulti(b *testing.B) {
 func (dbr *Dbr) Update(b *testing.B) {
 	m := NewModel2()
 
-	_, err := dbr.conn.InsertInto("models").Columns(columns...).Record(m).Exec()
+	err := dbr.conn.InsertInto("models").Columns(columns...).Record(m).Returning("id").Load(&m.ID)
 	if err != nil {
 		helper.SetError(b, dbr.Name(), "Update", err.Error())
+		return
 	}
+	m.Counter = helper.UpdatedCounter
 
-	b.ReportAllocs()
-	b.ResetTimer()
-
-	for i := 0; i < b.N; i++ {
+	helper.BenchExec(b, dbr.Name(), "Update", func() error {
 		_, err := dbr.conn.Update("models").SetMap(map[string]any{
 			"name":    m.Name,
 			"title":   m.Title,
@@ -81,49 +69,39 @@ func (dbr *Dbr) Update(b *testing.B) {
 			"age":     m.Age,
 			"right":   m.Right,
 			"counter": m.Counter,
-		}).Exec()
-		if err != nil {
-			helper.SetError(b, dbr.Name(), "Update", err.Error())
-		}
-	}
+		}).Where("id = ?", m.ID).Exec()
+		return err
+	})
 }
 
 func (dbr *Dbr) Read(b *testing.B) {
 	m := NewModel2()
 
-	_, err := dbr.conn.InsertInto("models").Columns(columns...).Record(m).Exec()
+	err := dbr.conn.InsertInto("models").Columns(columns...).Record(m).Returning("id").Load(&m.ID)
 	if err != nil {
 		helper.SetError(b, dbr.Name(), "Read", err.Error())
+		return
 	}
 
-	b.ReportAllocs()
-	b.ResetTimer()
-
-	for i := 0; i < b.N; i++ {
-		_, err := dbr.conn.Select("*").From("models").Where("id = ?", m.ID).Load(m)
-		if err != nil {
-			helper.SetError(b, dbr.Name(), "Read", err.Error())
-		}
-	}
+	helper.BenchRows(b, dbr.Name(), "Read", 1, func() (int, error) {
+		count, err := dbr.conn.Select("*").From("models").Where("id = ?", m.ID).Load(m)
+		return count, err
+	})
 }
 
 func (dbr *Dbr) ReadSlice(b *testing.B) {
 	m := NewModel2()
-	for i := 0; i < 100; i++ {
+	for i := 0; i < helper.BatchSize; i++ {
 		_, err := dbr.conn.InsertInto("models").Columns(columns...).Record(m).Exec()
 		if err != nil {
 			helper.SetError(b, dbr.Name(), "ReadSlice", err.Error())
+			return
 		}
 	}
 
-	b.ReportAllocs()
-	b.ResetTimer()
-
-	for i := 0; i < b.N; i++ {
+	helper.BenchRows(b, dbr.Name(), "ReadSlice", helper.BatchSize, func() (int, error) {
 		var ms []*Model2
-		_, err := dbr.conn.Select("*").From("models").Where("id > 0").Limit(100).Load(&ms)
-		if err != nil {
-			helper.SetError(b, dbr.Name(), "ReadSlice", err.Error())
-		}
-	}
+		_, err := dbr.conn.Select("*").From("models").Where("id > 0").Limit(helper.BatchSize).Load(&ms)
+		return len(ms), err
+	})
 }

@@ -2,13 +2,13 @@ package bench
 
 import (
 	"database/sql"
+	"testing"
+
 	"github.com/efectn/go-orm-benchmarks/helper"
 
 	"github.com/efectn/go-orm-benchmarks/bench/jet/test/public/model"
 	. "github.com/efectn/go-orm-benchmarks/bench/jet/test/public/table"
 	jetpg "github.com/go-jet/jet/v2/postgres"
-
-	"testing"
 )
 
 type Jet struct {
@@ -40,95 +40,74 @@ func (jet *Jet) Close() error {
 
 func (jet *Jet) Insert(b *testing.B) {
 	m := NewModelJet()
-
-	b.ReportAllocs()
-	b.ResetTimer()
-
-	for i := 0; i < b.N; i++ {
+	helper.BenchExec(b, jet.Name(), "Insert", func() error {
 		_, err := Models.INSERT(Models.MutableColumns).MODEL(m).Exec(jet.conn)
-		if err != nil {
-			helper.SetError(b, jet.Name(), "Insert", err.Error())
-		}
-	}
+		return err
+	})
 }
 
 func (jet *Jet) InsertMulti(b *testing.B) {
-	ms := make([]*model.Models, 0, 100)
-	for i := 0; i < 100; i++ {
+	ms := make([]*model.Models, 0, helper.BatchSize)
+	for i := 0; i < helper.BatchSize; i++ {
 		ms = append(ms, NewModelJet())
 	}
 
-	b.ReportAllocs()
-	b.ResetTimer()
-
-	bulk := make([]*model.Models, len(ms))
-	for i, m := range ms {
-		bulk[i] = m
-	}
-
-	for i := 0; i < b.N; i++ {
+	helper.BenchExec(b, jet.Name(), "InsertMulti", func() error {
 		_, err := Models.INSERT(Models.MutableColumns).MODELS(ms).Exec(jet.conn)
-		if err != nil {
-			helper.SetError(b, jet.Name(), "InsertMulti", err.Error())
-		}
-	}
+		return err
+	})
 }
 
 func (jet *Jet) Update(b *testing.B) {
 	m, err := jet.create()
 	if err != nil {
 		helper.SetError(b, jet.Name(), "Update", err.Error())
+		return
 	}
+	m.Counter = helper.UpdatedCounter
 
-	b.ReportAllocs()
-	b.ResetTimer()
-
-	for i := 0; i < b.N; i++ {
+	helper.BenchExec(b, jet.Name(), "Update", func() error {
 		_, err := Models.UPDATE(Models.MutableColumns).MODEL(m).WHERE(Models.ID.EQ(jetpg.Int32(m.ID))).Exec(jet.conn)
-		if err != nil {
-			helper.SetError(b, jet.Name(), "Update", err.Error())
-		}
-	}
+		return err
+	})
 }
 
 func (jet *Jet) Read(b *testing.B) {
 	m, err := jet.create()
 	if err != nil {
 		helper.SetError(b, jet.Name(), "Read", err.Error())
+		return
 	}
 
-	b.ReportAllocs()
-	b.ResetTimer()
-
-	for i := 0; i < b.N; i++ {
+	helper.BenchRows(b, jet.Name(), "Read", 1, func() (int, error) {
 		var mout model.Models
 		err := Models.SELECT(Models.AllColumns).
 			WHERE(Models.ID.EQ(jetpg.Int32(m.ID))).
 			Query(jet.conn, &mout)
 		if err != nil {
-			helper.SetError(b, jet.Name(), "Read", err.Error())
+			return 0, err
 		}
-	}
+		return 1, nil
+	})
 }
 
 func (jet *Jet) ReadSlice(b *testing.B) {
-	for i := 0; i < 100; i++ {
+	for i := 0; i < helper.BatchSize; i++ {
 		_, err := jet.create()
 		if err != nil {
 			helper.SetError(b, jet.Name(), "ReadSlice", err.Error())
+			return
 		}
 	}
 
-	b.ReportAllocs()
-	b.ResetTimer()
-
-	for i := 0; i < b.N; i++ {
-		models := make([]model.Models, 100)
-		err := Models.SELECT(Models.AllColumns).WHERE(Models.ID.GT(jetpg.Int32(0))).LIMIT(100).Query(jet.conn, &models)
+	helper.BenchRows(b, jet.Name(), "ReadSlice", helper.BatchSize, func() (int, error) {
+		var models []model.Models
+		err := Models.SELECT(Models.AllColumns).WHERE(Models.ID.GT(jetpg.Int32(0))).LIMIT(int64(helper.BatchSize)).Query(jet.conn, &models)
 		if err != nil {
-			helper.SetError(b, jet.Name(), "ReadSlice", err.Error())
+			return 0, err
 		}
-	}
+		return len(models), nil
+	})
 }
 
 func (jet *Jet) create() (*model.Models, error) {

@@ -22,11 +22,11 @@ import (
 const VERSION = "v1.0.2"
 
 var defaultBenchmarkNames = []string{
-	"beego", "bun", "dbr", "ent",
+	"beego", "bob", "bun", "dbr", "ent",
 	"godb", "gorm", "gorm_prep", "gorp",
 	"pg", "pgx", "pgx_pool", "pop",
 	"raw", "reform", "rel", "sqlboiler",
-	"sqlc", "sqlx", "upper", "xorm",
+	"sqlc", "sqlr", "sqlrgen", "sqlx", "upper", "xorm",
 	"zorm", "gen", "jet", "sq",
 }
 
@@ -100,9 +100,19 @@ func main() {
 }
 
 func runBenchmarks(orms ListOpts) {
+	control, err := helper.NewBenchmarkControl()
+	if err != nil {
+		panic(fmt.Sprintf("Could not initialize benchmark control: %v", err))
+	}
+	defer func() { _ = control.Close() }()
+	if err := control.CreateTables(); err != nil {
+		panic(fmt.Sprintf("Could not create benchmark tables: %v", err))
+	}
+
 	// Run benchmarks
 	benchmarks := map[string]helper.ORMInterface{
 		"beego":     bench.CreateBeego(),
+		"bob":       bench.CreateBob(),
 		"bun":       bench.CreateBun(),
 		"dbr":       bench.CreateDbr(),
 		"ent":       bench.CreateEnt(),
@@ -119,6 +129,8 @@ func runBenchmarks(orms ListOpts) {
 		"rel":       bench.CreateRel(),
 		"sqlboiler": bench.CreateSqlboiler(),
 		"sqlc":      bench.CreateSqlc(),
+		"sqlr":      bench.CreateSqlr(),
+		"sqlrgen":   bench.CreateSqlrgen(),
 		"sqlx":      bench.CreateSqlx(),
 		"upper":     bench.CreateUpper(),
 		"xorm":      bench.CreateXorm(),
@@ -139,7 +151,7 @@ func runBenchmarks(orms ListOpts) {
 			panic(fmt.Sprintf("Unknown ORM: %s", n))
 		}
 
-		res, err := helper.RunBenchmarks(orm, reports)
+		res, err := helper.RunBenchmarks(orm, reports, control)
 		if err != nil {
 			panic(fmt.Sprintf("An error occured while running the benchmarks: %v", err))
 		}

@@ -52,22 +52,15 @@ func (sqlc *Sqlc) Insert(b *testing.B) {
 		Counter: m.Counter,
 	}
 
-	b.ReportAllocs()
-	b.ResetTimer()
-
-	for i := 0; i < b.N; i++ {
-		m.Id = 0
-		err := sqlc.conn.CreateModel(ctx, args)
-		if err != nil {
-			helper.SetError(b, sqlc.Name(), "Insert", err.Error())
-		}
-	}
+	helper.BenchExec(b, sqlc.Name(), "Insert", func() error {
+		return sqlc.conn.CreateModel(ctx, args)
+	})
 }
 
 func (sqlc *Sqlc) InsertMulti(b *testing.B) {
-	ms := make([]db.InsertMultiParams, 0, 100)
+	ms := make([]db.InsertMultiParams, 0, helper.BatchSize)
 	m := NewModel()
-	for i := 0; i < 100; i++ {
+	for i := 0; i < helper.BatchSize; i++ {
 		ms = append(ms, db.InsertMultiParams{
 			Name:    m.Name,
 			Title:   m.Title,
@@ -79,31 +72,20 @@ func (sqlc *Sqlc) InsertMulti(b *testing.B) {
 		})
 	}
 
-	b.ReportAllocs()
-	b.ResetTimer()
-
-	for i := 0; i < b.N; i++ {
+	helper.BenchExec(b, sqlc.Name(), "InsertMulti", func() error {
 		_, err := sqlc.conn.InsertMulti(ctx, ms)
-		if err != nil {
-			helper.SetError(b, sqlc.Name(), "InsertMulti", err.Error())
-		}
-	}
+		return err
+	})
 }
 
 func (sqlc *Sqlc) Update(b *testing.B) {
 	m := NewModel()
-	err := sqlc.conn.CreateModel(ctx, db.CreateModelParams{
-		Name:    m.Name,
-		Title:   m.Title,
-		Fax:     m.Fax,
-		Web:     m.Web,
-		Age:     int32(m.Age),
-		Right:   m.Right,
-		Counter: m.Counter,
-	})
+	err := sqlc.createModelReturning(m)
 	if err != nil {
 		helper.SetError(b, sqlc.Name(), "Update", err.Error())
+		return
 	}
+	m.Counter = helper.UpdatedCounter
 
 	args := db.UpdateModelParams{
 		Name:    m.Name,
@@ -115,51 +97,33 @@ func (sqlc *Sqlc) Update(b *testing.B) {
 		Counter: m.Counter,
 		ID:      int32(m.Id),
 	}
-	b.ReportAllocs()
-	b.ResetTimer()
-
-	for i := 0; i < b.N; i++ {
-		err := sqlc.conn.UpdateModel(ctx, args)
-		if err != nil {
-			helper.SetError(b, sqlc.Name(), "Update", err.Error())
-		}
-	}
+	helper.BenchExec(b, sqlc.Name(), "Update", func() error {
+		return sqlc.conn.UpdateModel(ctx, args)
+	})
 }
 
 func (sqlc *Sqlc) Read(b *testing.B) {
 	m := NewModel()
 
-	err := sqlc.conn.CreateModel(ctx, db.CreateModelParams{
-		Name:    m.Name,
-		Title:   m.Title,
-		Fax:     m.Fax,
-		Web:     m.Web,
-		Age:     int32(m.Age),
-		Right:   m.Right,
-		Counter: m.Counter,
-	})
-	m.Id = 1
+	err := sqlc.createModelReturning(m)
 	if err != nil {
 		helper.SetError(b, sqlc.Name(), "Read", err.Error())
+		return
 	}
 
-	b.ReportAllocs()
-	b.ResetTimer()
-
-	for i := 0; i < b.N; i++ {
+	helper.BenchRows(b, sqlc.Name(), "Read", 1, func() (int, error) {
 		_, err := sqlc.conn.GetModel(ctx, int32(m.Id))
 		if err != nil {
-			helper.SetError(b, sqlc.Name(), "Read", err.Error())
+			return 0, err
 		}
-	}
+		return 1, nil
+	})
 }
 
 func (sqlc *Sqlc) ReadSlice(b *testing.B) {
 	m := NewModel()
 
-	for i := 0; i < 100; i++ {
-		m.Id = 0
-
+	for i := 0; i < helper.BatchSize; i++ {
 		err := sqlc.conn.CreateModel(ctx, db.CreateModelParams{
 			Name:    m.Name,
 			Title:   m.Title,
@@ -171,16 +135,26 @@ func (sqlc *Sqlc) ReadSlice(b *testing.B) {
 		})
 		if err != nil {
 			helper.SetError(b, sqlc.Name(), "ReadSlice", err.Error())
+			return
 		}
 	}
 
-	b.ReportAllocs()
-	b.ResetTimer()
+	helper.BenchRows(b, sqlc.Name(), "ReadSlice", helper.BatchSize, func() (int, error) {
+		models, err := sqlc.conn.ListModels(ctx, int32(helper.BatchSize))
+		return len(models), err
+	})
+}
 
-	for i := 0; i < b.N; i++ {
-		_, err := sqlc.conn.ListModels(ctx)
-		if err != nil {
-			helper.SetError(b, sqlc.Name(), "ReadSlice", err.Error())
-		}
-	}
+func (sqlc *Sqlc) createModelReturning(m *Model) error {
+	return sqlc.db.QueryRow(
+		ctx,
+		sqlxInsertReturningSQL,
+		m.Name,
+		m.Title,
+		m.Fax,
+		m.Web,
+		m.Age,
+		m.Right,
+		m.Counter,
+	).Scan(&m.Id)
 }

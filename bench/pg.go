@@ -41,38 +41,27 @@ func (pg *Pg) Close() error {
 
 func (pg *Pg) Insert(b *testing.B) {
 	m := NewModel()
-
-	b.ReportAllocs()
-	b.ResetTimer()
-
-	for i := 0; i < b.N; i++ {
+	helper.BenchExec(b, pg.Name(), "Insert", func() error {
 		m.Id = 0
 		_, err := pg.conn.Model(m).Insert()
-		if err != nil {
-			helper.SetError(b, pg.Name(), "Insert", err.Error())
-		}
-	}
+		return err
+	})
 }
 
 func (pg *Pg) InsertMulti(b *testing.B) {
-	ms := make([]*Model, 0, 100)
-	for i := 0; i < 100; i++ {
+	ms := make([]*Model, 0, helper.BatchSize)
+	for i := 0; i < helper.BatchSize; i++ {
 		ms = append(ms, NewModel())
 	}
 
-	b.ReportAllocs()
-	b.ResetTimer()
-
-	for i := 0; i < b.N; i++ {
+	helper.BenchExec(b, pg.Name(), "InsertMulti", func() error {
 		for _, m := range ms {
 			m.Id = 0
 		}
 
 		_, err := pg.conn.Model(&ms).Insert()
-		if err != nil {
-			helper.SetError(b, pg.Name(), "InsertMulti", err.Error())
-		}
-	}
+		return err
+	})
 }
 
 func (pg *Pg) Update(b *testing.B) {
@@ -81,17 +70,14 @@ func (pg *Pg) Update(b *testing.B) {
 	_, err := pg.conn.Model(m).Insert()
 	if err != nil {
 		helper.SetError(b, pg.Name(), "Update", err.Error())
+		return
 	}
+	m.Counter = helper.UpdatedCounter
 
-	b.ReportAllocs()
-	b.ResetTimer()
-
-	for i := 0; i < b.N; i++ {
+	helper.BenchExec(b, pg.Name(), "Update", func() error {
 		_, err := pg.conn.Model(m).WherePK().Update()
-		if err != nil {
-			helper.SetError(b, pg.Name(), "Update", err.Error())
-		}
-	}
+		return err
+	})
 }
 
 func (pg *Pg) Read(b *testing.B) {
@@ -100,37 +86,31 @@ func (pg *Pg) Read(b *testing.B) {
 	_, err := pg.conn.Model(m).Insert()
 	if err != nil {
 		helper.SetError(b, pg.Name(), "Read", err.Error())
+		return
 	}
 
-	b.ReportAllocs()
-	b.ResetTimer()
-
-	for i := 0; i < b.N; i++ {
-		err := pg.conn.Model(m).Limit(1).Select()
-		if err != nil {
-			helper.SetError(b, pg.Name(), "Read", err.Error())
+	helper.BenchRows(b, pg.Name(), "Read", 1, func() (int, error) {
+		if err := pg.conn.Model(m).WherePK().Select(); err != nil {
+			return 0, err
 		}
-	}
+		return 1, nil
+	})
 }
 
 func (pg *Pg) ReadSlice(b *testing.B) {
 	m := NewModel()
-	for i := 0; i < 100; i++ {
+	for i := 0; i < helper.BatchSize; i++ {
 		m.Id = 0
 		_, err := pg.conn.Model(m).Insert()
 		if err != nil {
 			helper.SetError(b, pg.Name(), "ReadSlice", err.Error())
+			return
 		}
 	}
 
-	b.ReportAllocs()
-	b.ResetTimer()
-
-	for i := 0; i < b.N; i++ {
+	helper.BenchRows(b, pg.Name(), "ReadSlice", helper.BatchSize, func() (int, error) {
 		var models []*Model
-		err := pg.conn.Model(&models).Where("id > ?", 0).Limit(100).Select()
-		if err != nil {
-			helper.SetError(b, pg.Name(), "ReadSlice", err.Error())
-		}
-	}
+		err := pg.conn.Model(&models).Where("id > ?", 0).Limit(helper.BatchSize).Select()
+		return len(models), err
+	})
 }

@@ -73,11 +73,11 @@ const listModels = `-- name: ListModels :many
 SELECT id, name, title, fax, web, age, "right", counter
 FROM models
 WHERE ID > 0
-LIMIT 100
+LIMIT $1
 `
 
-func (q *Queries) ListModels(ctx context.Context) ([]Model, error) {
-	rows, err := q.db.Query(ctx, listModels)
+func (q *Queries) ListModels(ctx context.Context, limit int32) ([]Model, error) {
+	rows, err := q.db.Query(ctx, listModels, limit)
 	if err != nil {
 		return nil, err
 	}

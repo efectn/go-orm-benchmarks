@@ -47,7 +47,7 @@ func (s BenchmarkReport) Less(i, j int) bool {
 	return s[i].NsPerOp < s[j].NsPerOp
 }
 
-func RunBenchmarks(orm ORMInterface, reports map[string]BenchmarkReport) (BenchmarkResult, error) {
+func RunBenchmarks(orm ORMInterface, reports map[string]BenchmarkReport, control *BenchmarkControl) (BenchmarkResult, error) {
 	err := orm.Init()
 	if err != nil {
 		return BenchmarkResult{}, err
@@ -58,18 +58,36 @@ func RunBenchmarks(orm ORMInterface, reports map[string]BenchmarkReport) (Benchm
 	}(orm)
 
 	var result BenchmarkResult
-	operations := []func(b *testing.B){orm.Insert, orm.InsertMulti, orm.Update, orm.Read, orm.ReadSlice}
+	operations := []struct {
+		name string
+		fn   func(b *testing.B)
+	}{
+		{"Insert", orm.Insert},
+		{"InsertMulti", orm.InsertMulti},
+		{"Update", orm.Update},
+		{"Read", orm.Read},
+		{"ReadSlice", orm.ReadSlice},
+	}
 
 	result.ORM = orm.Name()
 	for _, operation := range operations {
-		// Clean tables for each run
-		err := CreateTables()
-		if err != nil {
-			panic(err)
-		}
+		br := testing.Benchmark(func(b *testing.B) {
+			b.StopTimer()
+			if err := control.Reset(orm.Name(), operation.name); err != nil {
+				SetError(b, orm.Name(), operation.name, err.Error())
+				return
+			}
 
-		br := testing.Benchmark(operation)
-		method := getFuncName(operation)
+			operation.fn(b)
+			b.StopTimer()
+			if b.Failed() {
+				return
+			}
+			if err := control.Validate(orm.Name(), operation.name, b.N); err != nil {
+				SetError(b, orm.Name(), operation.name, err.Error())
+			}
+		})
+		method := operation.name
 
 		gotResult := &Result{
 			Name:      orm.Name(),

@@ -2,9 +2,9 @@ package bench
 
 import (
 	"context"
-	"github.com/efectn/go-orm-benchmarks/helper"
 	"testing"
 
+	"github.com/efectn/go-orm-benchmarks/helper"
 	"github.com/go-rel/postgres"
 	relware "github.com/go-rel/rel"
 	"github.com/go-rel/rel/where"
@@ -54,37 +54,24 @@ func (rel *Rel) Close() error {
 
 func (rel *Rel) Insert(b *testing.B) {
 	m := NewModel3()
-
-	b.ReportAllocs()
-	b.ResetTimer()
-
-	for i := 0; i < b.N; i++ {
+	helper.BenchExec(b, rel.Name(), "Insert", func() error {
 		m.ID = 0
-		err := rel.conn.Insert(ctx, m)
-		if err != nil {
-			helper.SetError(b, rel.Name(), "Insert", err.Error())
-		}
-	}
+		return rel.conn.Insert(ctx, m)
+	})
 }
 
 func (rel *Rel) InsertMulti(b *testing.B) {
-	ms := make([]*Model3, 0, 100)
-	for i := 0; i < 100; i++ {
+	ms := make([]*Model3, 0, helper.BatchSize)
+	for i := 0; i < helper.BatchSize; i++ {
 		ms = append(ms, NewModel3())
 	}
 
-	b.ReportAllocs()
-	b.ResetTimer()
-
-	for i := 0; i < b.N; i++ {
+	helper.BenchExec(b, rel.Name(), "InsertMulti", func() error {
 		for _, m := range ms {
 			m.ID = 0
 		}
-		err := rel.conn.InsertAll(ctx, &ms)
-		if err != nil {
-			helper.SetError(b, rel.Name(), "InsertMulti", err.Error())
-		}
-	}
+		return rel.conn.InsertAll(ctx, &ms)
+	})
 }
 
 func (rel *Rel) Update(b *testing.B) {
@@ -93,17 +80,13 @@ func (rel *Rel) Update(b *testing.B) {
 	err := rel.conn.Insert(ctx, m)
 	if err != nil {
 		helper.SetError(b, rel.Name(), "Update", err.Error())
+		return
 	}
+	m.Counter = helper.UpdatedCounter
 
-	b.ReportAllocs()
-	b.ResetTimer()
-
-	for i := 0; i < b.N; i++ {
-		err := rel.conn.Update(ctx, m)
-		if err != nil {
-			helper.SetError(b, rel.Name(), "Update", err.Error())
-		}
-	}
+	helper.BenchExec(b, rel.Name(), "Update", func() error {
+		return rel.conn.Update(ctx, m)
+	})
 }
 
 func (rel *Rel) Read(b *testing.B) {
@@ -112,37 +95,35 @@ func (rel *Rel) Read(b *testing.B) {
 	err := rel.conn.Insert(ctx, m)
 	if err != nil {
 		helper.SetError(b, rel.Name(), "Read", err.Error())
+		return
 	}
 
-	b.ReportAllocs()
-	b.ResetTimer()
-
-	for i := 0; i < b.N; i++ {
-		err := rel.conn.Find(ctx, m)
-		if err != nil {
-			helper.SetError(b, rel.Name(), "Read", err.Error())
+	helper.BenchRows(b, rel.Name(), "Read", 1, func() (int, error) {
+		var result Model3
+		if err := rel.conn.Find(ctx, &result, where.Eq("id", m.ID)); err != nil {
+			return 0, err
 		}
-	}
+		return 1, nil
+	})
 }
 
 func (rel *Rel) ReadSlice(b *testing.B) {
 	m := NewModel3()
-	for i := 0; i < 100; i++ {
+	for i := 0; i < helper.BatchSize; i++ {
 		m.ID = 0
 		err := rel.conn.Insert(ctx, m)
 		if err != nil {
 			helper.SetError(b, rel.Name(), "ReadSlice", err.Error())
+			return
 		}
 	}
 
-	b.ReportAllocs()
-	b.ResetTimer()
-
-	for i := 0; i < b.N; i++ {
+	helper.BenchRows(b, rel.Name(), "ReadSlice", helper.BatchSize, func() (int, error) {
 		var ms []Model3
-		err := rel.conn.FindAll(ctx, &ms, where.Gt("id", 0), relware.Limit(100))
+		err := rel.conn.FindAll(ctx, &ms, where.Gt("id", 0), relware.Limit(helper.BatchSize))
 		if err != nil {
-			helper.SetError(b, rel.Name(), "ReadSlice", err.Error())
+			return 0, err
 		}
-	}
+		return len(ms), nil
+	})
 }

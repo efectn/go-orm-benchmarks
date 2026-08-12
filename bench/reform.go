@@ -45,89 +45,75 @@ func (reform *Reform) Close() error {
 
 func (reform *Reform) Insert(b *testing.B) {
 	m := NewReformModel()
-
-	b.ReportAllocs()
-	b.ResetTimer()
-
-	for i := 0; i < b.N; i++ {
-		err := reform.conn.Save(m)
-		if err != nil {
-			helper.SetError(b, reform.Name(), "Insert", err.Error())
-		}
-	}
+	helper.BenchExec(b, reform.Name(), "Insert", func() error {
+		m.ID = 0
+		return reform.conn.Insert(m)
+	})
 }
 
 func (reform *Reform) InsertMulti(b *testing.B) {
-	ms := make([]reformware.Struct, 0, 100)
-	for i := 0; i < 100; i++ {
+	ms := make([]reformware.Struct, 0, helper.BatchSize)
+	for i := 0; i < helper.BatchSize; i++ {
 		ms = append(ms, NewReformModel())
 	}
 
-	b.ReportAllocs()
-	b.ResetTimer()
-
-	for i := 0; i < b.N; i++ {
-		err := reform.conn.InsertMulti(ms...)
-		if err != nil {
-			helper.SetError(b, reform.Name(), "InsertMulti", err.Error())
+	helper.BenchExec(b, reform.Name(), "InsertMulti", func() error {
+		for _, model := range ms {
+			model.(*r.ReformModels).ID = 0
 		}
-	}
+		return reform.conn.InsertMulti(ms...)
+	})
 }
 
 func (reform *Reform) Update(b *testing.B) {
 	m := NewReformModel()
 
-	err := reform.conn.Save(m)
+	err := reform.conn.Insert(m)
 	if err != nil {
 		helper.SetError(b, reform.Name(), "Update", err.Error())
+		return
 	}
+	m.Counter = helper.UpdatedCounter
 
-	b.ReportAllocs()
-	b.ResetTimer()
-
-	for i := 0; i < b.N; i++ {
-		err := reform.conn.Update(m)
-		if err != nil {
-			helper.SetError(b, reform.Name(), "Update", err.Error())
-		}
-	}
+	helper.BenchExec(b, reform.Name(), "Update", func() error {
+		return reform.conn.Update(m)
+	})
 }
 
 func (reform *Reform) Read(b *testing.B) {
 	m := NewReformModel()
 
-	err := reform.conn.Save(m)
+	err := reform.conn.Insert(m)
 	if err != nil {
 		helper.SetError(b, reform.Name(), "Read", err.Error())
+		return
 	}
 
-	b.ReportAllocs()
-	b.ResetTimer()
-
-	for i := 0; i < b.N; i++ {
+	helper.BenchRows(b, reform.Name(), "Read", 1, func() (int, error) {
 		_, err := reform.conn.FindByPrimaryKeyFrom(r.ReformModelsTable, m.ID)
 		if err != nil {
-			helper.SetError(b, reform.Name(), "Read", err.Error())
+			return 0, err
 		}
-	}
+		return 1, nil
+	})
 }
 
 func (reform *Reform) ReadSlice(b *testing.B) {
 	m := NewReformModel()
-	for i := 0; i < 100; i++ {
-		err := reform.conn.Save(m)
+	for i := 0; i < helper.BatchSize; i++ {
+		m.ID = 0
+		err := reform.conn.Insert(m)
 		if err != nil {
 			helper.SetError(b, reform.Name(), "ReadSlice", err.Error())
+			return
 		}
 	}
 
-	b.ReportAllocs()
-	b.ResetTimer()
-
-	for i := 0; i < b.N; i++ {
-		_, err := reform.conn.SelectAllFrom(r.ReformModelsTable, "WHERE id > 0 LIMIT 100")
+	helper.BenchRows(b, reform.Name(), "ReadSlice", helper.BatchSize, func() (int, error) {
+		models, err := reform.conn.SelectAllFrom(r.ReformModelsTable, "WHERE id > 0 LIMIT $1", helper.BatchSize)
 		if err != nil {
-			helper.SetError(b, reform.Name(), "ReadSlice", err.Error())
+			return 0, err
 		}
-	}
+		return len(models), nil
+	})
 }
