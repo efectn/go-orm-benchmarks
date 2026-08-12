@@ -8,14 +8,15 @@ import (
 )
 
 const (
-	sqlxInsertBaseSQL   = `INSERT INTO models (name, title, fax, web, age, "right", counter) VALUES `
-	sqlxInsertValuesSQL = `($1, $2, $3, $4, $5, $6, $7)`
-	sqlxInsertSQL       = sqlxInsertBaseSQL + sqlxInsertValuesSQL
-	sqlxInsertNamesSQL  = `(:name, :title, :fax, :web, :age, :right, :counter)`
-	sqlxInsertMultiSQL  = sqlxInsertBaseSQL + sqlxInsertNamesSQL
-	sqlxUpdateSQL       = `UPDATE models SET name = $1, title = $2, fax = $3, web = $4, age = $5, "right" = $6, counter = $7 WHERE id = $8`
-	sqlxSelectSQL       = `SELECT * FROM models WHERE id = $1`
-	sqlxSelectMultiSQL  = `SELECT * FROM models WHERE id > 0 LIMIT 100`
+	sqlxInsertBaseSQL      = `INSERT INTO models (name, title, fax, web, age, "right", counter) VALUES `
+	sqlxInsertValuesSQL    = `($1, $2, $3, $4, $5, $6, $7)`
+	sqlxInsertSQL          = sqlxInsertBaseSQL + sqlxInsertValuesSQL
+	sqlxInsertReturningSQL = sqlxInsertSQL + ` RETURNING id`
+	sqlxInsertNamesSQL     = `(:name, :title, :fax, :web, :age, :right, :counter)`
+	sqlxInsertMultiSQL     = sqlxInsertBaseSQL + sqlxInsertNamesSQL
+	sqlxUpdateSQL          = `UPDATE models SET name = $1, title = $2, fax = $3, web = $4, age = $5, "right" = $6, counter = $7 WHERE id = $8`
+	sqlxSelectSQL          = `SELECT * FROM models WHERE id = $1`
+	sqlxSelectMultiSQL     = `SELECT * FROM models WHERE id > 0 LIMIT $1`
 )
 
 type Sqlx struct {
@@ -47,89 +48,69 @@ func (sqlx *Sqlx) Close() error {
 
 func (sqlx *Sqlx) Insert(b *testing.B) {
 	m := NewModel()
-
-	b.ReportAllocs()
-	b.ResetTimer()
-
-	for i := 0; i < b.N; i++ {
+	helper.BenchExec(b, sqlx.Name(), "Insert", func() error {
 		_, err := sqlx.conn.Exec(sqlxInsertSQL, m.Name, m.Title, m.Fax, m.Web, m.Age, m.Right, m.Counter)
-		if err != nil {
-			helper.SetError(b, sqlx.Name(), "Insert", err.Error())
-		}
-	}
+		return err
+	})
 }
 
 func (sqlx *Sqlx) InsertMulti(b *testing.B) {
-	ms := make([]*Model, 0, 100)
-	for i := 0; i < 100; i++ {
+	ms := make([]*Model, 0, helper.BatchSize)
+	for i := 0; i < helper.BatchSize; i++ {
 		ms = append(ms, NewModel())
 	}
-
-	b.ReportAllocs()
-	b.ResetTimer()
-
-	for i := 0; i < b.N; i++ {
+	helper.BenchExec(b, sqlx.Name(), "InsertMulti", func() error {
 		_, err := sqlx.conn.NamedExec(sqlxInsertMultiSQL, ms)
-		if err != nil {
-			helper.SetError(b, sqlx.Name(), "InsertMulti", err.Error())
-		}
-	}
+		return err
+	})
 }
 
 func (sqlx *Sqlx) Update(b *testing.B) {
 	m := NewModel()
-	_, err := sqlx.conn.Exec(sqlxInsertSQL, m.Name, m.Title, m.Fax, m.Web, m.Age, m.Right, m.Counter)
+	err := sqlx.conn.QueryRow(sqlxInsertReturningSQL, m.Name, m.Title, m.Fax, m.Web, m.Age, m.Right, m.Counter).Scan(&m.Id)
 	if err != nil {
 		helper.SetError(b, sqlx.Name(), "Update", err.Error())
+		return
 	}
+	m.Counter = helper.UpdatedCounter
 
-	b.ReportAllocs()
-	b.ResetTimer()
-
-	for i := 0; i < b.N; i++ {
+	helper.BenchExec(b, sqlx.Name(), "Update", func() error {
 		_, err := sqlx.conn.Exec(sqlxUpdateSQL, m.Name, m.Title, m.Fax, m.Web, m.Age, m.Right, m.Counter, m.Id)
-		if err != nil {
-			helper.SetError(b, sqlx.Name(), "Update", err.Error())
-		}
-	}
+		return err
+	})
 }
 
 func (sqlx *Sqlx) Read(b *testing.B) {
 	m := NewModel()
-	_, err := sqlx.conn.Exec(sqlxInsertSQL, m.Name, m.Title, m.Fax, m.Web, m.Age, m.Right, m.Counter)
+	err := sqlx.conn.QueryRow(sqlxInsertReturningSQL, m.Name, m.Title, m.Fax, m.Web, m.Age, m.Right, m.Counter).Scan(&m.Id)
 	if err != nil {
 		helper.SetError(b, sqlx.Name(), "Read", err.Error())
+		return
 	}
 
-	b.ReportAllocs()
-	b.ResetTimer()
-
-	for i := 0; i < b.N; i++ {
-		var m []Model
-		err := sqlx.conn.Select(&m, sqlxSelectSQL, 1)
+	helper.BenchRows(b, sqlx.Name(), "Read", 1, func() (int, error) {
+		var mout Model
+		err := sqlx.conn.Get(&mout, sqlxSelectSQL, m.Id)
 		if err != nil {
-			helper.SetError(b, sqlx.Name(), "Read", err.Error())
+			return 0, err
 		}
-	}
+		return 1, nil
+	})
 }
 
 func (sqlx *Sqlx) ReadSlice(b *testing.B) {
 	m := NewModel()
-	for i := 0; i < 100; i++ {
+	for i := 0; i < helper.BatchSize; i++ {
 		_, err := sqlx.conn.Exec(sqlxInsertSQL, m.Name, m.Title, m.Fax, m.Web, m.Age, m.Right, m.Counter)
 		if err != nil {
 			helper.SetError(b, sqlx.Name(), "ReadSlice", err.Error())
+			return
 		}
 	}
 
-	b.ReportAllocs()
-	b.ResetTimer()
-
-	for i := 0; i < b.N; i++ {
-		ms := make([]Model, 100)
-		err := sqlx.conn.Select(&ms, sqlxSelectMultiSQL)
-		if err != nil {
-			helper.SetError(b, sqlx.Name(), "ReadSlice", err.Error())
-		}
-	}
+	helper.BenchRows(b, sqlx.Name(), "ReadSlice", helper.BatchSize, func() (int, error) {
+		var ms []Model
+		err := sqlx.conn.Select(&ms, sqlxSelectMultiSQL, helper.BatchSize)
+		return len(ms), err
+	})
 }

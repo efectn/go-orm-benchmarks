@@ -15,7 +15,7 @@ const (
 	sqlrgenInsertMultiSQL     = `INSERT INTO models (name, title, fax, web, age, "right", counter) VALUES :rows{name,title,fax,web,age,right,counter}`
 	sqlrgenUpdateSQL          = `UPDATE models SET name = :name, title = :title, fax = :fax, web = :web, age = :age, "right" = :right, counter = :counter WHERE id = :id`
 	sqlrgenSelectSQL          = `SELECT id, name, title, fax, web, age, "right", counter FROM models WHERE id = :id`
-	sqlrgenSelectMultiSQL     = `SELECT id, name, title, fax, web, age, "right", counter FROM models WHERE id > 0 LIMIT 100`
+	sqlrgenSelectMultiSQL     = `SELECT id, name, title, fax, web, age, "right", counter FROM models WHERE id > 0 LIMIT :limit`
 )
 
 //go:generate go run github.com/gandaldf/sqlr/cmd/sqlrgen -type SqlrgenModel -output sqlrgen_model.go
@@ -66,37 +66,26 @@ func (sqlrgen *Sqlrgen) Close() error {
 
 func (sqlrgen *Sqlrgen) Insert(b *testing.B) {
 	model := newSqlrgenModel()
-
-	b.ReportAllocs()
-	b.ResetTimer()
-
-	for i := 0; i < b.N; i++ {
+	helper.BenchExec(b, sqlrgen.Name(), "Insert", func() error {
 		_, err := sqlrgen.lib.Write(sqlrgenInsertSQL).
 			Bind(model).
 			ExecContext(ctx, sqlrgen.conn)
-		if err != nil {
-			helper.SetError(b, sqlrgen.Name(), "Insert", err.Error())
-		}
-	}
+		return err
+	})
 }
 
 func (sqlrgen *Sqlrgen) InsertMulti(b *testing.B) {
-	models := make([]SqlrgenModel, 100)
+	models := make([]SqlrgenModel, helper.BatchSize)
 	for i := range models {
 		models[i] = *newSqlrgenModel()
 	}
 
-	b.ReportAllocs()
-	b.ResetTimer()
-
-	for i := 0; i < b.N; i++ {
+	helper.BenchExec(b, sqlrgen.Name(), "InsertMulti", func() error {
 		_, err := sqlrgen.lib.Write(sqlrgenInsertMultiSQL).
 			Bind("rows", SQLRRowsOfSqlrgenModel(models)).
 			ExecContext(ctx, sqlrgen.conn)
-		if err != nil {
-			helper.SetError(b, sqlrgen.Name(), "InsertMulti", err.Error())
-		}
-	}
+		return err
+	})
 }
 
 func (sqlrgen *Sqlrgen) Update(b *testing.B) {
@@ -105,18 +94,14 @@ func (sqlrgen *Sqlrgen) Update(b *testing.B) {
 		helper.SetError(b, sqlrgen.Name(), "Update", err.Error())
 		return
 	}
+	model.Counter = helper.UpdatedCounter
 
-	b.ReportAllocs()
-	b.ResetTimer()
-
-	for i := 0; i < b.N; i++ {
+	helper.BenchExec(b, sqlrgen.Name(), "Update", func() error {
 		_, err := sqlrgen.lib.Write(sqlrgenUpdateSQL).
 			Bind(model).
 			ExecContext(ctx, sqlrgen.conn)
-		if err != nil {
-			helper.SetError(b, sqlrgen.Name(), "Update", err.Error())
-		}
-	}
+		return err
+	})
 }
 
 func (sqlrgen *Sqlrgen) Read(b *testing.B) {
@@ -126,39 +111,33 @@ func (sqlrgen *Sqlrgen) Read(b *testing.B) {
 		return
 	}
 
-	b.ReportAllocs()
-	b.ResetTimer()
-
-	for i := 0; i < b.N; i++ {
+	helper.BenchRows(b, sqlrgen.Name(), "Read", 1, func() (int, error) {
 		var result SqlrgenModel
 		err := sqlrgen.lib.Write(sqlrgenSelectSQL).
 			Bind(model).
 			ScanOneContext(ctx, sqlrgen.conn, &result)
 		if err != nil {
-			helper.SetError(b, sqlrgen.Name(), "Read", err.Error())
+			return 0, err
 		}
-	}
+		return 1, nil
+	})
 }
 
 func (sqlrgen *Sqlrgen) ReadSlice(b *testing.B) {
-	for i := 0; i < 100; i++ {
+	for i := 0; i < helper.BatchSize; i++ {
 		if err := sqlrgen.insertModel(newSqlrgenModel()); err != nil {
 			helper.SetError(b, sqlrgen.Name(), "ReadSlice", err.Error())
 			return
 		}
 	}
 
-	b.ReportAllocs()
-	b.ResetTimer()
-
-	for i := 0; i < b.N; i++ {
+	helper.BenchRows(b, sqlrgen.Name(), "ReadSlice", helper.BatchSize, func() (int, error) {
 		var models []SqlrgenModel
 		err := sqlrgen.lib.Write(sqlrgenSelectMultiSQL).
+			Bind("limit", helper.BatchSize).
 			ScanAllContext(ctx, sqlrgen.conn, &models)
-		if err != nil {
-			helper.SetError(b, sqlrgen.Name(), "ReadSlice", err.Error())
-		}
-	}
+		return len(models), err
+	})
 }
 
 func (sqlrgen *Sqlrgen) insertModel(model *SqlrgenModel) error {

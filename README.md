@@ -51,6 +51,23 @@ go-orm-benchmarks -orm=bun
 
 **_Note: Also, you can run `./run_benchmarks.sh` and you can get output like results.md format._**
 
+### Benchmark contract
+
+The tables are created once and truncated before every calibration run. Each
+iteration performs one logical operation; bulk operations process exactly 100
+rows. Setup and validation are excluded from the measured interval. Reads must
+materialize exactly one or 100 rows, while persisted row counts and counter
+sentinels are checked centrally after each run. Central validation treats
+primary-key values as opaque and never asserts a specific ID; adapters use the
+key returned by their native setup path.
+
+Insert benchmarks do not explicitly request a returned row unless the library's
+normal insert API intrinsically returns or populates a key. Update benchmarks do
+not reload the updated row. For bulk inserts, each adapter uses its idiomatic
+bulk API: `pgx`, `pgx_pool`, and `sqlc` intentionally use PostgreSQL `COPY`,
+while adapters whose bulk API emits `INSERT ... VALUES` retain that strategy.
+This difference is considered part of the library abstraction being measured.
+
 ### Results
 Look at [`results.md`](results.md) to see detailed benchmark results.
 

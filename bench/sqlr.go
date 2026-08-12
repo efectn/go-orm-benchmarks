@@ -15,7 +15,7 @@ const (
 	sqlrInsertMultiSQL     = `INSERT INTO models (name, title, fax, web, age, "right", counter) VALUES :rows{name,title,fax,web,age,right,counter}`
 	sqlrUpdateSQL          = `UPDATE models SET name = :name, title = :title, fax = :fax, web = :web, age = :age, "right" = :right, counter = :counter WHERE id = :id`
 	sqlrSelectSQL          = `SELECT id, name, title, fax, web, age, "right", counter FROM models WHERE id = :id`
-	sqlrSelectMultiSQL     = `SELECT id, name, title, fax, web, age, "right", counter FROM models WHERE id > 0 LIMIT 100`
+	sqlrSelectMultiSQL     = `SELECT id, name, title, fax, web, age, "right", counter FROM models WHERE id > 0 LIMIT :limit`
 )
 
 type Sqlr struct {
@@ -53,37 +53,26 @@ func (sqlr *Sqlr) Close() error {
 
 func (sqlr *Sqlr) Insert(b *testing.B) {
 	params := newSqlrParams()
-
-	b.ReportAllocs()
-	b.ResetTimer()
-
-	for i := 0; i < b.N; i++ {
+	helper.BenchExec(b, sqlr.Name(), "Insert", func() error {
 		_, err := sqlr.lib.Write(sqlrInsertSQL).
 			Bind(params).
 			ExecContext(ctx, sqlr.conn)
-		if err != nil {
-			helper.SetError(b, sqlr.Name(), "Insert", err.Error())
-		}
-	}
+		return err
+	})
 }
 
 func (sqlr *Sqlr) InsertMulti(b *testing.B) {
-	rows := make([]sqlrlib.P, 100)
+	rows := make([]sqlrlib.P, helper.BatchSize)
 	for i := range rows {
 		rows[i] = newSqlrParams()
 	}
 
-	b.ReportAllocs()
-	b.ResetTimer()
-
-	for i := 0; i < b.N; i++ {
+	helper.BenchExec(b, sqlr.Name(), "InsertMulti", func() error {
 		_, err := sqlr.lib.Write(sqlrInsertMultiSQL).
 			Bind("rows", rows).
 			ExecContext(ctx, sqlr.conn)
-		if err != nil {
-			helper.SetError(b, sqlr.Name(), "InsertMulti", err.Error())
-		}
-	}
+		return err
+	})
 }
 
 func (sqlr *Sqlr) Update(b *testing.B) {
@@ -94,18 +83,14 @@ func (sqlr *Sqlr) Update(b *testing.B) {
 		return
 	}
 	params["id"] = id
+	params["counter"] = helper.UpdatedCounter
 
-	b.ReportAllocs()
-	b.ResetTimer()
-
-	for i := 0; i < b.N; i++ {
+	helper.BenchExec(b, sqlr.Name(), "Update", func() error {
 		_, err = sqlr.lib.Write(sqlrUpdateSQL).
 			Bind(params).
 			ExecContext(ctx, sqlr.conn)
-		if err != nil {
-			helper.SetError(b, sqlr.Name(), "Update", err.Error())
-		}
-	}
+		return err
+	})
 }
 
 func (sqlr *Sqlr) Read(b *testing.B) {
@@ -117,10 +102,7 @@ func (sqlr *Sqlr) Read(b *testing.B) {
 	}
 	params["id"] = id
 
-	b.ReportAllocs()
-	b.ResetTimer()
-
-	for i := 0; i < b.N; i++ {
+	helper.BenchRows(b, sqlr.Name(), "Read", 1, func() (int, error) {
 		var result struct {
 			ID      int    `db:"id"`
 			Name    string `db:"name"`
@@ -135,24 +117,22 @@ func (sqlr *Sqlr) Read(b *testing.B) {
 			Bind(params).
 			ScanOneContext(ctx, sqlr.conn, &result)
 		if err != nil {
-			helper.SetError(b, sqlr.Name(), "Read", err.Error())
+			return 0, err
 		}
-	}
+		return 1, nil
+	})
 }
 
 func (sqlr *Sqlr) ReadSlice(b *testing.B) {
 	params := newSqlrParams()
-	for i := 0; i < 100; i++ {
+	for i := 0; i < helper.BatchSize; i++ {
 		if _, err := sqlr.insertRow(params); err != nil {
 			helper.SetError(b, sqlr.Name(), "ReadSlice", err.Error())
 			return
 		}
 	}
 
-	b.ReportAllocs()
-	b.ResetTimer()
-
-	for i := 0; i < b.N; i++ {
+	helper.BenchRows(b, sqlr.Name(), "ReadSlice", helper.BatchSize, func() (int, error) {
 		var rows []struct {
 			ID      int    `db:"id"`
 			Name    string `db:"name"`
@@ -164,11 +144,10 @@ func (sqlr *Sqlr) ReadSlice(b *testing.B) {
 			Counter int64  `db:"counter"`
 		}
 		err := sqlr.lib.Write(sqlrSelectMultiSQL).
+			Bind("limit", helper.BatchSize).
 			ScanAllContext(ctx, sqlr.conn, &rows)
-		if err != nil {
-			helper.SetError(b, sqlr.Name(), "ReadSlice", err.Error())
-		}
-	}
+		return len(rows), err
+	})
 }
 
 func (sqlr *Sqlr) insertRow(params sqlrlib.P) (int, error) {

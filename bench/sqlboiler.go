@@ -6,10 +6,10 @@ import (
 
 	"github.com/efectn/go-orm-benchmarks/helper"
 
-	models "github.com/efectn/go-orm-benchmarks/bench/sqlboiler"
-	_ "github.com/jackc/pgx/v5/stdlib"
 	"github.com/aarondl/sqlboiler/v4/boil"
 	"github.com/aarondl/sqlboiler/v4/queries/qm"
+	models "github.com/efectn/go-orm-benchmarks/bench/sqlboiler"
+	_ "github.com/jackc/pgx/v5/stdlib"
 )
 
 type Sqlboiler struct {
@@ -43,17 +43,10 @@ func (sqlboiler *Sqlboiler) Close() error {
 
 func (sqlboiler *Sqlboiler) Insert(b *testing.B) {
 	m := NewModel6()
-
-	b.ReportAllocs()
-	b.ResetTimer()
-
-	for i := 0; i < b.N; i++ {
+	helper.BenchExec(b, sqlboiler.Name(), "Insert", func() error {
 		m.ID = 0
-		err := m.Insert(ctx, sqlboiler.conn, boil.Infer())
-		if err != nil {
-			helper.SetError(b, sqlboiler.Name(), "Insert", err.Error())
-		}
-	}
+		return m.Insert(ctx, sqlboiler.conn, boil.Infer())
+	})
 }
 
 func (sqlboiler *Sqlboiler) InsertMulti(b *testing.B) {
@@ -66,17 +59,14 @@ func (sqlboiler *Sqlboiler) Update(b *testing.B) {
 	err := m.Insert(ctx, sqlboiler.conn, boil.Infer())
 	if err != nil {
 		helper.SetError(b, sqlboiler.Name(), "Update", err.Error())
+		return
 	}
+	m.Counter = helper.UpdatedCounter
 
-	b.ReportAllocs()
-	b.ResetTimer()
-
-	for i := 0; i < b.N; i++ {
+	helper.BenchExec(b, sqlboiler.Name(), "Update", func() error {
 		_, err := m.Update(ctx, sqlboiler.conn, boil.Infer())
-		if err != nil {
-			helper.SetError(b, sqlboiler.Name(), "Update", err.Error())
-		}
-	}
+		return err
+	})
 }
 
 func (sqlboiler *Sqlboiler) Read(b *testing.B) {
@@ -85,36 +75,34 @@ func (sqlboiler *Sqlboiler) Read(b *testing.B) {
 	err := m.Insert(ctx, sqlboiler.conn, boil.Infer())
 	if err != nil {
 		helper.SetError(b, sqlboiler.Name(), "Read", err.Error())
+		return
 	}
 
-	b.ReportAllocs()
-	b.ResetTimer()
-
-	for i := 0; i < b.N; i++ {
-		_, err := models.Models(qm.Where("id = 0")).Exec(sqlboiler.conn)
+	helper.BenchRows(b, sqlboiler.Name(), "Read", 1, func() (int, error) {
+		_, err := models.FindModel(ctx, sqlboiler.conn, m.ID)
 		if err != nil {
-			helper.SetError(b, sqlboiler.Name(), "Read", err.Error())
+			return 0, err
 		}
-	}
+		return 1, nil
+	})
 }
 
 func (sqlboiler *Sqlboiler) ReadSlice(b *testing.B) {
 	m := NewModel6()
-	for i := 0; i < 100; i++ {
+	for i := 0; i < helper.BatchSize; i++ {
 		m.ID = 0
 		err := m.Insert(ctx, sqlboiler.conn, boil.Infer())
 		if err != nil {
 			helper.SetError(b, sqlboiler.Name(), "ReadSlice", err.Error())
+			return
 		}
 	}
 
-	b.ReportAllocs()
-	b.ResetTimer()
-
-	for i := 0; i < b.N; i++ {
-		_, err := models.Models(qm.Where("id > 0"), qm.Limit(100)).All(ctx, sqlboiler.conn)
+	helper.BenchRows(b, sqlboiler.Name(), "ReadSlice", helper.BatchSize, func() (int, error) {
+		rows, err := models.Models(qm.Where("id > 0"), qm.Limit(helper.BatchSize)).All(ctx, sqlboiler.conn)
 		if err != nil {
-			helper.SetError(b, sqlboiler.Name(), "ReadSlice", err.Error())
+			return 0, err
 		}
-	}
+		return len(rows), nil
+	})
 }

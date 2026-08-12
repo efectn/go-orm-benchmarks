@@ -50,92 +50,76 @@ func (gen *Gen) Close() error {
 
 func (gen *Gen) Insert(b *testing.B) {
 	m := models.NewModelAlt()
-
-	b.ReportAllocs()
-	b.ResetTimer()
-	for i := 0; i < b.N; i++ {
+	helper.BenchExec(b, gen.Name(), "Insert", func() error {
 		m.Id = 0
-		if err := query.Use(gen.conn).Model.WithContext(ctx).Create(&m); err != nil {
-			helper.SetError(b, gen.Name(), "Insert", err.Error())
-		}
-	}
+		return query.Use(gen.conn).Model.WithContext(ctx).Create(&m)
+	})
 }
 
-func (gen Gen) InsertMulti(b *testing.B) {
-	ms := make([]*models.Model, 0, 100)
-	for i := 0; i < 100; i++ {
+func (gen *Gen) InsertMulti(b *testing.B) {
+	ms := make([]*models.Model, 0, helper.BatchSize)
+	for i := 0; i < helper.BatchSize; i++ {
 		m := models.NewModelAlt()
 		ms = append(ms, &m)
 	}
 
-	b.ReportAllocs()
-	b.ResetTimer()
-
-	for i := 0; i < b.N; i++ {
-		ms := make([]*models.Model, 0, 100)
-		for i := 0; i < 100; i++ {
-			m := models.NewModelAlt()
-			ms = append(ms, &m)
+	helper.BenchExec(b, gen.Name(), "InsertMulti", func() error {
+		for _, m := range ms {
+			m.Id = 0
 		}
-		if err := query.Use(gen.conn).Model.WithContext(ctx).Create(ms...); err != nil {
-			helper.SetError(b, gen.Name(), "InsertMulti", err.Error())
-		}
-	}
+		return query.Use(gen.conn).Model.WithContext(ctx).Create(ms...)
+	})
 }
 
 func (gen *Gen) Update(b *testing.B) {
 	m := models.NewModelAlt()
 	if err := query.Use(gen.conn).Model.WithContext(ctx).Create(&m); err != nil {
-		helper.SetError(b, gen.Name(), "Insert", err.Error())
+		helper.SetError(b, gen.Name(), "Update", err.Error())
+		return
 	}
-	b.ReportAllocs()
-	b.ResetTimer()
+	m.Counter = helper.UpdatedCounter
 
-	for i := 0; i < b.N; i++ {
+	helper.BenchExec(b, gen.Name(), "Update", func() error {
 		_, err := query.Use(gen.conn).Model.WithContext(ctx).
 			Where(query.Use(gen.conn).Model.Id.Eq(m.Id)).
 			Updates(m)
-		if err != nil {
-			helper.SetError(b, gen.Name(), "Update", err.Error())
-		}
-	}
+		return err
+	})
 }
 
 func (gen *Gen) Read(b *testing.B) {
 	m := models.NewModelAlt()
 	if err := query.Use(gen.conn).Model.WithContext(ctx).Create(&m); err != nil {
-		helper.SetError(b, gen.Name(), "Insert", err.Error())
+		helper.SetError(b, gen.Name(), "Read", err.Error())
+		return
 	}
-	b.ReportAllocs()
-	b.ResetTimer()
 
-	for i := 0; i < b.N; i++ {
+	helper.BenchRows(b, gen.Name(), "Read", 1, func() (int, error) {
 		_, err := query.Use(gen.conn).Model.WithContext(ctx).
 			Where(query.Use(gen.conn).Model.Id.Eq(m.Id)).
 			First()
 		if err != nil {
-			helper.SetError(b, gen.Name(), "Read", err.Error())
+			return 0, err
 		}
-	}
-
+		return 1, nil
+	})
 }
 
 func (gen *Gen) ReadSlice(b *testing.B) {
 	m := models.NewModelAlt()
-	for i := 0; i < 100; i++ {
+	for i := 0; i < helper.BatchSize; i++ {
 		m.Id = 0
 		if err := query.Use(gen.conn).Model.WithContext(ctx).Create(&m); err != nil {
 			helper.SetError(b, gen.Name(), "ReadSlice", err.Error())
+			return
 		}
 	}
 
-	for i := 0; i < b.N; i++ {
-		_, err := query.Use(gen.conn).Model.WithContext(ctx).
+	helper.BenchRows(b, gen.Name(), "ReadSlice", helper.BatchSize, func() (int, error) {
+		found, err := query.Use(gen.conn).Model.WithContext(ctx).
 			Where(query.Use(gen.conn).Model.Id.Gt(0)).
-			Limit(100).
+			Limit(helper.BatchSize).
 			Find()
-		if err != nil {
-			helper.SetError(b, gen.Name(), "ReadSlice", err.Error())
-		}
-	}
+		return len(found), err
+	})
 }

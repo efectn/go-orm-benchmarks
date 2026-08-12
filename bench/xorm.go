@@ -1,8 +1,9 @@
 package bench
 
 import (
-	"github.com/efectn/go-orm-benchmarks/helper"
 	"testing"
+
+	"github.com/efectn/go-orm-benchmarks/helper"
 	xormdb "xorm.io/xorm"
 )
 
@@ -36,34 +37,26 @@ func (xorm *Xorm) Close() error {
 
 func (xorm *Xorm) Insert(b *testing.B) {
 	m := NewModel5()
-
-	b.ReportAllocs()
-	b.ResetTimer()
-
-	for i := 0; i < b.N; i++ {
+	helper.BenchExec(b, xorm.Name(), "Insert", func() error {
 		m.ID = 0
 		_, err := xorm.conn.Insert(m)
-		if err != nil {
-			helper.SetError(b, xorm.Name(), "Insert", err.Error())
-		}
-	}
+		return err
+	})
 }
 
 func (xorm *Xorm) InsertMulti(b *testing.B) {
-	ms := make([]*Model5, 0, 100)
-	for i := 0; i < 100; i++ {
+	ms := make([]*Model5, 0, helper.BatchSize)
+	for i := 0; i < helper.BatchSize; i++ {
 		ms = append(ms, NewModel5())
 	}
 
-	b.ReportAllocs()
-	b.ResetTimer()
-
-	for i := 0; i < b.N; i++ {
-		_, err := xorm.conn.Insert(&ms)
-		if err != nil {
-			helper.SetError(b, xorm.Name(), "InsertMulti", err.Error())
+	helper.BenchExec(b, xorm.Name(), "InsertMulti", func() error {
+		for _, m := range ms {
+			m.ID = 0
 		}
-	}
+		_, err := xorm.conn.Insert(&ms)
+		return err
+	})
 }
 
 func (xorm *Xorm) Update(b *testing.B) {
@@ -72,17 +65,14 @@ func (xorm *Xorm) Update(b *testing.B) {
 	_, err := xorm.conn.Insert(m)
 	if err != nil {
 		helper.SetError(b, xorm.Name(), "Update", err.Error())
+		return
 	}
+	m.Counter = helper.UpdatedCounter
 
-	b.ReportAllocs()
-	b.ResetTimer()
-
-	for i := 0; i < b.N; i++ {
+	helper.BenchExec(b, xorm.Name(), "Update", func() error {
 		_, err := xorm.conn.ID(m.ID).Update(m)
-		if err != nil {
-			helper.SetError(b, xorm.Name(), "Update", err.Error())
-		}
-	}
+		return err
+	})
 }
 
 func (xorm *Xorm) Read(b *testing.B) {
@@ -91,38 +81,40 @@ func (xorm *Xorm) Read(b *testing.B) {
 	_, err := xorm.conn.Insert(m)
 	if err != nil {
 		helper.SetError(b, xorm.Name(), "Read", err.Error())
+		return
 	}
 
-	b.ReportAllocs()
-	b.ResetTimer()
-
-	for i := 0; i < b.N; i++ {
-		_, err := xorm.conn.ID(1).NoAutoCondition().Get(m)
+	helper.BenchRows(b, xorm.Name(), "Read", 1, func() (int, error) {
+		var result Model5
+		found, err := xorm.conn.ID(m.ID).NoAutoCondition().Get(&result)
 		if err != nil {
-			helper.SetError(b, xorm.Name(), "Read", err.Error())
+			return 0, err
 		}
-	}
+		if !found {
+			return 0, nil
+		}
+		return 1, nil
+	})
 }
 
 func (xorm *Xorm) ReadSlice(b *testing.B) {
 	m := NewModel5()
 
-	for i := 0; i < 100; i++ {
+	for i := 0; i < helper.BatchSize; i++ {
 		m.ID = 0
 		_, err := xorm.conn.Insert(m)
 		if err != nil {
 			helper.SetError(b, xorm.Name(), "ReadSlice", err.Error())
+			return
 		}
 	}
 
-	b.ReportAllocs()
-	b.ResetTimer()
-
-	for i := 0; i < b.N; i++ {
+	helper.BenchRows(b, xorm.Name(), "ReadSlice", helper.BatchSize, func() (int, error) {
 		var models []*Model5
-		err := xorm.conn.Where("id > 0").Limit(100).Find(&models)
+		err := xorm.conn.Where("id > 0").Limit(helper.BatchSize).Find(&models)
 		if err != nil {
-			helper.SetError(b, xorm.Name(), "ReadSlice", err.Error())
+			return 0, err
 		}
-	}
+		return len(models), nil
+	})
 }

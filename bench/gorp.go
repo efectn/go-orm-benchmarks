@@ -42,16 +42,10 @@ func (gorp *Gorp) Close() error {
 
 func (gorp *Gorp) Insert(b *testing.B) {
 	m := NewModel()
-
-	b.ReportAllocs()
-	b.ResetTimer()
-
-	for i := 0; i < b.N; i++ {
-		err := gorp.conn.Insert(m)
-		if err != nil {
-			helper.SetError(b, gorp.Name(), "Insert", err.Error())
-		}
-	}
+	helper.BenchExec(b, gorp.Name(), "Insert", func() error {
+		m.Id = 0
+		return gorp.conn.Insert(m)
+	})
 }
 
 func (gorp *Gorp) InsertMulti(b *testing.B) {
@@ -64,17 +58,14 @@ func (gorp *Gorp) Update(b *testing.B) {
 	err := gorp.conn.Insert(m)
 	if err != nil {
 		helper.SetError(b, gorp.Name(), "Update", err.Error())
+		return
 	}
+	m.Counter = helper.UpdatedCounter
 
-	b.ReportAllocs()
-	b.ResetTimer()
-
-	for i := 0; i < b.N; i++ {
+	helper.BenchExec(b, gorp.Name(), "Update", func() error {
 		_, err := gorp.conn.Update(m)
-		if err != nil {
-			helper.SetError(b, gorp.Name(), "Update", err.Error())
-		}
-	}
+		return err
+	})
 }
 
 func (gorp *Gorp) Read(b *testing.B) {
@@ -83,36 +74,31 @@ func (gorp *Gorp) Read(b *testing.B) {
 	err := gorp.conn.Insert(m)
 	if err != nil {
 		helper.SetError(b, gorp.Name(), "Read", err.Error())
+		return
 	}
 
-	b.ReportAllocs()
-	b.ResetTimer()
-
-	for i := 0; i < b.N; i++ {
-		err := gorp.conn.SelectOne(m, "SELECT * FROM models LIMIT 1")
-		if err != nil {
-			helper.SetError(b, gorp.Name(), "Read", err.Error())
+	helper.BenchRows(b, gorp.Name(), "Read", 1, func() (int, error) {
+		if err := gorp.conn.SelectOne(m, "SELECT * FROM models WHERE id = $1", m.Id); err != nil {
+			return 0, err
 		}
-	}
+		return 1, nil
+	})
 }
 
 func (gorp *Gorp) ReadSlice(b *testing.B) {
 	m := NewModel()
-	for i := 0; i < 100; i++ {
+	for i := 0; i < helper.BatchSize; i++ {
+		m.Id = 0
 		err := gorp.conn.Insert(m)
 		if err != nil {
 			helper.SetError(b, gorp.Name(), "ReadSlice", err.Error())
+			return
 		}
 	}
 
-	b.ReportAllocs()
-	b.ResetTimer()
-
-	for i := 0; i < b.N; i++ {
+	helper.BenchRows(b, gorp.Name(), "ReadSlice", helper.BatchSize, func() (int, error) {
 		var ms []*Model
-		_, err := gorp.conn.Select(&ms, "select * from models where id > 0 LIMIT 100")
-		if err != nil {
-			helper.SetError(b, gorp.Name(), "ReadSlice", err.Error())
-		}
-	}
+		_, err := gorp.conn.Select(&ms, "select * from models where id > 0 LIMIT $1", helper.BatchSize)
+		return len(ms), err
+	})
 }

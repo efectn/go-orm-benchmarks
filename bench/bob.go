@@ -8,6 +8,7 @@ import (
 	boblib "github.com/stephenafamo/bob"
 	"github.com/stephenafamo/bob/dialect/psql"
 	"github.com/stephenafamo/bob/dialect/psql/sm"
+	"github.com/stephenafamo/bob/dialect/psql/um"
 )
 
 type Bob struct {
@@ -43,33 +44,22 @@ func (bob *Bob) Close() error {
 
 func (bob *Bob) Insert(b *testing.B) {
 	setter := newBobModelSetter(NewModel())
-
-	b.ReportAllocs()
-	b.ResetTimer()
-
-	for i := 0; i < b.N; i++ {
-		_, err := bobModels.Insert(setter).One(ctx, bob.conn)
-		if err != nil {
-			helper.SetError(b, bob.Name(), "Insert", err.Error())
-		}
-	}
+	helper.BenchExec(b, bob.Name(), "Insert", func() error {
+		_, err := bobModels.Insert(setter).Exec(ctx, bob.conn)
+		return err
+	})
 }
 
 func (bob *Bob) InsertMulti(b *testing.B) {
-	setters := make([]*bobModelSetter, 100)
+	setters := make([]*bobModelSetter, helper.BatchSize)
 	for i := range setters {
 		setters[i] = newBobModelSetter(NewModel())
 	}
 
-	b.ReportAllocs()
-	b.ResetTimer()
-
-	for i := 0; i < b.N; i++ {
-		_, err := bobModels.Insert(boblib.ToMods(setters...)).All(ctx, bob.conn)
-		if err != nil {
-			helper.SetError(b, bob.Name(), "InsertMulti", err.Error())
-		}
-	}
+	helper.BenchExec(b, bob.Name(), "InsertMulti", func() error {
+		_, err := bobModels.Insert(boblib.ToMods(setters...)).Exec(ctx, bob.conn)
+		return err
+	})
 }
 
 func (bob *Bob) Update(b *testing.B) {
@@ -79,16 +69,17 @@ func (bob *Bob) Update(b *testing.B) {
 		helper.SetError(b, bob.Name(), "Update", err.Error())
 		return
 	}
+	updated := NewModel()
+	updated.Counter = helper.UpdatedCounter
+	setter = newBobModelSetter(updated)
 
-	b.ReportAllocs()
-	b.ResetTimer()
-
-	for i := 0; i < b.N; i++ {
-		err = model.Update(ctx, bob.conn, setter)
-		if err != nil {
-			helper.SetError(b, bob.Name(), "Update", err.Error())
-		}
-	}
+	helper.BenchExec(b, bob.Name(), "Update", func() error {
+		_, err = bobModels.Update(
+			setter.UpdateMod(),
+			um.Where(model.primaryKeyEquals()),
+		).Exec(ctx, bob.conn)
+		return err
+	})
 }
 
 func (bob *Bob) Read(b *testing.B) {
@@ -98,22 +89,20 @@ func (bob *Bob) Read(b *testing.B) {
 		return
 	}
 
-	b.ReportAllocs()
-	b.ResetTimer()
-
-	for i := 0; i < b.N; i++ {
+	helper.BenchRows(b, bob.Name(), "Read", 1, func() (int, error) {
 		_, err = bobModels.Query(
 			sm.Where(psql.Quote("models", "id").EQ(psql.Arg(model.ID))),
 		).One(ctx, bob.conn)
 		if err != nil {
-			helper.SetError(b, bob.Name(), "Read", err.Error())
+			return 0, err
 		}
-	}
+		return 1, nil
+	})
 }
 
 func (bob *Bob) ReadSlice(b *testing.B) {
 	setter := newBobModelSetter(NewModel())
-	for i := 0; i < 100; i++ {
+	for i := 0; i < helper.BatchSize; i++ {
 		_, err := bobModels.Insert(setter).One(ctx, bob.conn)
 		if err != nil {
 			helper.SetError(b, bob.Name(), "ReadSlice", err.Error())
@@ -121,16 +110,11 @@ func (bob *Bob) ReadSlice(b *testing.B) {
 		}
 	}
 
-	b.ReportAllocs()
-	b.ResetTimer()
-
-	for i := 0; i < b.N; i++ {
-		_, err := bobModels.Query(
+	helper.BenchRows(b, bob.Name(), "ReadSlice", helper.BatchSize, func() (int, error) {
+		models, err := bobModels.Query(
 			sm.Where(psql.Quote("models", "id").GT(psql.Arg(0))),
-			sm.Limit(100),
+			sm.Limit(helper.BatchSize),
 		).All(ctx, bob.conn)
-		if err != nil {
-			helper.SetError(b, bob.Name(), "ReadSlice", err.Error())
-		}
-	}
+		return len(models), err
+	})
 }

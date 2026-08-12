@@ -19,7 +19,7 @@ WHERE id = $1;
 SELECT *
 FROM models
 WHERE ID > 0
-LIMIT 100;
+LIMIT $1;
 -- name: InsertMulti :copyfrom
 INSERT INTO models (name, title, fax, web, age, "right", counter) VALUES
 ($1, $2, $3, $4, $5, $6, $7);

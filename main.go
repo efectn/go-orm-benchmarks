@@ -100,6 +100,15 @@ func main() {
 }
 
 func runBenchmarks(orms ListOpts) {
+	control, err := helper.NewBenchmarkControl()
+	if err != nil {
+		panic(fmt.Sprintf("Could not initialize benchmark control: %v", err))
+	}
+	defer func() { _ = control.Close() }()
+	if err := control.CreateTables(); err != nil {
+		panic(fmt.Sprintf("Could not create benchmark tables: %v", err))
+	}
+
 	// Run benchmarks
 	benchmarks := map[string]helper.ORMInterface{
 		"beego":     bench.CreateBeego(),
@@ -142,7 +151,7 @@ func runBenchmarks(orms ListOpts) {
 			panic(fmt.Sprintf("Unknown ORM: %s", n))
 		}
 
-		res, err := helper.RunBenchmarks(orm, reports)
+		res, err := helper.RunBenchmarks(orm, reports, control)
 		if err != nil {
 			panic(fmt.Sprintf("An error occured while running the benchmarks: %v", err))
 		}

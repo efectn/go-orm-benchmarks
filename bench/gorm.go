@@ -47,36 +47,24 @@ func (gorm *Gorm) Close() error {
 func (gorm *Gorm) Insert(b *testing.B) {
 	m := NewModel()
 
-	b.ReportAllocs()
-	b.ResetTimer()
-
-	for i := 0; i < b.N; i++ {
+	helper.BenchExec(b, gorm.Name(), "Insert", func() error {
 		m.Id = 0
-		err := gorm.conn.Create(m).Error
-		if err != nil {
-			helper.SetError(b, gorm.Name(), "Insert", err.Error())
-		}
-	}
+		return gorm.conn.Create(m).Error
+	})
 }
 
 func (gorm *Gorm) InsertMulti(b *testing.B) {
-	ms := make([]*Model, 0, 100)
-	for i := 0; i < 100; i++ {
+	ms := make([]*Model, 0, helper.BatchSize)
+	for i := 0; i < helper.BatchSize; i++ {
 		ms = append(ms, NewModel())
 	}
 
-	b.ReportAllocs()
-	b.ResetTimer()
-
-	for i := 0; i < b.N; i++ {
+	helper.BenchExec(b, gorm.Name(), "InsertMulti", func() error {
 		for _, m := range ms {
 			m.Id = 0
 		}
-		err := gorm.conn.Create(&ms).Error
-		if err != nil {
-			helper.SetError(b, gorm.Name(), "InsertMulti", err.Error())
-		}
-	}
+		return gorm.conn.Create(&ms).Error
+	})
 }
 
 func (gorm *Gorm) Update(b *testing.B) {
@@ -85,17 +73,13 @@ func (gorm *Gorm) Update(b *testing.B) {
 	err := gorm.conn.Create(m).Error
 	if err != nil {
 		helper.SetError(b, gorm.Name(), "Update", err.Error())
+		return
 	}
+	m.Counter = helper.UpdatedCounter
 
-	b.ReportAllocs()
-	b.ResetTimer()
-
-	for i := 0; i < b.N; i++ {
-		err := gorm.conn.Model(m).Updates(m).Error
-		if err != nil {
-			helper.SetError(b, gorm.Name(), "Update", err.Error())
-		}
-	}
+	helper.BenchExec(b, gorm.Name(), "Update", func() error {
+		return gorm.conn.Model(m).Updates(m).Error
+	})
 }
 
 func (gorm *Gorm) Read(b *testing.B) {
@@ -104,37 +88,31 @@ func (gorm *Gorm) Read(b *testing.B) {
 	err := gorm.conn.Create(m).Error
 	if err != nil {
 		helper.SetError(b, gorm.Name(), "Read", err.Error())
+		return
 	}
 
-	b.ReportAllocs()
-	b.ResetTimer()
-
-	for i := 0; i < b.N; i++ {
-		err := gorm.conn.Take(m).Error
-		if err != nil {
-			helper.SetError(b, gorm.Name(), "Read", err.Error())
+	helper.BenchRows(b, gorm.Name(), "Read", 1, func() (int, error) {
+		if err := gorm.conn.Take(m).Error; err != nil {
+			return 0, err
 		}
-	}
+		return 1, nil
+	})
 }
 
 func (gorm *Gorm) ReadSlice(b *testing.B) {
 	m := NewModel()
-	for i := 0; i < 100; i++ {
+	for i := 0; i < helper.BatchSize; i++ {
 		m.Id = 0
 		err := gorm.conn.Create(m).Error
 		if err != nil {
 			helper.SetError(b, gorm.Name(), "ReadSlice", err.Error())
+			return
 		}
 	}
 
-	b.ReportAllocs()
-	b.ResetTimer()
-
-	for i := 0; i < b.N; i++ {
+	helper.BenchRows(b, gorm.Name(), "ReadSlice", helper.BatchSize, func() (int, error) {
 		var models []*Model
-		err := gorm.conn.Where("id > ?", 0).Limit(100).Find(&models).Error
-		if err != nil {
-			helper.SetError(b, gorm.Name(), "ReadSlice", err.Error())
-		}
-	}
+		err := gorm.conn.Where("id > ?", 0).Limit(helper.BatchSize).Find(&models).Error
+		return len(models), err
+	})
 }

@@ -44,16 +44,10 @@ func (pop *Pop) Close() error {
 
 func (pop *Pop) Insert(b *testing.B) {
 	m := NewModel3()
-
-	b.ReportAllocs()
-	b.ResetTimer()
-
-	for i := 0; i < b.N; i++ {
-		err := pop.conn.Create(m)
-		if err != nil {
-			helper.SetError(b, pop.Name(), "Insert", err.Error())
-		}
-	}
+	helper.BenchExec(b, pop.Name(), "Insert", func() error {
+		m.ID = 0
+		return pop.conn.Create(m)
+	})
 }
 
 func (pop *Pop) InsertMulti(b *testing.B) {
@@ -66,17 +60,13 @@ func (pop *Pop) Update(b *testing.B) {
 	err := pop.conn.Create(m)
 	if err != nil {
 		helper.SetError(b, pop.Name(), "Update", err.Error())
+		return
 	}
+	m.Counter = helper.UpdatedCounter
 
-	b.ReportAllocs()
-	b.ResetTimer()
-
-	for i := 0; i < b.N; i++ {
-		err := pop.conn.Update(m)
-		if err != nil {
-			helper.SetError(b, pop.Name(), "Update", err.Error())
-		}
-	}
+	helper.BenchExec(b, pop.Name(), "Update", func() error {
+		return pop.conn.Update(m)
+	})
 }
 
 func (pop *Pop) Read(b *testing.B) {
@@ -85,36 +75,35 @@ func (pop *Pop) Read(b *testing.B) {
 	err := pop.conn.Create(m)
 	if err != nil {
 		helper.SetError(b, pop.Name(), "Read", err.Error())
+		return
 	}
 
-	b.ReportAllocs()
-	b.ResetTimer()
-
-	for i := 0; i < b.N; i++ {
-		err := pop.conn.First(m)
-		if err != nil {
-			helper.SetError(b, pop.Name(), "Read", err.Error())
+	helper.BenchRows(b, pop.Name(), "Read", 1, func() (int, error) {
+		var result Model3
+		if err := pop.conn.Find(&result, m.ID); err != nil {
+			return 0, err
 		}
-	}
+		return 1, nil
+	})
 }
 
 func (pop *Pop) ReadSlice(b *testing.B) {
 	m := NewModel3()
-	for i := 0; i < 100; i++ {
+	for i := 0; i < helper.BatchSize; i++ {
+		m.ID = 0
 		err := pop.conn.Create(m)
 		if err != nil {
 			helper.SetError(b, pop.Name(), "ReadSlice", err.Error())
+			return
 		}
 	}
 
-	b.ReportAllocs()
-	b.ResetTimer()
-
-	for i := 0; i < b.N; i++ {
+	helper.BenchRows(b, pop.Name(), "ReadSlice", helper.BatchSize, func() (int, error) {
 		var ms []Model3
-		err := pop.conn.Where("id > 0").Limit(100).All(&ms)
+		err := pop.conn.Where("id > 0").Limit(helper.BatchSize).All(&ms)
 		if err != nil {
-			helper.SetError(b, pop.Name(), "ReadSlice", err.Error())
+			return 0, err
 		}
-	}
+		return len(ms), nil
+	})
 }

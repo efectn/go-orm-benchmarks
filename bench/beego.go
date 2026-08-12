@@ -38,35 +38,28 @@ func (beego *Beego) Close() error {
 
 func (beego *Beego) Insert(b *testing.B) {
 	m := NewModel()
-
-	b.ReportAllocs()
-	b.ResetTimer()
-
-	for i := 0; i < b.N; i++ {
+	helper.BenchExec(b, beego.Name(), "Insert", func() error {
 		m.Id = 0
-
 		_, err := beego.conn.Insert(m)
 		if err != nil {
-			helper.SetError(b, beego.Name(), "Insert", fmt.Sprintf("beego: insert: %v", err))
+			return fmt.Errorf("beego: insert: %w", err)
 		}
-	}
+		return nil
+	})
 }
 
 func (beego *Beego) InsertMulti(b *testing.B) {
-	ms := make([]*Model, 0, 100)
-	for i := 0; i < 100; i++ {
+	ms := make([]*Model, 0, helper.BatchSize)
+	for i := 0; i < helper.BatchSize; i++ {
 		ms = append(ms, NewModel())
 	}
-
-	b.ReportAllocs()
-	b.ResetTimer()
-
-	for i := 0; i < b.N; i++ {
-		_, err := beego.conn.InsertMulti(100, ms)
-		if err != nil {
-			helper.SetError(b, beego.Name(), "InsertMulti", err.Error())
+	helper.BenchExec(b, beego.Name(), "InsertMulti", func() error {
+		for _, m := range ms {
+			m.Id = 0
 		}
-	}
+		_, err := beego.conn.InsertMulti(helper.BatchSize, ms)
+		return err
+	})
 }
 
 func (beego *Beego) Update(b *testing.B) {
@@ -75,17 +68,14 @@ func (beego *Beego) Update(b *testing.B) {
 	_, err := beego.conn.Insert(m)
 	if err != nil {
 		helper.SetError(b, beego.Name(), "Update", err.Error())
+		return
 	}
+	m.Counter = helper.UpdatedCounter
 
-	b.ReportAllocs()
-	b.ResetTimer()
-
-	for i := 0; i < b.N; i++ {
+	helper.BenchExec(b, beego.Name(), "Update", func() error {
 		_, err := beego.conn.Update(m)
-		if err != nil {
-			helper.SetError(b, beego.Name(), "Update", err.Error())
-		}
-	}
+		return err
+	})
 }
 
 func (beego *Beego) Read(b *testing.B) {
@@ -94,37 +84,31 @@ func (beego *Beego) Read(b *testing.B) {
 	_, err := beego.conn.Insert(m)
 	if err != nil {
 		helper.SetError(b, beego.Name(), "Read", err.Error())
+		return
 	}
 
-	b.ReportAllocs()
-	b.ResetTimer()
-
-	for i := 0; i < b.N; i++ {
-		err := beego.conn.Read(m)
-		if err != nil {
-			helper.SetError(b, beego.Name(), "Read", err.Error())
+	helper.BenchRows(b, beego.Name(), "Read", 1, func() (int, error) {
+		if err := beego.conn.Read(m); err != nil {
+			return 0, err
 		}
-	}
+		return 1, nil
+	})
 }
 
 func (beego *Beego) ReadSlice(b *testing.B) {
 	m := NewModel()
-	for i := 0; i < 100; i++ {
+	for i := 0; i < helper.BatchSize; i++ {
 		m.Id = 0
 		_, err := beego.conn.Insert(m)
 		if err != nil {
 			helper.SetError(b, beego.Name(), "ReadSlice", err.Error())
+			return
 		}
 	}
 
-	b.ReportAllocs()
-	b.ResetTimer()
-
-	for i := 0; i < b.N; i++ {
+	helper.BenchRows(b, beego.Name(), "ReadSlice", helper.BatchSize, func() (int, error) {
 		var models []*Model
-		_, err := beego.conn.QueryTable("models").Filter("id__gt", 0).Limit(100).All(&models)
-		if err != nil {
-			helper.SetError(b, beego.Name(), "ReadSlice", err.Error())
-		}
-	}
+		_, err := beego.conn.QueryTable("models").Filter("id__gt", 0).Limit(helper.BatchSize).All(&models)
+		return len(models), err
+	})
 }
